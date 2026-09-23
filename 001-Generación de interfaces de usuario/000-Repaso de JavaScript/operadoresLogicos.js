@@ -10,6 +10,7 @@ if (edad >= 18 && tieneEntrada) {
 const esProfesor = false;
 const esAdministrador = true;
 
+
 if (esProfesor || esAdministrador) {
 
     console.log("Tiene permisos");
@@ -23,3 +24,11 @@ if (!bloqueado) {
     console.log("El usuario puede acceder");
 
 }
+
+
+/*
+varias
+lineas
+*/
+
+//una linea
