@@ -1,0 +1,1094 @@
+:root {
+  --tono: 170;
+  --saturacion: 45%;
+  --brillo: 35%;
+  --escalon: 12%;
+  --relleno:12px;
+  --texto:12px;
+  --chaflan:12px;
+  --color0:hsl(var(--tono),var(--saturacion),calc(var(--brillo) - var(--escalon)));
+  --color:hsl(var(--tono),var(--saturacion),var(--brillo));
+  --color2:hsl(var(--tono),var(--saturacion),calc(var(--brillo) + var(--escalon)));
+  --color3:hsl(var(--tono),var(--saturacion),calc(var(--brillo) + var(--escalon)*2));
+  --color4:hsl(var(--tono),var(--saturacion),calc(var(--brillo) + var(--escalon)*3));
+  --color-hover:hsl(176,72%,68%);
+  --color-activo:hsl(42,92%,68%);
+  --color-activo-text:hsl(190,45%,18%);
+  --color-caption-text:hsl(190,52%,12%);
+  --radio:14px;
+  --radio-pequeno:9px;
+  --sombra:0 8px 24px rgba(0,35,40,.12);
+  --sombra-fuerte:0 14px 34px rgba(0,35,40,.18);
+  --texto-nav:white;
+  --ancho-nav:210px;
+  --ancho-section:260px
+}
+* {
+  box-sizing:border-box
+}
+html,body {
+  width:100%;
+  height:100%;
+  margin:0
+}
+.jocarsa-iu {
+  font-family:Ubuntu,Arial,sans-serif;
+  font-size:var(--texto);
+  display:flex;
+  flex-direction:column;
+  overflow:hidden;
+  background:var(--color3)
+}
+header {
+  height:54px;
+  flex:none;
+  background:var(--color);
+  display:flex;
+  align-items:center;
+  gap:12px;
+  padding:12px;
+  color:var(--texto-nav)
+}
+.corporativo {
+  display:flex;
+  align-items:center;
+  gap:10px;
+  flex:1
+}
+.corporativo img {
+  width:28px;
+  height:28px
+}
+.corporativo h1 {
+  font-size:20px;
+  font-weight:bold;
+  margin:0
+}
+header input,header button {
+  border:0;
+  padding:8px 10px;
+  background:var(--color2);
+  color:inherit;
+  outline:none;
+  border-radius:var(--radio-pequeno);
+  transition:background-color .2s ease,box-shadow .2s ease
+}
+header input {
+  min-width:260px;
+  background:var(--color0)
+}
+header input:focus {
+  background:var(--color3);
+  box-shadow:0 0 0 3px rgba(255,255,255,.2)
+}
+header button:hover {
+  background:var(--color-hover);
+  color:var(--color-activo-text)
+}
+main {
+  display:flex;
+  flex:1;
+  min-height:0;
+  height: 100%;
+  width: 100%;
+}
+nav,section {
+  position:relative;
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+  padding:12px;
+  background:var(--color);
+  color:white;
+  overflow:hidden;
+  flex:none;
+  transition:width .25s
+}
+nav {
+  width:var(--ancho-nav)
+}
+section {
+  width:var(--ancho-section);
+  background:var(--color2);
+  color:#111;
+  padding-left:3px;
+}
+.titulo-columna {
+  font-weight:bold;
+  opacity:.75
+}
+.contenido-columna {
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+  overflow:auto;
+  min-height:0
+}
+.contenido-columna a,.contenido-columna article {
+  display:flex;
+  align-items:center;
+  gap:9px;
+  padding:9px;
+  background:var(--color2);
+  color:inherit;
+  text-decoration:none;
+  cursor:pointer;
+  border-radius:999px;
+  box-shadow:0 2px 6px rgba(0,35,40,.12);
+  transition:transform .2s ease,background-color .2s ease,color .2s ease,box-shadow .2s ease
+}
+.contenido-columna article {
+  background:var(--color3)
+}
+.contenido-columna .activo {
+  transform:translateX(8px);
+  box-shadow:0 5px 12px rgba(0,35,40,.2);
+}
+.ficha {
+  width:28px;
+  height:28px;
+  display:grid;
+  place-items:center;
+  border-radius:50%;
+  color:white;
+  font-weight:bold;
+  flex:none
+}
+.minimizar {
+  position:absolute;
+  right:5px;
+  bottom:5px;
+  border:0;
+  width:28px;
+  height:28px;
+  cursor:pointer
+}
+.compacto {
+  width:58px!important
+}
+.compacto .titulo-columna,.compacto .etiqueta {
+  display:none
+}
+.compacto .contenido-columna {
+  overflow:hidden
+}
+.separador {
+  width:5px;
+  cursor:col-resize;
+  background:var(--color0);
+  flex:none
+}
+.escenario {
+  flex:1;
+  min-width:0;
+  padding:14px;
+  overflow:auto;
+  background:var(--color3);
+  padding-left:5px;
+  position:relative;
+  z-index:1000
+}
+table {
+  width:100%;
+  border-collapse:separate;
+  border-spacing:0;
+  background:white;
+  border-radius:var(--radio);
+  overflow:hidden;
+  box-shadow:var(--sombra)
+}
+caption {
+  text-align:left;
+  margin-bottom:10px;
+  padding:11px 14px;
+  background:var(--color2);
+  border-radius:var(--radio);
+  box-shadow:0 3px 10px rgba(0,35,40,.1);
+  font-weight:bold;
+  color:var(--color-caption-text);
+  caption-side:top
+}
+th,td {
+  padding:10px;
+  border-bottom:1px solid #e4ecec;
+  text-align:left
+}
+thead {
+  background:var(--color)
+}
+thead th {
+  color:white
+}
+tbody tr:nth-child(odd) {
+  background:#ffffff
+}
+tbody tr:nth-child(even) {
+  background:#e4e4e4
+}
+tbody tr:last-child td {
+  border-bottom:0
+}
+tfoot {
+  background:var(--color);
+  color: white;
+}
+tfoot th,tfoot td {
+  border-bottom:0;
+  font-weight:bold
+}
+tbody tr:hover {
+  background:color-mix(in srgb,var(--color-hover) 22%,white)
+}
+.panel {
+  background:white;
+  padding:16px;
+  max-width:1000px;
+  border-radius:var(--radio);
+  box-shadow:var(--sombra)
+}
+.campos {
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+  gap:12px
+}
+.campo {
+  display:flex;
+  flex-direction:column;
+  gap:5px
+}
+.campo input,.campo textarea,.campo select {
+  padding:9px;
+  border:1px solid #d5e2e2;
+  border-radius:var(--radio-pequeno);
+  outline:none
+}
+.campo input:focus,.campo textarea:focus,.campo select:focus {
+  border-color:var(--color-hover);
+  box-shadow:0 0 0 3px color-mix(in srgb,var(--color-hover) 30%,transparent)
+}
+.campo textarea {
+  min-height:90px
+}
+.acciones {
+  display:flex;
+  gap:8px;
+  margin-top:14px
+}
+.acciones button {
+  padding:9px 14px;
+  border:0;
+  background:var(--color);
+  color:white;
+  border-radius:var(--radio-pequeno);
+  cursor:pointer
+}
+.acciones button:hover {
+  background:var(--color-hover);
+  color:var(--color-activo-text)
+}
+.drag-over {
+  outline:3px dashed var(--color0)
+}
+.estado {
+  margin:0 0 10px;
+  padding:8px;
+  background:rgba(255,255,255,.55);
+  border-radius:var(--radio-pequeno)
+}
+/* =========================================================
+   REGLAS 010: SEPARADORES + MENUS CONTRAIDOS
+   ========================================================= */
+nav,section {
+  transition:width .3s ease,flex-basis .3s ease,padding .3s ease
+}
+.separador {
+  flex:0 0 7px;
+  width:7px;
+  min-width:7px;
+  padding:0;
+  cursor:col-resize;
+  position:relative;
+  z-index:4;
+  transition:background .3s ease
+}
+nav + .separador {
+  background:var(--color2)
+}
+section + .separador {
+  background:var(--color3)
+}
+.separador:hover {
+  background:var(--color4)
+}
+body.redimensionando {
+  cursor:col-resize;
+  user-select:none
+}
+body.redimensionando * {
+  cursor:col-resize!important
+}
+.minimizar {
+  position:absolute;
+  bottom:var(--relleno);
+  left:var(--relleno);
+  right:var(--relleno);
+  width:auto;
+  height:28px;
+  border:0;
+  background:var(--color2);
+  color:inherit;
+  cursor:pointer;
+  font:inherit;
+  z-index:20;
+  transition:left .3s,right .3s,width .3s,background .3s
+}
+section .minimizar {
+  background:var(--color3)
+}
+.minimizar:hover {
+  background:var(--color4)
+}
+nav.compacto,section.compacto {
+  flex-basis:52px!important;
+  width:52px!important;
+  padding-left:6px;
+  padding-right:6px;
+  align-items:center
+}
+nav.compacto .contenido-columna,section.compacto .contenido-columna {
+  width:40px;
+  overflow:hidden;
+  align-items:center
+}
+nav.compacto .contenido-columna a,section.compacto .contenido-columna article {
+  width:40px!important;
+  min-width:40px;
+  max-width:40px;
+  height:40px;
+  min-height:40px;
+  max-height:40px;
+  padding:6px;
+  justify-content:center;
+  overflow:hidden;
+  flex:none;
+  transform:none!important
+}
+nav.compacto .titulo-columna,section.compacto .titulo-columna,nav.compacto .etiqueta,section.compacto .etiqueta {
+  display:none
+}
+nav.compacto .minimizar,section.compacto .minimizar {
+  left:6px;
+  right:6px;
+  width:40px
+}
+/* =========================================================
+   LIBRERIA: FORMULARIOS
+   ========================================================= */
+.ju-card {
+  background:white;
+  padding:18px;
+  border-radius:var(--radio);
+  box-shadow:var(--sombra)
+}
+.ju-form-grid {
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:16px;
+  margin-top:16px
+}
+.ju-form-full {
+  grid-column:1/-1
+}
+.ju-form-grid label {
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+  font-size:14px;
+  font-weight:500
+}
+.ju-form-grid input,.ju-form-grid select,.ju-form-grid textarea {
+  width:100%;
+  border:1px solid #d8dfeb;
+  background:#f8fafc;
+  color:#172033;
+  padding:12px 14px;
+  font:inherit;
+  outline:none;
+  border-radius:var(--radio-pequeno)
+}
+.ju-form-grid textarea {
+  min-height:110px;
+  resize:vertical
+}
+.ju-form-grid input:focus,.ju-form-grid select:focus,.ju-form-grid textarea:focus {
+  border-color:var(--color);
+  box-shadow:0 0 0 4px color-mix(in srgb,var(--color) 18%,transparent);
+  background:white
+}
+.ju-check {
+  display:inline-flex!important;
+  flex-direction:row!important;
+  align-items:center;
+  gap:10px!important
+}
+.ju-check input {
+  width:18px!important;
+  height:18px;
+  clip-path:none!important
+}
+.ju-btn {
+  border:0;
+  padding:11px 16px;
+  background:var(--color);
+  color:white;
+  cursor:pointer;
+  font:inherit;
+  border-radius:var(--radio-pequeno);
+  transition:background-color .2s ease,transform .2s ease,box-shadow .2s ease
+}
+.ju-btn:hover {
+  background:var(--color-hover);
+  color:var(--color-activo-text);
+  transform:translateY(-1px);
+  box-shadow:0 5px 12px rgba(0,35,40,.16)
+}
+.ju-btn.secondary {
+  background:var(--color2);
+  color:var(--color-activo-text)
+}
+.ju-button-row {
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  margin-top:16px
+}
+/* LOGIN jocarsa-iu */
+.ju-login-page {
+  min-height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:radial-gradient(circle at top left,var(--color4),transparent 35%),linear-gradient(180deg,var(--color3),var(--color4));
+  padding:30px
+}
+.ju-login-layout {
+  width:min(920px,100%);
+  display:grid;
+  grid-template-columns:minmax(280px,400px) minmax(320px,520px);
+  gap:24px
+}
+.ju-login-side,.ju-login-card {
+  padding:28px;
+  border-radius:var(--radio);
+  box-shadow:var(--sombra-fuerte)
+}
+.ju-login-side {
+  background:linear-gradient(180deg,var(--color0),var(--color));
+  color:white;
+  display:flex;
+  flex-direction:column;
+  justify-content:center
+}
+.ju-login-card {
+  background:white
+}
+.ju-login-brand {
+  text-align:center
+}
+.ju-login-brand img {
+  width:72px;
+  height:72px
+}
+.ju-login-product-title {
+  font-size:28px;
+  margin:12px 0 6px
+}
+.ju-login-card h2 {
+  margin-top:0
+}
+.ju-login-actions {
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:14px
+}
+.ju-text-link {
+  color:var(--color);
+  font-weight:bold;
+  text-decoration:none
+}
+/* TOASTS jocarsa-iu */
+.ju-toast-stack {
+  position:fixed;
+  right:22px;
+  bottom:22px;
+  z-index:1000;
+  width:min(420px,calc(100vw - 44px));
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+  pointer-events:none
+}
+.ju-toast {
+  pointer-events:auto;
+  position:relative;
+  display:grid;
+  grid-template-columns:42px 1fr auto;
+  gap:12px;
+  align-items:start;
+  padding:14px;
+  background:rgba(255,255,255,.97);
+  box-shadow:var(--sombra-fuerte);
+  border-radius:var(--radio);
+  transform:translateX(22px);
+  opacity:0;
+  animation:juToastIn .28s ease forwards
+}
+.ju-toast:before {
+  content:"";
+  position:absolute;
+  left:0;
+  top:0;
+  bottom:0;
+  width:7px;
+  background:#3b82f6
+}
+.ju-toast.is-success:before {
+  background:#22c55e
+}
+.ju-toast.is-warning:before {
+  background:#f59e0b
+}
+.ju-toast.is-danger:before {
+  background:#ef4444
+}
+.ju-toast-icon {
+  width:42px;
+  height:42px;
+  display:grid;
+  place-items:center;
+  background:var(--color3);
+  font-weight:800
+}
+.ju-toast-title {
+  margin:0 0 3px;
+  font-weight:800
+}
+.ju-toast-text {
+  margin:0;
+  color:#667085;
+  font-size:13px
+}
+.ju-toast-close {
+  border:0;
+  background:transparent;
+  font-size:20px;
+  cursor:pointer
+}
+.ju-toast.is-leaving {
+  animation:juToastOut .22s ease forwards
+}
+@keyframes juToastIn {
+  to {
+    transform:translateX(0);
+    opacity:1
+  }
+}
+@keyframes juToastOut {
+  to {
+    transform:translateX(24px);
+    opacity:0
+  }
+}
+@media(max-width:800px) {
+  .ju-form-grid,.ju-login-layout {
+    grid-template-columns:1fr
+  }
+}
+/* =========================================================
+   V3 · AJUSTES DE COHERENCIA JOCARSA-IU
+   ========================================================= */
+@import url('https://fonts.googleapis.com/css2?family=Ubuntu:wght@300;400;500;700&display=swap');
+html,body,button,input,select,textarea {
+  font-family:Ubuntu,Arial,sans-serif
+}
+/* Las cajas de ambas columnas quedan centradas dentro de su menú. */
+nav .contenido-columna,section .contenido-columna {
+  align-items:center;
+  width:100%
+}
+nav .contenido-columna>a,section .contenido-columna>article {
+  width:100%;
+  margin-left:auto;
+  margin-right:auto
+}
+nav.compacto .contenido-columna,section.compacto .contenido-columna {
+  margin-left:auto;
+  margin-right:auto
+}
+/* Login: composición centrada y fondo de proyecto. jocarsa.png vive en la raíz. */
+.ju-login-page {
+  position:relative;
+  isolation:isolate;
+  min-height:100vh;
+  margin:0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:40px 20px;
+  background-image:linear-gradient(rgba(215,230,227,.72),rgba(215,230,227,.72)),url('../jocarsa.png');
+  background-size:cover;
+  background-position:center;
+  background-repeat:no-repeat;
+}
+.ju-login-layout {
+  width:min(980px,100%);
+  margin:auto;
+  align-items:stretch
+}
+.ju-login-side,.ju-login-card {
+  min-height:450px
+}
+.ju-login-card {
+  display:flex;
+  flex-direction:column;
+  justify-content:center
+}
+.ju-login-brand {
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  text-align:center
+}
+/* Páginas de demostración de la librería */
+.ju-demo-page {
+  min-height:100vh;
+  overflow:auto;
+  background:var(--color3);
+  color:#172033
+}
+.ju-demo-header {
+  min-height:64px;
+  background:var(--color);
+  color:white;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:16px;
+  padding:12px 20px
+}
+.ju-demo-header h1 {
+  margin:0;
+  font-size:20px;
+  font-weight:500
+}
+.ju-demo-header p {
+  margin:3px 0 0;
+  opacity:.75
+}
+.ju-demo-header nav {
+  width:auto!important;
+  background:transparent;
+  padding:0;
+  display:flex;
+  flex-direction:row;
+  gap:8px;
+  overflow:visible
+}
+.ju-demo-header a {
+  color:white;
+  text-decoration:none;
+  padding:10px 14px;
+  background:var(--color2);
+  clip-path:polygon(0 0,calc(100% - 10px) 0,100% 10px,100% 100%,0 100%)
+}
+.ju-demo-main {
+  width:min(1100px,calc(100% - 40px));
+  margin:32px auto;
+  display:grid;
+  gap:20px
+}
+.ju-demo-grid {
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:20px
+}
+.ju-demo-page .ju-card h2,.ju-demo-page .ju-card h3 {
+  margin-top:0
+}
+.ju-fieldset {
+  border:1px solid #e2e8f0;
+  background:#f8fafc;
+  padding:16px;
+  display:flex;
+  flex-direction:column;
+  gap:12px
+}
+.ju-check-group {
+  display:flex;
+  gap:18px;
+  flex-wrap:wrap
+}
+@media(max-width:800px) {
+  .ju-demo-grid {
+    grid-template-columns:1fr
+  }
+  .ju-demo-header {
+    align-items:flex-start;
+    flex-direction:column
+  }
+  .ju-demo-header nav {
+    flex-wrap:wrap
+  }
+}
+/* =========================================================
+   V4 · fidelidad jocarsa-iu 010
+   ========================================================= */
+/* Header completo: corporativo / herramientas / usuario */
+header .corporativo {
+  flex:1
+}
+header #herramientas {
+  display:flex;
+  gap:var(--relleno);
+  align-items:center;
+  justify-content:center;
+  flex:2;
+  height:100%
+}
+header #usuario {
+  display:flex;
+  align-items:center;
+  justify-content:flex-end;
+  gap:var(--relleno);
+  flex:1;
+  height:100%
+}
+header #usuario .imagen {
+  width:28px;
+  height:28px;
+  background:var(--color2);
+  border-radius:100px;
+  flex:none
+}
+header #usuario>div:last-child {
+  display:flex;
+  align-items:center;
+  gap:var(--relleno);
+  flex:none
+}
+header #usuario p {
+  margin:0;
+  white-space:nowrap
+}
+header #usuario a {
+  background:hsl(8,72%,62%);
+  border:0;
+  padding:6px 12px;
+  height:30px;
+  display:flex;
+  align-items:center;
+  border-radius:999px;
+  color:white;
+  text-decoration:none;
+  font:inherit;
+  box-shadow:0 3px 8px rgba(0,35,40,.16);
+  transition:background-color .2s ease,transform .2s ease,box-shadow .2s ease
+}
+header #usuario a:hover {
+  background:hsl(8,78%,70%);
+  color:var(--color-activo-text);
+  transform:translateY(-1px);
+  box-shadow:0 5px 12px rgba(0,35,40,.22)
+}
+/* Las fichas de letra tienen forma de rombo y mantienen la letra horizontal. */
+.ficha {
+  border-radius:0!important;
+  clip-path:polygon(50% 0,100% 50%,50% 100%,0 50%)
+}
+/* El destacado atraviesa visualmente el separador, sin provocar scroll horizontal. */
+nav {
+  overflow:visible!important;
+  z-index:3
+}
+nav .contenido-columna {
+  overflow-y:auto;
+  overflow-x:visible;
+  padding-right:0
+}
+section {
+  overflow:visible!important;
+  z-index:200;
+}
+section .contenido-columna {
+  overflow-y:auto;
+  overflow-x:visible;
+  padding-right:0
+}
+.contenido-columna .activo {
+  transform:none
+}
+#navegacion .contenido-columna a,#entidades .contenido-columna article {
+  width:100%;
+  height:40px;
+  flex:none;
+  transition:width .3s ease,background .3s ease
+}
+#navegacion .contenido-columna a:hover,#entidades .contenido-columna article:hover {
+  background-color:var(--color-hover);
+  color:var(--color-activo-text);
+  box-shadow:0 5px 12px rgba(0,35,40,.2);
+}
+#navegacion .contenido-columna a.activo,#entidades .contenido-columna article.activo {
+  position:relative;
+  z-index:10;
+  background-color:var(--color-activo);
+  color:var(--color-activo-text);
+  box-shadow:0 6px 14px rgba(0,35,40,.24);
+}
+nav.compacto .contenido-columna a:hover,nav.compacto .contenido-columna a.activo,section.compacto .contenido-columna article:hover,section.compacto .contenido-columna article.activo {
+}
+/* Login realmente centrado + fondo jocarsa.png de la raíz */
+body.ju-login-page {
+  width:100%;
+  height:100vh;
+  min-height:100vh;
+  margin:0;
+  display:grid!important;
+  place-items:center;
+  overflow:auto;
+  padding:30px;
+  background:linear-gradient(rgba(235,244,243,.72),rgba(235,244,243,.72)),url('../jocarsa.png') center center/cover no-repeat fixed
+}
+body.ju-login-page main.ju-login-layout {
+  flex:none!important;
+  min-height:0!important;
+  margin:0!important;
+  width:min(920px,calc(100vw - 60px));
+  align-self:center;
+  justify-self:center
+}
+/* Páginas de demostración: mismo esqueleto de dos menús + escenario */
+body.ju-library-page {
+  font-family:Ubuntu,Arial,sans-serif;
+  font-size:var(--texto);
+  display:flex;
+  flex-direction:column;
+  overflow:hidden;
+  background:var(--color3)
+}
+body.ju-library-page main {
+  display:flex;
+  flex:1;
+  min-height:0;
+  overflow:hidden
+}
+body.ju-library-page .library-nav {
+  width:var(--ancho-nav);
+  flex:0 0 var(--ancho-nav);
+  background:var(--color);
+  color:white;
+  padding:12px;
+  position:relative;
+  overflow:visible;
+  display:flex;
+  flex-direction:column;
+  gap:10px
+}
+body.ju-library-page .library-section {
+  width:var(--ancho-section);
+  flex:0 0 var(--ancho-section);
+  background:var(--color2);
+  color:#111;
+  padding:12px 12px 12px 3px;
+  position:relative;
+  overflow:visible;
+  display:flex;
+  flex-direction:column;
+  gap:10px
+}
+body.ju-library-page .library-nav .contenido-columna,body.ju-library-page .library-section .contenido-columna {
+  overflow-y:auto;
+  overflow-x:visible
+}
+body.ju-library-page .library-nav a,body.ju-library-page .library-section a {
+  height:40px;
+  flex:none;
+  display:flex;
+  align-items:center;
+  gap:9px;
+  padding:6px;
+  background:var(--color2);
+  color:inherit;
+  text-decoration:none;
+  border-radius:999px;
+  box-shadow:0 2px 6px rgba(0,35,40,.12);
+  transition:transform .2s ease,background-color .2s ease,color .2s ease,box-shadow .2s ease
+}
+body.ju-library-page .library-section a {
+  background:var(--color3)
+}
+body.ju-library-page .library-nav a:hover,body.ju-library-page .library-section a:hover {
+  background:var(--color-hover);
+  color:var(--color-activo-text);
+  box-shadow:0 5px 12px rgba(0,35,40,.2)
+}
+body.ju-library-page .library-nav a.activo,body.ju-library-page .library-section a.activo {
+  width:calc(100% + var(--relleno)*2);
+  position:relative;
+  z-index:10;
+  background:var(--color-activo);
+  color:var(--color-activo-text);
+  box-shadow:0 6px 14px rgba(0,35,40,.24)
+}
+body.ju-library-page .library-stage {
+  flex:1;
+  min-width:0;
+  padding:14px;
+  overflow:auto;
+  background:var(--color3)
+}
+body.ju-library-page .library-stage>.ju-card {
+  max-width:1100px
+}
+/* =========================================================
+   V5 · continuidad entre columnas sin scroll horizontal
+   ========================================================= */
+/*
+  No usamos un contenedor scrollable alrededor de las fichas: cuando un
+  elemento activo es más ancho que su columna, overflow:auto convierte el
+  desbordamiento horizontal en una barra de scroll. En jocarsa-iu el
+  destacado debe poder atravesar el límite de la columna y cubrir el
+  separador visualmente.
+*/
+.jocarsa-iu nav .contenido-columna, .jocarsa-iu section .contenido-columna, body.ju-library-page .library-nav .contenido-columna, body.ju-library-page .library-section .contenido-columna {
+  overflow:visible !important;
+  width:100%;
+  min-width:0;
+  align-items:stretch;
+}
+/* Las fichas normales ocupan siempre todo el ancho útil de su columna. */
+.jocarsa-iu nav .contenido-columna > a, .jocarsa-iu section .contenido-columna > article, body.ju-library-page .library-nav .contenido-columna > a, body.ju-library-page .library-section .contenido-columna > a {
+  width:100%;
+  max-width:none;
+  margin:0;
+  flex:0 0 40px;
+}
+/* Hover y selección continúan físicamente hacia la columna siguiente. */
+.jocarsa-iu nav .contenido-columna > a:hover, .jocarsa-iu section .contenido-columna > article:hover, body.ju-library-page .library-nav .contenido-columna > a:hover, body.ju-library-page .library-section .contenido-columna > a:hover {
+  width:calc(100% + (var(--relleno) * .9));
+  position:relative;
+  z-index:9;
+}
+.jocarsa-iu nav .contenido-columna > a.activo, .jocarsa-iu section .contenido-columna > article.activo, body.ju-library-page .library-nav .contenido-columna > a.activo, body.ju-library-page .library-section .contenido-columna > a.activo {
+  width:calc(100% + (var(--relleno) * 2));
+  position:relative;
+  z-index:10;
+}
+/* El separador queda por debajo del destacado, como en 010. */
+.jocarsa-iu main .separador, body.ju-library-page main .separador {
+  z-index:4
+}
+.jocarsa-iu nav, body.ju-library-page .library-nav {
+  z-index:6
+}
+.jocarsa-iu section, body.ju-library-page .library-section {
+  z-index:500
+}
+/* La columna central de las demos conserva exactamente la misma geometría
+   que la columna central de index.html. */
+body.ju-library-page .library-section {
+  padding:var(--relleno);
+  padding-left:3px;
+}
+body.ju-library-page .library-section .contenido-columna > a {
+  padding:calc(var(--relleno) / 2);
+  height:40px;
+  min-height:40px;
+  display:flex;
+  align-items:center;
+  justify-content:flex-start;
+  gap:calc(var(--relleno) / 2);
+  background:var(--color3);
+}
+/* Contraído: conserva la misma continuidad visual hacia la columna siguiente. */
+.jocarsa-iu nav.compacto .contenido-columna,
+.jocarsa-iu section.compacto .contenido-columna {
+  width:40px;
+  align-items:center;
+  overflow:visible !important;
+}
+
+/* Estado normal: la ficha permanece dentro de los 40px de la columna compacta. */
+.jocarsa-iu nav.compacto .contenido-columna > a,
+.jocarsa-iu section.compacto .contenido-columna > article {
+  width:40px !important;
+  min-width:40px;
+  max-width:none;
+  overflow:visible;
+  position:relative;
+}
+
+/* Hover: sobresale ligeramente hacia la siguiente sección. */
+.jocarsa-iu nav.compacto .contenido-columna > a:hover,
+.jocarsa-iu section.compacto .contenido-columna > article:hover {
+  width:calc(40px + (var(--relleno) * .9)) !important;
+  z-index:9;
+}
+
+/* Activo: atraviesa el separador igual que en el estado desplegado. */
+.jocarsa-iu nav.compacto .contenido-columna > a.activo,
+.jocarsa-iu section.compacto .contenido-columna > article.activo {
+  width:calc(50px + (var(--relleno) * 2)) !important;
+  z-index:10;
+  box-shadow:0 5px 12px rgba(0,35,40,.22);
+}
+
+
+/* =========================================================
+   V6 · DRAWER DERECHO REDIMENSIONABLE + MODAL
+   ========================================================= */
+.ju-drawer-overlay{position:fixed;inset:54px 0 0 0;background:rgba(20,35,45,.12);z-index:70;opacity:0;pointer-events:none;transition:opacity .25s ease}
+.ju-drawer-overlay.abierto{opacity:1;pointer-events:auto}
+.ju-drawer{--drawer-width:440px;position:fixed;z-index:80;top:54px;right:0;bottom:0;width:var(--drawer-width);max-width:50vw;background:white;box-shadow:-18px 0 45px rgba(0,0,0,.18);transform:translateX(calc(100% + 20px));transition:transform .3s ease;display:flex;flex-direction:column;color:#172033}
+.ju-drawer.abierto{transform:translateX(0)}
+.ju-drawer-resizer{position:absolute;left:-7px;top:0;bottom:0;width:7px;background:var(--color0);cursor:col-resize;z-index:3;transition:background .2s}
+.ju-drawer-resizer:hover{background:var(--color)}
+.ju-drawer-header{height:auto;min-height:76px;flex:none;background:var(--color);padding:14px 16px;color:white;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.ju-drawer-header small{display:block;opacity:.7;font-weight:700;letter-spacing:.12em;margin-bottom:3px}
+.ju-drawer-header h2{margin:0;font-size:20px}
+.ju-drawer-close,.ju-modal-close{border:0;background:var(--color2);color:inherit;width:36px;height:36px;font-size:24px;cursor:pointer;flex:none}
+.ju-drawer-body{padding:18px;overflow:auto;flex:1;min-height:0;background:var(--color3)}
+.ju-drawer-body .ju-card{min-height:100%}
+.ju-drawer-body .ju-form-grid{grid-template-columns:1fr}
+.ju-drawer-body .ju-form-full{grid-column:auto}
+.ju-drawer.ju-drawer-dos-columnas .ju-drawer-body .ju-form-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+.ju-drawer.ju-drawer-dos-columnas .ju-drawer-body .ju-form-full{grid-column:1/-1}
+.ju-row-editable{cursor:pointer}
+.ju-row-editable:hover{background:color-mix(in srgb,var(--color2) 35%,white)!important}
+.ju-row-editable:after{content:""}
+.ju-modal-layer{position:fixed;inset:0;z-index:120;display:grid;place-items:center;opacity:0;pointer-events:none;transition:opacity .22s ease;padding:24px}
+.ju-modal-layer.abierto{opacity:1;pointer-events:auto}
+.ju-modal-backdrop{position:absolute;inset:0;background:rgba(8,18,24,.62);backdrop-filter:blur(2px)}
+.ju-modal-window{position:relative;z-index:1;width:min(650px,calc(100vw - 48px));max-height:calc(100vh - 48px);background:white;box-shadow:0 28px 80px rgba(0,0,0,.3);border-radius:var(--radio);transform:translateY(16px) scale(.98);transition:transform .22s ease;overflow:hidden}
+.ju-modal-layer.abierto .ju-modal-window{transform:none}
+.ju-modal-header{height:auto;min-height:62px;background:var(--color);color:white;padding:12px 16px;display:flex;align-items:center;justify-content:space-between}
+.ju-modal-header h2{margin:0;font-size:19px}
+.ju-modal-body{padding:22px;max-height:calc(100vh - 120px);overflow:auto}
+.ju-showcase-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;margin-top:18px}
+.ju-showcase-box{padding:18px;background:var(--color3);min-height:150px;border-radius:var(--radio-pequeno);box-shadow:0 3px 10px rgba(0,35,40,.08)}
+.ju-showcase-box h3{margin-top:0}
+body.redimensionando-drawer,body.redimensionando-drawer *{cursor:col-resize!important;user-select:none!important}
+@media(max-width:700px){.ju-drawer{--drawer-width:50vw;max-width:50vw}.ju-showcase-grid{grid-template-columns:1fr}}
+
+
+/* =========================================================
+   V7 · compacto: fusionar visualmente con la sección derecha
+   ========================================================= */
+.jocarsa-iu nav.compacto .contenido-columna > a:hover,
+.jocarsa-iu section.compacto .contenido-columna > article:hover,
+.jocarsa-iu nav.compacto .contenido-columna > a.activo,
+.jocarsa-iu section.compacto .contenido-columna > article.activo {
+  transform:translateX(16px) !important;
+}

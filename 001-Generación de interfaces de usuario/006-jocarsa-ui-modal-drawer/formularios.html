@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="es">
+ <head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width,initial-scale=1" name="viewport"/>
+  <title>
+  rocodrigo | formularios
+  </title>
+  <link href="css/estilo.css" rel="stylesheet"/>
+ </head>
+ <body class="ju-library-page">
+  <header>
+   <div class="corporativo">
+    <img alt="" src="https://static  rocodrigo.com/logos/white.svg"/>
+    <h1>
+      rocodrigo | interfaz integrada
+    </h1>
+   </div>
+   <div id="herramientas">
+    <input placeholder="Buscar..." type="search"/>
+    <a href="index.html">
+     Aplicación
+    </a>
+   </div>
+   <div id="usuario">
+    <div class="imagen">
+    </div>
+    <div>
+     <p>
+      Jose Vicente Carratalá
+     </p>
+     <a href="login.html">
+      Cerrar sesión
+     </a>
+    </div>
+   </div>
+  </header>
+  <main>
+   <nav class="library-nav">
+    <div class="titulo-columna">
+     Módulos
+    </div>
+    <div class="contenido-columna">
+     <a class="" href="index.html">
+      <span class="ficha" style="background:hsl(200,55%,45%)">
+       C
+      </span>
+      <span class="etiqueta">
+       Clientes
+      </span>
+     </a>
+     <a class="" href="formularios.html">
+      <span class="ficha" style="background:hsl(200,55%,45%)">
+       F
+      </span>
+      <span class="etiqueta">
+       Formularios
+      </span>
+     </a>
+     <a class="" href="toasts.html">
+      <span class="ficha" style="background:hsl(200,55%,45%)">
+       T
+      </span>
+      <span class="etiqueta">
+       Toasts
+      </span>
+     </a>
+     <a class="" href="login.html">
+      <span class="ficha" style="background:hsl(200,55%,45%)">
+       L
+      </span>
+      <span class="etiqueta">
+       Login
+      </span>
+     </a>
+    </div>
+   </nav>
+   <div class="separador">
+   </div>
+   <section class="library-section">
+    <div class="titulo-columna">
+     Vistas
+    </div>
+    <div class="contenido-columna">
+     <a class="activo" href="#">
+      <span class="ficha" style="background:hsl(52,55%,45%)">
+       F
+      </span>
+      <span class="etiqueta">
+       Formulario completo
+      </span>
+     </a>
+     <a class="" href="#controles">
+      <span class="ficha" style="background:hsl(160,55%,45%)">
+       C
+      </span>
+      <span class="etiqueta">
+       Controles
+      </span>
+     </a>
+     <a class="" href="#eventos">
+      <span class="ficha" style="background:hsl(280,55%,45%)">
+       E
+      </span>
+      <span class="etiqueta">
+       Eventos
+      </span>
+     </a>
+    </div>
+   </section>
+   <div class="separador">
+   </div>
+   <div class="library-stage">
+    <article class="ju-card">
+     <h2>
+      Formulario completo
+     </h2>
+     <p>
+      Ejemplo de controles reutilizables manteniendo el escenario de  rocodrigo-iu.
+     </p>
+     <form class="ju-form-grid" id="formDemo">
+      <label>
+       <span>
+        Nombre
+       </span>
+       <input name="nombre" required=""/>
+      </label>
+      <label>
+       <span>
+        Email
+       </span>
+       <input name="email" required="" type="email"/>
+      </label>
+      <label>
+       <span>
+        Tipo
+       </span>
+       <select name="tipo">
+        <option>
+         Cliente
+        </option>
+        <option>
+         Proveedor
+        </option>
+        <option>
+         Alumno
+        </option>
+       </select>
+      </label>
+      <label>
+       <span>
+        Fecha
+       </span>
+       <input name="fecha" type="date"/>
+      </label>
+      <label>
+       <span>
+        Teléfono
+       </span>
+       <input name="telefono" type="tel"/>
+      </label>
+      <label>
+       <span>
+        Web
+       </span>
+       <input name="web" placeholder="https://" type="url"/>
+      </label>
+      <label class="ju-form-full">
+       <span>
+        Descripción
+       </span>
+       <textarea name="descripcion"></textarea>
+      </label>
+      <fieldset class="ju-fieldset ju-form-full">
+       <strong>
+        Preferencias
+       </strong>
+       <div class="ju-check-group">
+        <label class="ju-check">
+         <input name="activo" type="checkbox"/>
+         <span>
+          Activo
+         </span>
+        </label>
+        <label class="ju-check">
+         <input checked="" name="nivel" type="radio" value="normal"/>
+         <span>
+          Normal
+         </span>
+        </label>
+        <label class="ju-check">
+         <input name="nivel" type="radio" value="prioritario"/>
+         <span>
+          Prioritario
+         </span>
+        </label>
+       </div>
+      </fieldset>
+      <div class="ju-form-full ju-button-row">
+       <button class="ju-btn" type="submit">
+        Guardar
+       </button>
+       <button class="ju-btn secondary" type="reset">
+        Limpiar
+       </button>
+      </div>
+     </form>
+    </article>
+   </div>
+  </main>
+  <div aria-live="polite" class="ju-toast-stack" id="toastStack">
+  </div>
+  <script src="js/demo-ui.js">
+  </script>
+ </body>
+</html>
+

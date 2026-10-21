@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="es">
+ <head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width,initial-scale=1" name="viewport"/>
+  <title>
+   rocodrigo | interfaz integrada
+  </title>
+  <link href="https://static.rocodrigo.com/logos/white.svg" rel="shortcut icon" type="image/svg+xml"/>
+  <link href="css/estilo.css" rel="stylesheet"/>
+ </head>
+ <body class="rocodrigo-iu">
+  <header>
+   <div class="corporativo">
+    <img alt="" src="https://static.rocodrigo.com/logos/white.svg"/>
+    <h1>
+     rocodrigo | interfaz integrada
+    </h1>
+   </div>
+   <div id="herramientas">
+    <input id="buscador" placeholder="Buscar en clientes…" type="search"/>
+    <button id="nuevo">
+     + Nuevo
+    </button>
+   </div>
+   <div id="usuario">
+    <div class="imagen">
+    </div>
+    <div>
+     <p>
+      Rodrigo Menéndez Molina
+     </p>
+     <a href="login.html">
+      Cerrar sesión
+     </a>
+    </div>
+   </div>
+  </header>
+  <main>
+   <nav id="navegacion">
+    <div class="contenido-columna">
+    </div>
+    <button class="minimizar" title="Minimizar">
+     ◀
+    </button>
+   </nav>
+   <div class="separador" data-left="navegacion">
+   </div>
+   <section id="entidades">
+    <div class="contenido-columna">
+    </div>
+    <button class="minimizar" title="Minimizar">
+     ◀
+    </button>
+   </section>
+   <div class="separador" data-left="entidades">
+   </div>
+   <div class="escenario" id="escenario">
+   </div>
+  </main>
+  <template id="tpl-nav">
+   <a href="#">
+    <span class="ficha">
+    </span>
+    <span class="etiqueta">
+    </span>
+   </a>
+  </template>
+  <template id="tpl-card">
+   <article draggable="true">
+    <span class="ficha">
+    </span>
+    <span class="etiqueta">
+    </span>
+   </article>
+  </template>
+  <template id="tpl-fila">
+   <tr>
+   </tr>
+  </template>
+  <!-- Componentes flotantes globales -->
+  <div class="ju-drawer-overlay" id="juDrawerOverlay" aria-hidden="true"></div>
+  <aside class="ju-drawer" id="juDrawer" aria-hidden="true" aria-label="Editor lateral">
+   <div class="ju-drawer-resizer" id="juDrawerResizer" title="Arrastra para redimensionar"></div>
+   <header class="ju-drawer-header">
+    <div>
+     <small id="juDrawerMode">CREAR</small>
+     <h2 id="juDrawerTitle">Nuevo registro</h2>
+    </div>
+    <button class="ju-drawer-close" id="juDrawerClose" type="button" aria-label="Cerrar">×</button>
+   </header>
+   <div class="ju-drawer-body" id="juDrawerBody"></div>
+  </aside>
+
+  <div class="ju-modal-layer" id="juModal" aria-hidden="true">
+   <div class="ju-modal-backdrop" data-modal-close></div>
+   <section class="ju-modal-window" role="dialog" aria-modal="true" aria-labelledby="juModalTitle">
+    <header class="ju-modal-header">
+     <h2 id="juModalTitle">Ventana modal</h2>
+     <button class="ju-modal-close" type="button" data-modal-close aria-label="Cerrar">×</button>
+    </header>
+    <div class="ju-modal-body" id="juModalBody"></div>
+   </section>
+  </div>
+
+  <script src="js/componentes.js">
+  </script>
+ </body>
+</html>
+

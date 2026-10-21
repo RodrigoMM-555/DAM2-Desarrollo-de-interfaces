@@ -1,0 +1,19 @@
+[
+  {
+    "emoji": "👤",
+    "texto": "Clientes",
+    "activo": true
+  },
+  {
+    "texto": "Formulario"
+  },
+  {
+    "texto": "Login"
+  },
+  {
+    "texto": "Toasts"
+  },
+  {
+    "texto": "Modal / paneles"
+  }
+]

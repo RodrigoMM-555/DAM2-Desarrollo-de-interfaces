@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="es">
+ <head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width,initial-scale=1" name="viewport"/>
+  <title>
+   rocodrigo | toasts
+  </title>
+  <link href="css/estilo.css" rel="stylesheet"/>
+ </head>
+ <body class="ju-library-page">
+  <header>
+   <div class="corporativo">
+    <img alt="" src="https://static.rocodrigo.com/logos/white.svg"/>
+    <h1>
+     rocodrigo | interfaz integrada
+    </h1>
+   </div>
+   <div id="herramientas">
+    <input placeholder="Buscar..." type="search"/>
+    <a href="index.html">
+     Aplicación
+    </a>
+   </div>
+   <div id="usuario">
+    <div class="imagen">
+    </div>
+    <div>
+     <p>
+      Jose Vicente Carratalá
+     </p>
+     <a href="login.html">
+      Cerrar sesión
+     </a>
+    </div>
+   </div>
+  </header>
+  <main>
+   <nav class="library-nav">
+    <div class="titulo-columna">
+     Módulos
+    </div>
+    <div class="contenido-columna">
+     <a class="" href="index.html">
+      <span class="ficha" style="background:hsl(200,55%,45%)">
+       C
+      </span>
+      <span class="etiqueta">
+       Clientes
+      </span>
+     </a>
+     <a class="" href="formularios.html">
+      <span class="ficha" style="background:hsl(200,55%,45%)">
+       F
+      </span>
+      <span class="etiqueta">
+       Formularios
+      </span>
+     </a>
+     <a class="" href="toasts.html">
+      <span class="ficha" style="background:hsl(200,55%,45%)">
+       T
+      </span>
+      <span class="etiqueta">
+       Toasts
+      </span>
+     </a>
+     <a class="" href="login.html">
+      <span class="ficha" style="background:hsl(200,55%,45%)">
+       L
+      </span>
+      <span class="etiqueta">
+       Login
+      </span>
+     </a>
+    </div>
+   </nav>
+   <div class="separador">
+   </div>
+   <section class="library-section">
+    <div class="titulo-columna">
+     Vistas
+    </div>
+    <div class="contenido-columna">
+     <a class="activo" href="#">
+      <span class="ficha" style="background:hsl(310,55%,45%)">
+       T
+      </span>
+      <span class="etiqueta">
+       Mensajes toast
+      </span>
+     </a>
+     <a class="" href="#success">
+      <span class="ficha" style="background:hsl(130,55%,45%)">
+       E
+      </span>
+      <span class="etiqueta">
+       Éxito
+      </span>
+     </a>
+     <a class="" href="#info">
+      <span class="ficha" style="background:hsl(200,55%,45%)">
+       I
+      </span>
+      <span class="etiqueta">
+       Información
+      </span>
+     </a>
+     <a class="" href="#warning">
+      <span class="ficha" style="background:hsl(40,55%,45%)">
+       A
+      </span>
+      <span class="etiqueta">
+       Aviso
+      </span>
+     </a>
+     <a class="" href="#danger">
+      <span class="ficha" style="background:hsl(355,55%,45%)">
+       X
+      </span>
+      <span class="etiqueta">
+       Error
+      </span>
+     </a>
+    </div>
+   </section>
+   <div class="separador">
+   </div>
+   <div class="library-stage">
+    <article class="ju-card">
+     <h2>
+      Mensajes emergentes Toast
+     </h2>
+     <p>
+      El escenario conserva la misma estructura de la aplicación principal. Pulsa un estado para generar el mensaje.
+     </p>
+     <div class="ju-button-row">
+      <button class="ju-btn" data-toast="success">
+       Éxito
+      </button>
+      <button class="ju-btn secondary" data-toast="info">
+       Información
+      </button>
+      <button class="ju-btn secondary" data-toast="warning">
+       Aviso
+      </button>
+      <button class="ju-btn secondary" data-toast="danger">
+       Error
+      </button>
+     </div>
+     <div style="margin-top:24px">
+      <h3>
+       Comportamiento
+      </h3>
+      <p>
+       Los mensajes se apilan abajo a la derecha, permiten cierre manual y desaparecen automáticamente.
+      </p>
+     </div>
+    </article>
+   </div>
+  </main>
+  <div aria-live="polite" class="ju-toast-stack" id="toastStack">
+  </div>
+  <script src="js/demo-ui.js">
+  </script>
+ </body>
+</html>
+
