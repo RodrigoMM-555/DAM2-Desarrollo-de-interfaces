@@ -4,7 +4,7 @@
   --brillo: 35%;
   --escalon: 12%;
   --relleno:12px;
-  --texto:12px;
+  --texto:16px;
   --chaflan:12px;
   --color0:hsl(var(--tono),var(--saturacion),calc(var(--brillo) - var(--escalon)));
   --color:hsl(var(--tono),var(--saturacion),var(--brillo));
@@ -31,7 +31,7 @@ html,body {
   height:100%;
   margin:0
 }
-.jocarsa-iu {
+.rocodrigo-iu {
   font-family:Ubuntu,Arial,sans-serif;
   font-size:var(--texto);
   display:flex;
@@ -72,6 +72,7 @@ header input,header button {
   outline:none;
   border-radius:var(--radio-pequeno);
   transition:background-color .2s ease,box-shadow .2s ease
+
 }
 header input {
   min-width:260px;
@@ -166,6 +167,7 @@ section {
 .compacto {
   width:58px!important
 }
+
 .compacto .titulo-columna,.compacto .etiqueta {
   display:none
 }
@@ -349,7 +351,7 @@ section .minimizar {
   background:var(--color4)
 }
 nav.compacto,section.compacto {
-  flex-basis:52px!important;
+  flex-basis:65px!important;
   width:52px!important;
   padding-left:6px;
   padding-right:6px;
@@ -797,7 +799,7 @@ header #usuario a {
   transition:background-color .2s ease,transform .2s ease,box-shadow .2s ease
 }
 header #usuario a:hover {
-  background:hsl(8,78%,70%);
+  background:hsl(8, 84%, 41%);
   color:var(--color-activo-text);
   transform:translateY(-1px);
   box-shadow:0 5px 12px rgba(0,35,40,.22)
@@ -833,7 +835,8 @@ section .contenido-columna {
   width:100%;
   height:40px;
   flex:none;
-  transition:width .3s ease,background .3s ease
+  transition:width .3s ease,background .3s ease;
+    transition: transform 0.2s ease-in-out;
 }
 #navegacion .contenido-columna a:hover,#entidades .contenido-columna article:hover {
   background-color:var(--color-hover);
@@ -962,38 +965,38 @@ body.ju-library-page .library-stage>.ju-card {
   destacado debe poder atravesar el límite de la columna y cubrir el
   separador visualmente.
 */
-.jocarsa-iu nav .contenido-columna, .jocarsa-iu section .contenido-columna, body.ju-library-page .library-nav .contenido-columna, body.ju-library-page .library-section .contenido-columna {
+.rocodrigo-iu nav .contenido-columna, .rocodrigo-iu section .contenido-columna, body.ju-library-page .library-nav .contenido-columna, body.ju-library-page .library-section .contenido-columna {
   overflow:visible !important;
   width:100%;
   min-width:0;
   align-items:stretch;
 }
 /* Las fichas normales ocupan siempre todo el ancho útil de su columna. */
-.jocarsa-iu nav .contenido-columna > a, .jocarsa-iu section .contenido-columna > article, body.ju-library-page .library-nav .contenido-columna > a, body.ju-library-page .library-section .contenido-columna > a {
+.rocodrigo-iu nav .contenido-columna > a, .rocodrigo-iu section .contenido-columna > article, body.ju-library-page .library-nav .contenido-columna > a, body.ju-library-page .library-section .contenido-columna > a {
   width:100%;
   max-width:none;
   margin:0;
   flex:0 0 40px;
 }
 /* Hover y selección continúan físicamente hacia la columna siguiente. */
-.jocarsa-iu nav .contenido-columna > a:hover, .jocarsa-iu section .contenido-columna > article:hover, body.ju-library-page .library-nav .contenido-columna > a:hover, body.ju-library-page .library-section .contenido-columna > a:hover {
+.rocodrigo-iu nav .contenido-columna > a:hover, .rocodrigo-iu section .contenido-columna > article:hover, body.ju-library-page .library-nav .contenido-columna > a:hover, body.ju-library-page .library-section .contenido-columna > a:hover {
   width:calc(100% + (var(--relleno) * .9));
   position:relative;
   z-index:9;
 }
-.jocarsa-iu nav .contenido-columna > a.activo, .jocarsa-iu section .contenido-columna > article.activo, body.ju-library-page .library-nav .contenido-columna > a.activo, body.ju-library-page .library-section .contenido-columna > a.activo {
+.rocodrigo-iu nav .contenido-columna > a.activo, .rocodrigo-iu section .contenido-columna > article.activo, body.ju-library-page .library-nav .contenido-columna > a.activo, body.ju-library-page .library-section .contenido-columna > article.activo {
   width:calc(100% + (var(--relleno) * 2));
   position:relative;
   z-index:10;
 }
 /* El separador queda por debajo del destacado, como en 010. */
-.jocarsa-iu main .separador, body.ju-library-page main .separador {
+.rocodrigo-iu main .separador, body.ju-library-page main .separador {
   z-index:4
 }
-.jocarsa-iu nav, body.ju-library-page .library-nav {
+.rocodrigo-iu nav, body.ju-library-page .library-nav {
   z-index:6
 }
-.jocarsa-iu section, body.ju-library-page .library-section {
+.rocodrigo-iu section, body.ju-library-page .library-section {
   z-index:500
 }
 /* La columna central de las demos conserva exactamente la misma geometría
@@ -1013,16 +1016,16 @@ body.ju-library-page .library-section .contenido-columna > a {
   background:var(--color3);
 }
 /* Contraído: conserva la misma continuidad visual hacia la columna siguiente. */
-.jocarsa-iu nav.compacto .contenido-columna,
-.jocarsa-iu section.compacto .contenido-columna {
+.rocodrigo-iu nav.compacto .contenido-columna,
+.rocodrigo-iu section.compacto .contenido-columna {
   width:40px;
   align-items:center;
   overflow:visible !important;
 }
 
 /* Estado normal: la ficha permanece dentro de los 40px de la columna compacta. */
-.jocarsa-iu nav.compacto .contenido-columna > a,
-.jocarsa-iu section.compacto .contenido-columna > article {
+.rocodrigo-iu nav.compacto .contenido-columna > a,
+.rocodrigo-iu section.compacto .contenido-columna > article {
   width:40px !important;
   min-width:40px;
   max-width:none;
@@ -1031,15 +1034,15 @@ body.ju-library-page .library-section .contenido-columna > a {
 }
 
 /* Hover: sobresale ligeramente hacia la siguiente sección. */
-.jocarsa-iu nav.compacto .contenido-columna > a:hover,
-.jocarsa-iu section.compacto .contenido-columna > article:hover {
+.rocodrigo-iu nav.compacto .contenido-columna > a:hover,
+.rocodrigo-iu section.compacto .contenido-columna > article:hover {
   width:calc(40px + (var(--relleno) * .9)) !important;
   z-index:9;
 }
 
 /* Activo: atraviesa el separador igual que en el estado desplegado. */
-.jocarsa-iu nav.compacto .contenido-columna > a.activo,
-.jocarsa-iu section.compacto .contenido-columna > article.activo {
+.rocodrigo-iu nav.compacto .contenido-columna > a.activo,
+.rocodrigo-iu section.compacto .contenido-columna > article.activo {
   width:calc(50px + (var(--relleno) * 2)) !important;
   z-index:10;
   box-shadow:0 5px 12px rgba(0,35,40,.22);
@@ -1086,9 +1089,284 @@ body.redimensionando-drawer,body.redimensionando-drawer *{cursor:col-resize!impo
 /* =========================================================
    V7 · compacto: fusionar visualmente con la sección derecha
    ========================================================= */
-.jocarsa-iu nav.compacto .contenido-columna > a:hover,
-.jocarsa-iu section.compacto .contenido-columna > article:hover,
-.jocarsa-iu nav.compacto .contenido-columna > a.activo,
-.jocarsa-iu section.compacto .contenido-columna > article.activo {
+.rocodrigo-iu nav.compacto .contenido-columna > a:hover,
+.rocodrigo-iu section.compacto .contenido-columna > article:hover,
+.rocodrigo-iu nav.compacto .contenido-columna > a.activo,
+.rocodrigo-iu section.compacto .contenido-columna > article.activo {
   transform:translateX(16px) !important;
+}
+
+/* =========================================================
+   V8 · rediseño visual de la aplicación integrada
+   ========================================================= */
+.rocodrigo-iu {
+  --superficie:hsl(var(--tono),var(--saturacion),calc(var(--brillo) + 22%));
+  --superficie-suave:hsl(var(--tono),var(--saturacion),calc(var(--brillo) + 28%));
+  --linea:hsl(var(--tono),30%,78%);
+  color:var(--color-caption-text);
+}
+.rocodrigo-iu > header {
+  height:68px;
+  padding:12px 20px;
+  gap:20px;
+  background:linear-gradient(110deg,var(--color0),var(--color));
+  border-bottom:4px solid var(--color-activo);
+  box-shadow:0 4px 16px rgba(0,35,40,.2);
+  z-index:20;
+}
+.rocodrigo-iu .corporativo {
+  gap:12px;
+}
+.rocodrigo-iu .corporativo img {
+  width:34px;
+  height:34px;
+  padding:6px;
+  background:var(--color2);
+  border-radius:50%;
+}
+.rocodrigo-iu .corporativo h1 {
+  font-size:19px;
+  letter-spacing:.02em;
+}
+.rocodrigo-iu header #herramientas {
+  flex:1.4;
+}
+.rocodrigo-iu header input {
+  width:min(360px,100%);
+  min-width:0;
+  height:38px;
+  padding:9px 14px;
+  border:1px solid rgba(255,255,255,.16);
+  border-radius:999px;
+  background:rgba(0,35,40,.32);
+}
+.rocodrigo-iu header input::placeholder {
+  color:rgba(255,255,255,.75);
+}
+.rocodrigo-iu header button {
+  height:38px;
+  padding:0 16px;
+  border-radius:10px;
+  background:var(--color-activo);
+  color:var(--color-activo-text);
+  font-weight:700;
+  box-shadow:0 3px 8px rgba(0,35,40,.18);
+}
+.rocodrigo-iu header #usuario {
+  gap:10px;
+}
+.rocodrigo-iu header #usuario .imagen {
+  width:36px;
+  height:36px;
+  border:2px solid rgba(255,255,255,.55);
+}
+.rocodrigo-iu header #usuario>div:last-child {
+  gap:10px;
+}
+.rocodrigo-iu header #usuario p {
+  font-size:13px;
+  font-weight:700;
+}
+.rocodrigo-iu header #usuario a {
+  height:32px;
+  border-radius:10px;
+}
+.rocodrigo-iu > main {
+  gap:0;
+  background:var(--color3);
+}
+.rocodrigo-iu nav,
+.rocodrigo-iu section {
+  padding:18px 14px 58px;
+  gap:14px;
+  box-shadow:inset -1px 0 rgba(0,35,40,.12);
+}
+.rocodrigo-iu nav {
+  width:var(--ancho-nav);
+  background:linear-gradient(180deg,var(--color),var(--color0));
+}
+.rocodrigo-iu section {
+  width:var(--ancho-section);
+  padding-left:10px;
+  background:linear-gradient(180deg,var(--color2),var(--color3));
+  color:var(--color-caption-text);
+}
+.rocodrigo-iu .contenido-columna {
+  gap:8px;
+}
+.rocodrigo-iu .contenido-columna a,
+.rocodrigo-iu .contenido-columna article {
+  min-height:44px;
+  padding:8px 10px;
+  gap:10px;
+  border:1px solid transparent;
+  border-radius:12px;
+  box-shadow:0 3px 8px rgba(0,35,40,.14);
+  font-weight:500;
+}
+.rocodrigo-iu nav .contenido-columna a {
+  background:rgba(255,255,255,.1);
+  color:white;
+}
+.rocodrigo-iu section .contenido-columna article {
+  background:rgba(255,255,255,.5);
+  color:var(--color-caption-text);
+}
+.rocodrigo-iu .contenido-columna a:hover,
+.rocodrigo-iu .contenido-columna article:hover {
+  background:var(--color-hover);
+  color:var(--color-activo-text);
+  transform:translateX(4px);
+  box-shadow:0 6px 14px rgba(0,35,40,.2);
+}
+.rocodrigo-iu .contenido-columna a.activo,
+.rocodrigo-iu .contenido-columna article.activo {
+  background:var(--color-activo);
+  color:var(--color-activo-text);
+  transform:translateX(6px);
+}
+.rocodrigo-iu .ficha {
+  width:30px;
+  height:30px;
+  border-radius:0!important;
+  clip-path:polygon(50% 0,100% 50%,50% 100%,0 50%);
+  background:var(--color0);
+  box-shadow:inset 0 0 0 2px rgba(255,255,255,.25);
+}
+.rocodrigo-iu section .ficha {
+  background:var(--color);
+}
+.rocodrigo-iu .minimizar {
+  top:50%;
+  right:-21px;
+  left:auto;
+  bottom:auto;
+  width:42px;
+  height:34px;
+  transform:translateY(-50%);
+  border:1px solid rgba(255,255,255,.22);
+  border-radius:10px;
+  background:rgba(0,35,40,.24);
+  color:white;
+  font-weight:700;
+  box-shadow:0 3px 8px rgba(0,35,40,.16);
+  transition:transform .22s ease,background-color .22s ease,color .22s ease,box-shadow .22s ease;
+}
+.rocodrigo-iu section .minimizar {
+  right:-21px;
+  background:rgba(255,255,255,.42);
+  color:var(--color-caption-text);
+  border-color:rgba(0,35,40,.12);
+}
+.rocodrigo-iu .minimizar:hover {
+  background:var(--color-activo);
+  color:var(--color-activo-text);
+  transform:translateY(calc(-50% - 2px));
+}
+.rocodrigo-iu .minimizar:active {
+  transform:translateY(-50%) scale(.97);
+}
+.rocodrigo-iu nav.compacto .minimizar,
+.rocodrigo-iu section.compacto .minimizar {
+  width:42px;
+}
+.rocodrigo-iu .separador {
+  width:8px;
+  flex-basis:8px;
+  border:0;
+  transition:flex-basis .3s ease,width .3s ease,opacity .3s ease,background-color .22s ease;
+}
+.rocodrigo-iu nav + .separador {
+  background:var(--color);
+}
+.rocodrigo-iu section + .separador {
+  background:var(--color2);
+}
+.rocodrigo-iu nav + .separador:hover,
+.rocodrigo-iu section + .separador:hover {
+  background:var(--color-activo);
+}
+.rocodrigo-iu nav.compacto + .separador,
+.rocodrigo-iu section.compacto + .separador {
+  flex-basis:0;
+  width:0;
+  min-width:0;
+  opacity:0;
+  pointer-events:none;
+}
+.rocodrigo-iu nav.compacto .contenido-columna > a,
+.rocodrigo-iu nav.compacto .contenido-columna > a:hover,
+.rocodrigo-iu nav.compacto .contenido-columna > a.activo,
+.rocodrigo-iu section.compacto .contenido-columna > article,
+.rocodrigo-iu section.compacto .contenido-columna > article:hover,
+.rocodrigo-iu section.compacto .contenido-columna > article.activo {
+  width:40px!important;
+  min-width:40px;
+  max-width:40px;
+  transform:none!important;
+  overflow:hidden;
+}
+.rocodrigo-iu .escenario {
+  padding:24px;
+  background:radial-gradient(circle at 100% 0,rgba(255,255,255,.72),transparent 34%),var(--color3);
+}
+.rocodrigo-iu .escenario>table,
+.rocodrigo-iu .escenario>.panel,
+.rocodrigo-iu .escenario>.ju-card {
+  box-shadow:0 12px 28px rgba(0,35,40,.12);
+}
+.rocodrigo-iu table {
+  border-radius:12px;
+  border:0;
+}
+.rocodrigo-iu caption {
+  background:var(--color);
+  color:white;
+  border-radius:10px;
+  letter-spacing:.02em;
+}
+.rocodrigo-iu thead {
+  background:var(--color0);
+}
+.rocodrigo-iu tbody tr:nth-child(even) {
+  background:#f5f8f7;
+}
+.rocodrigo-iu tbody tr:hover {
+  background:color-mix(in srgb,var(--color-hover) 35%,white);
+}
+.rocodrigo-iu .panel,
+.rocodrigo-iu .ju-card {
+  border-radius:16px;
+}
+.rocodrigo-iu .acciones button,
+.rocodrigo-iu .ju-btn {
+  border-radius:10px;
+}
+.rocodrigo-iu button {
+  transition:transform .22s ease,background-color .22s ease,color .22s ease,box-shadow .22s ease,border-color .22s ease;
+}
+.rocodrigo-iu button:not(.minimizar):hover {
+  transform:translateY(-2px);
+}
+.rocodrigo-iu button:active {
+  transform:scale(.97);
+}
+.rocodrigo-iu button:focus-visible {
+  outline:3px solid color-mix(in srgb,var(--color-hover) 70%,white);
+  outline-offset:2px;
+}
+@media(max-width:850px) {
+  .rocodrigo-iu > header {
+    padding:10px 12px;
+    gap:10px;
+  }
+  .rocodrigo-iu header #usuario p {
+    display:none;
+  }
+  .rocodrigo-iu .corporativo h1 {
+    font-size:16px;
+  }
+  .rocodrigo-iu .escenario {
+    padding:14px;
+  }
 }
