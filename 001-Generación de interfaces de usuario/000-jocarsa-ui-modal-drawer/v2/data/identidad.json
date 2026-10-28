@@ -1,0 +1,48 @@
+{
+  "nombre": "rocodrigo | interfaz integrada",
+  "lema": "Una interfaz integrada, moderna y redondeada para trabajar sin ruido visual.",
+  "colores": [
+    {
+      "variable": "--color0",
+      "nombre": "Verde petróleo oscuro",
+      "significado": "Base oscura para la cabecera y las zonas principales."
+    },
+    {
+      "variable": "--color",
+      "nombre": "Verde petróleo",
+      "significado": "Color principal de la aplicación y de las acciones."
+    },
+    {
+      "variable": "--color2",
+      "nombre": "Verde intermedio",
+      "significado": "Superficies de navegación, controles y elementos secundarios."
+    },
+    {
+      "variable": "--color3",
+      "nombre": "Verde claro",
+      "significado": "Fondo de trabajo y superficie general."
+    },
+    {
+      "variable": "--color-hover",
+      "nombre": "Turquesa claro",
+      "significado": "Resalta elementos interactivos al pasar el cursor."
+    },
+    {
+      "variable": "--color-activo",
+      "nombre": "Amarillo cálido",
+      "significado": "Identifica acciones o elementos activos."
+    }
+  ],
+  "tipografia": {
+    "familia": "Ubuntu, Arial, sans-serif",
+    "motivo": "Tipografía legible, sencilla y coherente con el diseño de jocarsa-ui."
+  },
+  "formas": {
+    "radio": "Tarjetas y controles redondeados, fichas circulares y botones suaves.",
+    "motivo": "Una interfaz cercana con jerarquía visual clara."
+  },
+  "logo": {
+    "archivo": "https://static.rocodrigo.com/logos/white.svg",
+    "motivo": "Logotipo de rocodrigo utilizado en cabecera y acceso."
+  }
+}
