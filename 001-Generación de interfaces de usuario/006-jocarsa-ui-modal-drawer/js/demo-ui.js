@@ -1,6 +1,6 @@
 /**
- * jocarsa | iu · demostraciones
- * Namespace técnico: jocarsa.iu
+ * rocodrigo | iu · demostraciones
+ * Namespace técnico: rocodrigo.iu
  */
 window.jocarsa = window.jocarsa || {};
 window.jocarsa.iu = window.jocarsa.iu || {};
