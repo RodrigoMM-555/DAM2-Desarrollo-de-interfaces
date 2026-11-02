@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Librería de componentes · rocodrigo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@300;400;500;700&display=swap">
+<style id="lib">
+/* ===== rocodrigo UI · tokens ===== */
+:root{
+  --petroleo-900:#20544f;--petroleo-700:#31817b;--petroleo-600:#429e96;
+  --vino-900:#421b29;--vino-700:#702b3d;--vino-500:#98465a;
+  --menta-500:#62b8af;--menta-300:#8bcfc8;--menta-100:#eaf4f2;
+  --amarillo:#f8cf69;--turquesa:#79e5dc;--tinta:#172033;
+  --bg:#edf4f2;--surface:#fff;--surface-2:#f4f8f7;--text:#172033;--muted:#5b6678;--line:#d5e2e2;
+  --brand:#31817b;--ok:#28744d;--ok-bg:#edf7f1;--err:#b34b43;--err-bg:#fff1ef;--warn-bg:#fff8e8;--info-bg:#eaf4f2;
+  --fuente:Ubuntu,"Segoe UI",Roboto,Arial,sans-serif;
+  --radio:14px;--radio-s:9px;--sombra:0 8px 24px rgba(0,35,40,.10);
+  --s1:4px;--s2:8px;--s3:16px;--s4:24px;--s5:40px;
+  color-scheme:light;
+}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#0f1d1c;--surface:#162a29;--surface-2:#1c3332;--text:#e6f1ef;--muted:#9db4b1;--line:#2a4543;
+  --brand:#62b8af;--ok:#7fd1a3;--ok-bg:#15301f;--err:#f0948b;--err-bg:#3a1c1a;--warn-bg:#3a3118;--info-bg:#1c3332;
+  --sombra:0 8px 24px rgba(0,0,0,.35);color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0f1d1c;--surface:#162a29;--surface-2:#1c3332;--text:#e6f1ef;--muted:#9db4b1;--line:#2a4543;
+  --brand:#62b8af;--ok:#7fd1a3;--ok-bg:#15301f;--err:#f0948b;--err-bg:#3a1c1a;--warn-bg:#3a3118;--info-bg:#1c3332;
+  --sombra:0 8px 24px rgba(0,0,0,.35);color-scheme:dark}
+
+/* ===== base ===== */
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font:16px/1.6 var(--fuente)}
+h1,h2,h3{line-height:1.15;letter-spacing:-.03em;margin:0 0 var(--s2)}
+h1{font-size:clamp(36px,6vw,64px)}h2{font-size:clamp(24px,3vw,32px)}h3{font-size:18px}
+p{margin:0 0 var(--s3)}a{color:var(--brand)}
+code{font-size:.9em}
+.muted{color:var(--muted)}
+.container{max-width:1100px;margin:auto;padding:0 var(--s3)}
+
+/* ===== layout ===== */
+.grid{display:grid;gap:var(--s3);grid-template-columns:repeat(auto-fit,minmax(220px,1fr))}
+.stack>*+*{margin-top:var(--s3)}
+.row{display:flex;gap:var(--s2);flex-wrap:wrap;align-items:center}
+
+/* ===== botones ===== */
+.btn{font:700 14px var(--fuente);padding:10px 18px;border-radius:var(--radio-s);border:2px solid transparent;cursor:pointer;text-decoration:none;display:inline-block;transition:filter .15s,background .15s}
+.btn:focus-visible{outline:3px solid var(--turquesa);outline-offset:2px}
+.btn-primary{background:var(--amarillo);color:var(--petroleo-900)}
+.btn-brand{background:var(--petroleo-700);color:#fff}
+.btn-wine{background:var(--vino-700);color:#fff}
+.btn-ghost{border-color:var(--brand);color:var(--brand);background:transparent}
+.btn:hover{filter:brightness(1.08)}
+.btn-ghost:hover{background:var(--info-bg)}
+.btn[disabled]{opacity:.5;cursor:not-allowed;filter:none}
+.btn-sm{padding:6px 12px;font-size:12px}
+
+/* ===== tarjetas y portadas ===== */
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radio);padding:var(--s4);box-shadow:var(--sombra)}
+.card h3{color:var(--brand)}
+.hero{color:#fff;border-radius:var(--radio);padding:var(--s5) var(--s4);background:linear-gradient(125deg,var(--petroleo-900),var(--petroleo-700))}
+.hero-wine{background:linear-gradient(125deg,var(--vino-900),var(--vino-700))}
+.hero p{color:#e0efec;font-weight:300;max-width:560px}
+.symbol{width:36px;height:36px;background:var(--amarillo);clip-path:polygon(50% 0,100% 50%,50% 100%,0 50%);display:inline-grid;place-items:center;color:var(--petroleo-900);font-weight:700}
+
+/* ===== navegación ===== */
+.navbar{display:flex;justify-content:space-between;align-items:center;gap:var(--s3);flex-wrap:wrap;padding:12px 20px;color:#fff;border-radius:var(--radio-s);background:linear-gradient(110deg,var(--petroleo-900),var(--petroleo-700))}
+.navbar .brand{display:flex;align-items:center;gap:10px;font-weight:700}
+.navbar nav{display:flex;gap:4px}
+.navbar nav a{color:#f4fbfa;text-decoration:none;padding:6px 12px;border-radius:var(--radio-s);font-size:14px}
+.navbar nav a:hover,.navbar nav a[aria-current]{background:var(--amarillo);color:var(--petroleo-900)}
+.tabs{display:flex;gap:4px;border-bottom:2px solid var(--line);overflow-x:auto}
+.tab{font:500 15px var(--fuente);padding:10px 16px;background:none;border:0;border-bottom:3px solid transparent;margin-bottom:-2px;color:var(--muted);cursor:pointer}
+.tab[aria-selected="true"]{color:var(--text);border-bottom-color:var(--amarillo);font-weight:700}
+.tab:focus-visible{outline:3px solid var(--turquesa);outline-offset:-3px}
+
+/* ===== formularios ===== */
+.field{display:grid;gap:6px;margin-bottom:var(--s3)}
+.field label{font-weight:500;font-size:14px}
+.field small{color:var(--muted)}
+input,select,textarea{font:inherit;padding:10px 12px;width:100%;border:1px solid var(--line);border-radius:var(--radio-s);background:var(--surface);color:var(--text)}
+input:focus,select:focus,textarea:focus{outline:3px solid var(--turquesa);outline-offset:0;border-color:var(--brand)}
+.field.is-error input{border-color:var(--err)}
+.field.is-error small{color:var(--err)}
+.check{display:flex;gap:10px;align-items:center}
+.check input{width:auto;accent-color:var(--petroleo-700)}
+
+/* ===== feedback ===== */
+.badge{display:inline-block;font:700 12px var(--fuente);padding:3px 10px;border-radius:99px;background:var(--info-bg);color:var(--brand);border:1px solid var(--line)}
+.badge-accent{background:var(--amarillo);color:var(--petroleo-900);border-color:transparent}
+.badge-wine{background:var(--vino-700);color:#fff;border-color:transparent}
+.alert{border-left:4px solid var(--brand);background:var(--info-bg);padding:12px 16px;border-radius:0 10px 10px 0}
+.alert-ok{border-color:var(--ok);background:var(--ok-bg)}
+.alert-err{border-color:var(--err);background:var(--err-bg)}
+.alert-warn{border-color:var(--amarillo);background:var(--warn-bg)}
+.progress{height:12px;background:var(--line);border-radius:99px;overflow:hidden}
+.progress span{display:block;height:100%;background:linear-gradient(90deg,var(--petroleo-700),var(--turquesa))}
+
+/* ===== tablas ===== */
+.table-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:var(--radio-s)}
+table{width:100%;border-collapse:collapse;background:var(--surface)}
+th{text-align:left;background:var(--petroleo-900);color:#fff;font-weight:500;padding:10px 14px}
+td{padding:10px 14px;border-top:1px solid var(--line)}
+tbody tr:hover{background:var(--surface-2)}
+</style>
+<style id="doc">
+html{scroll-behavior:smooth;scroll-padding-top:calc(env(safe-area-inset-top,0px) + 70px)}
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--petroleo-900)}
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:9;background:var(--petroleo-900);color:#fff;padding:10px 0}
+.top .container{display:flex;gap:var(--s3);align-items:center}
+.top b{white-space:nowrap}
+.top nav{display:flex;gap:2px;overflow-x:auto;flex:1}
+.top nav a{color:#f4fbfa;text-decoration:none;font-size:13px;padding:6px 10px;border-radius:8px;white-space:nowrap}
+.top nav a:hover,.top nav a:focus-visible{background:var(--amarillo);color:var(--petroleo-900);outline:0}
+header.intro{padding:var(--s5) 0 var(--s4)}
+header.intro p{max-width:640px;color:var(--muted);font-size:18px}
+section{margin:0 0 var(--s4);padding:clamp(20px,4vw,36px);background:var(--surface);border-radius:var(--radio);box-shadow:var(--sombra)}
+section>p.muted{max-width:680px}
+.demo{padding:var(--s4);background:var(--bg);border:1px solid var(--line);border-radius:var(--radio-s);margin:var(--s3) 0 var(--s2)}
+.demo-lbl{font-weight:700;font-size:14px;margin:var(--s4) 0 0}
+details.code{margin-bottom:var(--s3)}
+details.code summary{cursor:pointer;font-size:13px;color:var(--brand);font-weight:500}
+details.code pre{margin:8px 0;padding:14px;background:var(--petroleo-900);color:#e6f1ef;border-radius:var(--radio-s);overflow-x:auto;font-size:12.5px;line-height:1.5}
+.swatches{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:12px}
+.sw{border:1px solid var(--line);border-radius:12px;overflow:hidden;background:var(--surface);cursor:pointer;text-align:left;padding:0;font:inherit;color:inherit}
+.sw:focus-visible{outline:3px solid var(--turquesa)}
+.sw i{display:block;height:64px}
+.sw span{display:block;padding:8px 10px;font-size:12px}
+.sw b{display:block;font-size:13px}
+.type-row{display:flex;gap:var(--s3);align-items:baseline;border-bottom:1px solid var(--line);padding:10px 0;flex-wrap:wrap}
+.type-row small{width:150px;color:var(--muted);flex:none}
+.spacing div{display:flex;align-items:center;gap:12px;margin:6px 0;font-size:13px}
+.spacing i{display:block;height:14px;background:var(--petroleo-600);border-radius:4px}
+.shapes{display:flex;gap:var(--s3);flex-wrap:wrap}
+.shapes div{width:96px;height:72px;background:var(--surface);border:1px solid var(--line);display:grid;place-items:center;font-size:12px;box-shadow:var(--sombra)}
+.copycss{margin-top:var(--s3)}
+.toast{position:fixed;left:50%;bottom:calc(env(safe-area-inset-bottom,0px) + 20px);transform:translateX(-50%);background:var(--amarillo);color:var(--petroleo-900);font-weight:700;padding:10px 18px;border-radius:var(--radio-s);box-shadow:var(--sombra);opacity:0;pointer-events:none;transition:opacity .2s;z-index:20}
+.toast.on{opacity:1}
+footer{padding:var(--s3) 0 var(--s5);color:var(--muted);font-size:13px}
+</style>
+</head>
+<body>
+<div class="top"><div class="container"><b>◆ rocodrigo ui</b>
+<nav aria-label="Secciones"><a href="#uso">Uso</a><a href="#color">Color</a><a href="#tipo">Tipografía</a><a href="#espacio">Espacio y formas</a><a href="#botones">Botones</a><a href="#tarjetas">Tarjetas</a><a href="#nav">Navegación</a><a href="#forms">Formularios</a><a href="#feedback">Avisos</a><a href="#tablas">Tablas</a></nav></div></div>
+
+<div class="container">
+<header class="intro">
+  <h1>Librería de componentes</h1>
+  <p>Todo lo básico de HTML y CSS con la identidad rocodrigo, listo para copiar. Cada ejemplo tiene su código debajo, y el CSS completo se copia con un solo botón.</p>
+</header>
+
+<section id="uso">
+  <h2>Cómo usarla en un proyecto</h2>
+  <p class="muted">Copia el CSS una vez en tu <code>estilos.css</code> y usa las clases en tu HTML. Los colores, radios y espacios viven en variables (<code>var(--brand)</code>), así que cambiar la marca es cambiar un bloque. Los modos claro y oscuro funcionan solos según el sistema.</p>
+  <div class="row"><button class="btn btn-primary" id="copiar-css">Copiar el CSS completo</button><span class="muted" id="css-info"></span></div>
+  <details class="code copycss"><summary>Ver el CSS completo</summary><pre><code id="css-code"></code></pre></details>
+  <h3>Esqueleto mínimo de página</h3>
+  <pre style="margin:0;padding:14px;background:var(--petroleo-900);color:#e6f1ef;border-radius:9px;overflow-x:auto;font-size:12.5px">&lt;meta name="viewport" content="width=device-width, initial-scale=1"&gt;
+&lt;link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@300;400;500;700&amp;display=swap"&gt;
+&lt;link rel="stylesheet" href="estilos.css"&gt;
+&lt;body&gt;&lt;main class="container stack"&gt; … &lt;/main&gt;&lt;/body&gt;</pre>
+</section>
+
+<section id="color">
+  <h2>Color</h2>
+  <p class="muted">Petróleo como base, rojo vino como contrapunto y amarillo como acento para acciones. Toca un color para copiar su variable.</p>
+  <div class="swatches" id="swatches"></div>
+  <h3 style="margin-top:24px">Tokens que cambian con el tema</h3>
+  <p class="muted">Para fondos, textos y bordes usa siempre estos y no los colores fijos: así el modo oscuro funciona sin trabajo extra.</p>
+  <div class="swatches" id="tokens"></div>
+</section>
+
+<section id="tipo">
+  <h2>Tipografía</h2>
+  <p class="muted">Una sola familia, Ubuntu, con tres pesos: 700 para titulares, 500 para etiquetas y 400 para texto.</p>
+  <div class="type-row"><small>h1 · 36–64 px</small><h1 style="margin:0">Ideas claras</h1></div>
+  <div class="type-row"><small>h2 · 24–32 px</small><h2 style="margin:0">Soluciones útiles</h2></div>
+  <div class="type-row"><small>h3 · 18 px</small><h3 style="margin:0">Título de tarjeta</h3></div>
+  <div class="type-row"><small>Texto · 16 px</small><p style="margin:0">Una interfaz debe facilitar la comprensión antes que llamar la atención.</p></div>
+  <div class="type-row"><small>.muted · apoyo</small><p class="muted" style="margin:0">Texto secundario para contexto y notas.</p></div>
+</section>
+
+<section id="espacio">
+  <h2>Espacio, radios y sombras</h2>
+  <p class="muted">Usa la escala de espacios en <code>gap</code>, <code>padding</code> y <code>margin</code>, no valores sueltos.</p>
+  <div class="spacing">
+    <div><i style="width:4px"></i><code>--s1</code> 4 px</div><div><i style="width:8px"></i><code>--s2</code> 8 px</div>
+    <div><i style="width:16px"></i><code>--s3</code> 16 px</div><div><i style="width:24px"></i><code>--s4</code> 24 px</div>
+    <div><i style="width:40px"></i><code>--s5</code> 40 px</div>
+  </div>
+  <h3 style="margin-top:24px">Radios y sombra</h3>
+  <div class="shapes">
+    <div style="border-radius:var(--radio)"><code>--radio</code></div>
+    <div style="border-radius:var(--radio-s)"><code>--radio-s</code></div>
+    <div style="border-radius:99px"><code>círculo</code></div>
+    <div style="clip-path:polygon(50% 0,100% 50%,50% 100%,0 50%);background:var(--amarillo);box-shadow:none;border:0;color:var(--petroleo-900)">rombo</div>
+  </div>
+  <p class="muted" style="margin-top:12px">Radio grande (14 px) para tarjetas y contenedores, pequeño (9 px) para botones y campos. Una sola sombra suave: <code>var(--sombra)</code>.</p>
+</section>
+
+<section id="botones">
+  <h2>Botones</h2>
+  <p class="muted">Amarillo para la acción principal de cada pantalla, y solo una. Petróleo y vino para acciones secundarias, contorno para las demás.</p>
+  <div class="demo row">
+    <button class="btn btn-primary">Guardar cambios</button>
+    <button class="btn btn-brand">Ver proyectos</button>
+    <button class="btn btn-wine">Destacar</button>
+    <button class="btn btn-ghost">Cancelar</button>
+    <button class="btn btn-primary" disabled>Deshabilitado</button>
+    <a class="btn btn-brand btn-sm" href="#botones">Enlace pequeño</a>
+  </div>
+</section>
+
+<section id="tarjetas">
+  <h2>Tarjetas y portadas</h2>
+  <p class="muted">Tarjetas blancas sobre fondo verdoso. Las portadas usan el degradado petróleo por defecto y el vino cuando quieras más carácter.</p>
+  <div class="demo grid">
+    <article class="card"><h3>Panel de proyectos</h3><p class="muted">Información clara, jerarquía visual y una acción reconocible.</p><a class="btn btn-primary btn-sm" href="#tarjetas">Abrir</a></article>
+    <article class="card"><h3>Documentación</h3><p class="muted">Guías y manuales de cada aplicación en un solo lugar.</p><span class="badge">Nuevo</span></article>
+  </div>
+  <div class="demo-lbl">Portada petróleo</div>
+  <div class="demo"><header class="hero"><h2>Diseñar. Conectar. Construir.</h2><p>Tecnología cercana, bien construida y al servicio de las personas.</p><a class="btn btn-primary" href="#tarjetas">Empezar</a></header></div>
+  <div class="demo-lbl">Portada vino</div>
+  <div class="demo"><header class="hero hero-wine"><h2>Proyecto destacado</h2><p>Variante expresiva para portadas y bloques editoriales.</p><a class="btn btn-primary" href="#tarjetas">Ver más</a></header></div>
+</section>
+
+<section id="nav">
+  <h2>Navegación</h2>
+  <div class="demo-lbl">Barra superior</div>
+  <div class="demo"><div class="navbar"><span class="brand"><span class="symbol">R</span>rocodrigo</span><nav aria-label="Principal"><a href="#nav" aria-current="page">Inicio</a><a href="#nav">Proyectos</a><a href="#nav">Recursos</a></nav></div></div>
+  <div class="demo-lbl">Pestañas</div>
+  <div class="demo"><div class="tabs" role="tablist"><button class="tab" role="tab" aria-selected="true">General</button><button class="tab" role="tab" aria-selected="false">Equipo</button><button class="tab" role="tab" aria-selected="false">Ajustes</button></div></div>
+</section>
+
+<section id="forms">
+  <h2>Formularios</h2>
+  <p class="muted">Cada campo lleva su etiqueta visible. El error se indica con borde, texto y mensaje, nunca solo con el color.</p>
+  <div class="demo"><form onsubmit="return false">
+    <div class="field"><label for="f1">Nombre</label><input id="f1" placeholder="Tu nombre"><small>Como quieres que aparezca en el proyecto.</small></div>
+    <div class="field is-error"><label for="f2">Correo</label><input id="f2" type="email" value="correo-sin-arroba" aria-invalid="true"><small>Falta la arroba: escribe un correo como nombre@dominio.es</small></div>
+    <div class="field"><label for="f3">Rama</label><select id="f3"><option>Castores</option><option>Lobatos</option><option>Tropa</option></select></div>
+    <div class="field"><label for="f4">Notas</label><textarea id="f4" rows="3"></textarea></div>
+    <label class="check field"><input type="checkbox" checked> Recibir avisos por correo</label>
+    <button class="btn btn-primary">Enviar</button>
+  </form></div>
+</section>
+
+<section id="feedback">
+  <h2>Avisos, etiquetas y progreso</h2>
+  <p class="muted">Cada aviso lleva un icono y texto además del color.</p>
+  <div class="demo stack">
+    <div class="alert alert-ok" role="status">✓ Guardado. Los cambios ya están publicados.</div>
+    <div class="alert alert-warn" role="status">! Quedan 2 campos sin rellenar.</div>
+    <div class="alert alert-err" role="alert">✕ No se pudo enviar. Revisa la conexión e inténtalo de nuevo.</div>
+    <div class="alert" role="status">i Los datos se actualizan cada hora.</div>
+  </div>
+  <div class="demo-lbl">Etiquetas</div>
+  <div class="demo row"><span class="badge">Estándar</span><span class="badge badge-accent">Destacado</span><span class="badge badge-wine">Importante</span></div>
+  <div class="demo-lbl">Progreso</div>
+  <div class="demo"><div class="progress" role="progressbar" aria-valuenow="65" aria-valuemin="0" aria-valuemax="100"><span style="width:65%"></span></div></div>
+</section>
+
+<section id="tablas">
+  <h2>Tablas</h2>
+  <p class="muted">Siempre dentro de <code>.table-wrap</code> para que se desplacen en móvil sin romper la página.</p>
+  <div class="demo"><div class="table-wrap"><table><thead><tr><th>Proyecto</th><th>Estado</th><th>Avance</th></tr></thead><tbody>
+    <tr><td>Web del grupo</td><td><span class="badge badge-accent">En curso</span></td><td>65 %</td></tr>
+    <tr><td>App de reuniones</td><td><span class="badge">Planificado</span></td><td>20 %</td></tr>
+    <tr><td>Manual de identidad</td><td><span class="badge badge-wine">Entregado</span></td><td>100 %</td></tr>
+  </tbody></table></div></div>
+</section>
+
+<footer>rocodrigo · Librería de componentes · v1.0 · Noviembre 2026</footer>
+</div>
+<div class="toast" id="toast" role="status"></div>
+
+<script>
+(function(){
+var toast=document.getElementById('toast'),tt;
+function say(m){toast.textContent=m;toast.classList.add('on');clearTimeout(tt);tt=setTimeout(function(){toast.classList.remove('on')},1800)}
+function copy(t,m){
+  function fb(){var a=document.createElement('textarea');a.value=t;a.style.position='fixed';a.style.opacity='0';document.body.appendChild(a);a.select();try{document.execCommand('copy');say(m)}catch(e){say('No se pudo copiar')}a.remove()}
+  try{navigator.clipboard.writeText(t).then(function(){say(m)},fb)}catch(e){fb()}
+}
+/* CSS completo */
+var css=document.getElementById('lib').textContent.trim();
+document.getElementById('css-code').textContent=css;
+document.getElementById('css-info').textContent=Math.round(css.length/1024*10)/10+' KB · sin dependencias';
+document.getElementById('copiar-css').onclick=function(){copy(css,'CSS copiado')};
+/* Paletas */
+function pal(id,list){
+  document.getElementById(id).innerHTML=list.map(function(c){
+    return '<button class="sw" data-v="'+c[1]+'"><i style="background:var('+c[1]+')"></i><span><b>'+c[0]+'</b><code>'+c[1]+'</code></span></button>'}).join('');
+}
+pal('swatches',[['Petróleo 900','--petroleo-900'],['Petróleo 700','--petroleo-700'],['Petróleo 600','--petroleo-600'],['Menta 500','--menta-500'],['Menta 300','--menta-300'],['Menta 100','--menta-100'],['Vino 900','--vino-900'],['Vino 700','--vino-700'],['Vino 500','--vino-500'],['Amarillo','--amarillo'],['Turquesa','--turquesa'],['Tinta','--tinta']]);
+pal('tokens',[['Fondo','--bg'],['Superficie','--surface'],['Superficie 2','--surface-2'],['Texto','--text'],['Apoyo','--muted'],['Borde','--line'],['Marca','--brand']]);
+document.addEventListener('click',function(e){var b=e.target.closest('.sw');if(b)copy('var('+b.dataset.v+')','Copiado var('+b.dataset.v+')')});
+/* Código de cada demo */
+document.querySelectorAll('.demo').forEach(function(d){
+  var h=d.innerHTML.replace(/ aria-invalid="true"/,'$&').trim().split('\n').map(function(l){return l.replace(/^\s{0,4}/,'')}).join('\n');
+  var det=document.createElement('details');det.className='code';
+  det.innerHTML='<summary>Ver código</summary><pre><code></code></pre><button class="btn btn-ghost btn-sm" type="button">Copiar HTML</button>';
+  det.querySelector('code').textContent=h;
+  det.querySelector('button').onclick=function(){copy(h,'HTML copiado')};
+  d.after(det);
+});
+/* Pestañas de ejemplo */
+document.addEventListener('click',function(e){var t=e.target.closest('.tab');if(!t)return;
+  t.parentNode.querySelectorAll('.tab').forEach(function(x){x.setAttribute('aria-selected',x===t)})});
+})();
+</script>
+</body>
+</html>
