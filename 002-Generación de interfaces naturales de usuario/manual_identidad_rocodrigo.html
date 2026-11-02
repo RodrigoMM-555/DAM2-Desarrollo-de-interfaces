@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#20544f">
+<title>Manual de identidad · rocodrigo</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Ubuntu:wght@300;400;500;700&display=swap');
+:root{
+  --petroleo-900:#20544f; --petroleo-700:#31817b; --petroleo-600:#429e96; --vino-900:#421b29; --vino-700:#702b3d; --vino-500:#98465a;
+  --menta-500:#62b8af; --menta-300:#8bcfc8; --menta-100:#eaf4f2;
+  --amarillo:#f8cf69; --turquesa:#79e5dc; --tinta:#172033;
+  --muted:#667085; --linea:#d5e2e2; --blanco:#fff;
+  --fuente:Ubuntu,"Segoe UI",Arial,sans-serif;
+  --radio:14px; --sombra:0 8px 24px rgba(0,35,40,.10);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:#edf4f2;color:var(--tinta);font:16px/1.6 var(--fuente)}
+a{color:inherit}
+.portada{min-height:82vh;padding:32px clamp(24px,7vw,110px) 70px;color:white;background:linear-gradient(125deg,var(--petroleo-900),var(--petroleo-700));position:relative;overflow:hidden}
+.portada:after{content:"";position:absolute;width:520px;height:520px;border:1px solid #ffffff25;transform:rotate(45deg);right:-120px;top:90px;border-radius:42px;box-shadow:0 0 0 45px #ffffff08,0 0 0 90px #ffffff06}
+.topline{display:flex;justify-content:space-between;gap:20px;align-items:center;position:relative;z-index:1}
+.wordmark{display:flex;align-items:center;gap:12px;font-weight:700;letter-spacing:.02em}
+.symbol{width:36px;height:36px;background:var(--amarillo);clip-path:polygon(50% 0,100% 50%,50% 100%,0 50%);display:inline-grid;place-items:center;color:var(--petroleo-900);font-weight:700}
+.edition{font-size:12px;letter-spacing:.12em;text-transform:uppercase;opacity:.75}
+.hero{position:relative;z-index:1;max-width:850px;margin:clamp(100px,18vh,190px) 0 0}
+.eyebrow{font-size:12px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--amarillo)}
+h1{font-size:clamp(48px,8vw,100px);line-height:.98;letter-spacing:-.055em;margin:18px 0 24px}
+.hero p{font-size:clamp(18px,2vw,23px);max-width:650px;color:#e0efec;font-weight:300}
+.hero-meta{display:flex;gap:12px;flex-wrap:wrap;margin-top:38px}
+.pill{border:1px solid #ffffff55;border-radius:999px;padding:7px 14px;font-size:12px}
+.layout{display:grid;grid-template-columns:230px minmax(0,1fr);max-width:1400px;margin:auto;gap:34px;padding:42px clamp(18px,4vw,60px)}
+nav{position:sticky;top:24px;align-self:start;background:linear-gradient(180deg,var(--petroleo-700),var(--petroleo-900));padding:18px 14px;border-radius:var(--radio);color:white}
+nav .navtitle{font-size:10px;letter-spacing:.14em;text-transform:uppercase;opacity:.7;padding:5px 10px 12px;font-weight:700}
+nav a{display:block;text-decoration:none;padding:9px 11px;border-radius:10px;font-size:13px;color:#f4fbfa}
+nav a:hover,nav a:focus{background:var(--amarillo);color:var(--petroleo-900);outline:0}
+main{min-width:0}
+section{scroll-margin-top:24px;margin:0 0 26px;background:white;padding:clamp(22px,4vw,42px);border-radius:var(--radio);box-shadow:var(--sombra)}
+.section-kicker{color:var(--petroleo-700);font-size:11px;font-weight:700;letter-spacing:.15em;text-transform:uppercase}
+h2{font-size:clamp(25px,3vw,34px);line-height:1.15;margin:7px 0 18px;letter-spacing:-.03em}
+h3{font-size:17px;margin:24px 0 8px}
+p{margin:0 0 13px}
+.lead{font-size:18px;color:#465467;max-width:850px}
+.callout{border-left:4px solid var(--amarillo);background:#fff8e8;padding:16px 18px;border-radius:0 10px 10px 0;margin:20px 0}
+.grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+.grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.tile{padding:18px;background:#f4f8f7;border:1px solid var(--linea);border-radius:12px}
+.tile strong{display:block;margin-bottom:5px;color:var(--petroleo-900)}
+.colorgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-top:18px}
+.swatch{border-radius:12px;overflow:hidden;border:1px solid #dce5e3;background:white}
+.swatch-color{height:88px}
+.swatch-info{padding:11px 12px}
+.swatch-info b{display:block;font-size:13px}
+.swatch-info code{font-size:11px;color:var(--muted)}
+.logo-stage{background:var(--petroleo-900);border-radius:12px;padding:30px;color:white;display:flex;align-items:center;justify-content:center;min-height:150px}
+.logo-lockup{display:flex;align-items:center;gap:14px;font-size:32px;font-weight:700;letter-spacing:-.04em}
+.logo-lockup .symbol{width:48px;height:48px}
+.logo-lockup small{display:block;font-size:11px;font-weight:400;letter-spacing:.12em;text-transform:uppercase;color:#c8e2de}
+.logo-light{background:#f0f6f4;color:var(--petroleo-900)}.logo-wine{background:linear-gradient(120deg,var(--vino-900),var(--vino-700));color:white}.palette-pair{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:18px 0}.palette-panel{padding:18px;border-radius:12px;color:white;min-height:120px;display:flex;flex-direction:column;justify-content:space-between}.palette-panel small{opacity:.8}.rule-list{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}.rule-list .tile{min-height:130px}.mini-bar{height:12px;border-radius:99px;overflow:hidden;display:flex;margin:10px 0 18px}.mini-bar span{height:100%}@media(max-width:560px){.palette-pair,.rule-list{grid-template-columns:1fr}}
+.logo-light small{color:var(--muted)}
+.shape-row{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.shape{width:42px;height:42px;background:var(--petroleo-700)}
+.shape.diamond{clip-path:polygon(50% 0,100% 50%,50% 100%,0 50%)}
+.shape.round{border-radius:14px}
+.shape.circle{border-radius:50%;background:var(--amarillo)}
+.type-sample{padding:20px;border:1px solid var(--linea);border-radius:12px}
+.type-sample .big{font-size:38px;font-weight:700;line-height:1.1;letter-spacing:-.04em}
+.type-sample .small{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.example-ui{border-radius:12px;overflow:hidden;border:1px solid var(--linea);box-shadow:var(--sombra)}
+.example-head{background:linear-gradient(110deg,var(--petroleo-900),var(--petroleo-700));padding:16px 20px;color:white;display:flex;align-items:center;justify-content:space-between}
+.example-body{display:grid;grid-template-columns:150px 1fr;min-height:190px;background:#eaf2f0}
+.example-side{background:var(--petroleo-700);padding:14px;color:white}
+.example-side span{display:block;padding:7px 9px;margin:4px 0;background:#ffffff18;border-radius:8px;font-size:12px}
+.example-side .selected{background:var(--amarillo);color:var(--petroleo-900)}
+.example-content{padding:18px}
+.example-card{background:white;border-radius:10px;padding:15px;box-shadow:var(--sombra)}
+.example-button{display:inline-block;background:var(--amarillo);color:var(--petroleo-900);font-weight:700;padding:8px 13px;border-radius:9px;margin-top:8px;font-size:12px}
+.do-dont{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.do,.dont{padding:16px;border-radius:12px;background:#edf7f1;border:1px solid #c8e4d5}
+.dont{background:#fff1ef;border-color:#f0d0cb}
+.do b{color:#28744d}.dont b{color:#b34b43}
+ul{padding-left:20px;margin:8px 0}
+li{margin:5px 0}
+footer{max-width:1400px;margin:auto;padding:0 clamp(18px,4vw,60px) 38px;color:var(--muted);font-size:12px;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
+@media(max-width:850px){.layout{grid-template-columns:1fr}.layout nav{position:relative;top:auto;display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}.navtitle{grid-column:1/-1}.grid3{grid-template-columns:1fr}.hero{margin-top:100px}}
+@media(max-width:560px){.grid2,.do-dont{grid-template-columns:1fr}.example-body{grid-template-columns:105px 1fr}.example-side{padding:8px}.example-content{padding:10px}.edition{display:none}}
+@media print{
+ body{background:white}.portada{min-height:0;padding:35px 45px 55px;break-after:page}.hero{margin:100px 0 30px}
+ .layout{display:block;padding:0 25px}.layout nav{display:none}section{box-shadow:none;border:1px solid #dce5e3;break-inside:avoid;margin:0 0 15px;padding:24px}
+ footer{padding:15px 25px}.example-ui,.logo-stage{print-color-adjust:exact;-webkit-print-color-adjust:exact}
+ a{text-decoration:none}
+}
+</style>
+</head>
+<body>
+<header class="portada" id="inicio">
+  <div class="topline">
+    <div class="wordmark"><span class="symbol">R</span><span>rocodrigo</span></div>
+    <div class="edition">Manual de identidad · 01 / 2026</div>
+  </div>
+  <div class="hero">
+    <div class="eyebrow">Identidad visual y verbal</div>
+    <h1>Diseñar.<br>Conectar.<br>Construir.</h1>
+    <p>Una identidad personal vinculada a la tecnología, el aprendizaje continuo y la creación de soluciones útiles, claras y con propósito.</p>
+    <div class="hero-meta"><span class="pill">Rodrigo Menéndez Molina</span><span class="pill">Marca personal · rocodrigo</span><span class="pill">Versión 1.1 · Noviembre 2026</span></div>
+  </div>
+</header>
+<div class="layout">
+<nav aria-label="Índice del manual">
+  <div class="navtitle">Contenido del manual</div>
+  <a href="#esencia">01 · Esencia</a><a href="#personalidad">02 · Personalidad</a>
+  <a href="#logotipo">03 · Identificador</a><a href="#color">04 · Color</a>
+  <a href="#tipografia">05 · Tipografía</a><a href="#formas">06 · Formas</a>
+  <a href="#composicion">07 · Composición</a><a href="#voz">08 · Voz y tono</a>
+  <a href="#aplicaciones">09 · Aplicaciones</a><a href="#sistema">10 · Sistema de marca</a><a href="#accesibilidad">11 · Accesibilidad</a><a href="#normas">12 · Normas de uso</a>
+</nav>
+<main>
+<section id="esencia">
+  <div class="section-kicker">01 / Fundamentos</div><h2>La esencia de la marca</h2>
+  <p class="lead">rocodrigo es una marca personal que presenta la tecnología como una herramienta para resolver problemas, compartir conocimiento y mejorar la forma en que las personas trabajan y colaboran.</p>
+  <div class="grid2">
+    <div class="tile"><strong>Propósito</strong>Crear soluciones digitales comprensibles, funcionales y accesibles, sin perder de vista a las personas que las utilizan.</div>
+    <div class="tile"><strong>Enfoque</strong>Aprender haciendo: experimentar, construir proyectos, documentar procesos y mejorar de forma constante.</div>
+    <div class="tile"><strong>Propuesta de valor</strong>Unir curiosidad técnica, pensamiento práctico y sensibilidad por el impacto social de la tecnología.</div>
+    <div class="tile"><strong>Ámbitos</strong>Desarrollo de software, interfaces, herramientas digitales, software libre y proyectos colaborativos.</div>
+  </div>
+  <div class="callout"><b>Idea central:</b> tecnología cercana, bien construida y al servicio de las personas.</div>
+  <p><b>Nota de alcance:</b> este manual interpreta el estilo de la interfaz facilitada y lo convierte en una propuesta de marca personal. Los atributos y mensajes son una base editable, no una declaración corporativa registrada.</p>
+</section>
+<section id="personalidad">
+  <div class="section-kicker">02 / Carácter</div><h2>Personalidad de marca</h2>
+  <p>La identidad debe transmitir equilibrio entre capacidad técnica y cercanía. No busca parecer distante ni excesivamente informal.</p>
+  <div class="grid3">
+    <div class="tile"><strong>Clara</strong>Explica lo complejo con orden, jerarquía y lenguaje directo.</div>
+    <div class="tile"><strong>Curiosa</strong>Explora tecnologías, prueba ideas y mantiene una actitud de aprendizaje.</div>
+    <div class="tile"><strong>Práctica</strong>Prioriza que las cosas funcionen y aporten valor real.</div>
+    <div class="tile"><strong>Colaborativa</strong>Entiende el desarrollo como un trabajo conectado con otras personas.</div>
+    <div class="tile"><strong>Responsable</strong>Valora la privacidad, la accesibilidad y el uso consciente de la tecnología.</div>
+    <div class="tile"><strong>Flexible</strong>Se adapta a distintos proyectos sin perder coherencia visual.</div>
+  </div>
+  <h3>Conceptos asociados</h3><p>Construcción · conocimiento · conexión · utilidad · confianza · evolución.</p>
+</section>
+<section id="logotipo">
+  <div class="section-kicker">03 / Identificador</div><h2>Logotipo y símbolo</h2>
+  <p>Como identificador provisional se propone el nombre <b>rocodrigo</b> en minúsculas, acompañado por un rombo geométrico. El rombo procede del lenguaje visual de la interfaz —sus fichas y elementos de navegación— y aporta una forma reconocible incluso en tamaños pequeños.</p>
+  <div class="logo-stage"><div class="logo-lockup"><span class="symbol">R</span><span>rocodrigo<small>tecnología con propósito</small></span></div></div>
+  <h3>Versiones de uso</h3>
+  <div class="grid2">
+    <div class="logo-stage"><div class="logo-lockup"><span class="symbol">R</span><span>rocodrigo</span></div></div>
+    <div class="logo-stage logo-light"><div class="logo-lockup"><span class="symbol">R</span><span>rocodrigo</span></div></div>
+  </div>
+  <h3>Área de respeto y tamaño</h3>
+  <p>Dejar alrededor del identificador un espacio libre equivalente, como mínimo, a la mitad de la altura del símbolo. Evitar reducir el conjunto hasta que el nombre deje de leerse con claridad. Para avatares pequeños puede utilizarse únicamente el rombo con la letra R.</p>
+  <div class="callout">El símbolo y el logotipo son una propuesta gráfica construida para este manual. Si ya existe un logotipo oficial, debe sustituirse esta representación manteniendo los criterios de color, contraste y espacio.</div>
+</section>
+<section id="color">
+  <div class="section-kicker">04 / Sistema cromático</div><h2>Paleta de color</h2>
+  <p>La base cromática es un azul verdoso o petróleo, acompañado por un rojo oscuro como contrapunto. El amarillo cálido se mantiene como acento protagonista: aporta luz, energía y reconocimiento. La combinación permite alternar entre una expresión tecnológica y serena y otra más intensa, sin perder unidad.</p>
+  <h3>Colores principales y contrapunto</h3><div class="palette-pair"><div class="palette-panel" style="background:linear-gradient(130deg,#20544f,#31817b)"><b>Azul petróleo</b><small>#20544F · #31817B · Base de identidad</small></div><div class="palette-panel" style="background:linear-gradient(130deg,#421b29,#702b3d)"><b>Dark red / rojo vino</b><small>#421B29 · #702B3D · Contrapunto</small></div></div><p>El rojo vino se incorpora como segundo color de personalidad. No sustituye al azul petróleo: funciona como alternativa para piezas concretas, secciones diferenciadas, portadas o elementos que necesiten más carácter.</p><div class="colorgrid">
+    <div class="swatch"><div class="swatch-color" style="background:#20544f"></div><div class="swatch-info"><b>Petróleo profundo</b><code>#20544F · Principal oscuro</code></div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#31817b"></div><div class="swatch-info"><b>Verde petróleo</b><code>#31817B · Color principal</code></div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#429e96"></div><div class="swatch-info"><b>Turquesa medio</b><code>#429E96 · Secundario</code></div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#62b8af"></div><div class="swatch-info"><b>Menta</b><code>#62B8AF · Superficie</code></div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#8bcfc8"></div><div class="swatch-info"><b>Menta clara</b><code>#8BCFC8 · Fondo suave</code></div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#421b29"></div><div class="swatch-info"><b>Vino profundo</b><code>#421B29 · Rojo oscuro</code></div></div><div class="swatch"><div class="swatch-color" style="background:#702b3d"></div><div class="swatch-info"><b>Dark red</b><code>#702B3D · Contrapunto</code></div></div><div class="swatch"><div class="swatch-color" style="background:#98465a"></div><div class="swatch-info"><b>Rojo vino medio</b><code>#98465A · Apoyo</code></div></div><div class="swatch"><div class="swatch-color" style="background:#f8cf69"></div><div class="swatch-info"><b>Amarillo cálido</b><code>#F8CF69 · Acento</code></div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#79e5dc"></div><div class="swatch-info"><b>Turquesa luminoso</b><code>#79E5DC · Interacción</code></div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#172033"></div><div class="swatch-info"><b>Tinta</b><code>#172033 · Texto principal</code></div></div>
+  </div>
+  <h3>Proporción orientativa</h3>
+  <div style="display:flex;height:22px;border-radius:8px;overflow:hidden;margin:12px 0"><span style="width:45%;background:#31817b"></span><span style="width:30%;background:#eaf4f2"></span><span style="width:15%;background:#20544f"></span><span style="width:10%;background:#f8cf69"></span></div>
+  <p class="small">45 % verde petróleo · 30 % fondos claros · 15 % petróleo profundo · 10 % acento amarillo.</p>
+  <h3>Cómo combinar las familias</h3><div class="rule-list"><div class="tile"><strong>Combinación habitual</strong>Azul petróleo + fondos claros + amarillo. Es la opción principal para web, portfolio y documentación.</div><div class="tile"><strong>Combinación de contraste</strong>Rojo vino + fondos claros + amarillo. Ideal para portadas, destacados o proyectos con una personalidad más intensa.</div><div class="tile"><strong>Combinación puntual</strong>Azul petróleo + rojo vino + amarillo. Usar los dos tonos oscuros en pequeñas áreas, evitando que compitan.</div></div><p>El amarillo debe reservarse para llamadas a la acción, selección y detalles destacados. No debe convertirse en el color dominante. En textos pequeños, priorizar combinaciones con contraste alto: tinta sobre fondos claros o blanco sobre petróleo.</p>
+</section>
+<section id="tipografia">
+  <div class="section-kicker">05 / Tipografía</div><h2>Tipografía y jerarquía</h2>
+  <p>La familia principal es <b>Ubuntu</b>, presente en la interfaz original. Tiene formas abiertas, buena legibilidad en pantalla y un carácter tecnológico sin resultar frío.</p>
+  <div class="type-sample"><div class="small">Ubuntu Bold · Titulares</div><div class="big">Ideas claras.<br>Soluciones útiles.</div><p style="margin:12px 0 0">Ubuntu Regular · Texto de lectura. Una interfaz y una marca deben facilitar la comprensión antes que llamar la atención por sí mismas.</p></div>
+  <h3>Escala recomendada</h3>
+  <ul><li><b>Titular principal:</b> 44–72 px, Ubuntu Bold.</li><li><b>Título de sección:</b> 26–34 px, Ubuntu Bold.</li><li><b>Subtítulo:</b> 17–20 px, Ubuntu Medium.</li><li><b>Texto:</b> 15–16 px, Ubuntu Regular.</li><li><b>Etiquetas:</b> 10–12 px, Ubuntu Bold, mayúsculas y espaciado amplio.</li></ul>
+  <p>Si Ubuntu no está disponible, utilizar Segoe UI, Roboto o Arial como alternativas de sistema.</p>
+</section>
+<section id="formas">
+  <div class="section-kicker">06 / Lenguaje gráfico</div><h2>Formas, bordes y profundidad</h2>
+  <p>El sistema visual combina geometría sencilla con superficies suaves. Las formas deben ayudar a organizar la información, no decorarla sin motivo.</p>
+  <div class="shape-row"><span class="shape diamond"></span><span class="shape round"></span><span class="shape circle"></span><span>Rombo · tarjeta redondeada · círculo de acento</span></div>
+  <div class="grid2">
+    <div class="tile"><strong>Radios</strong>Entre 9 y 14 px para botones, tarjetas y contenedores.</div>
+    <div class="tile"><strong>Bordes</strong>Líneas finas y discretas en tonos verde grisáceo.</div>
+    <div class="tile"><strong>Sombras</strong>Suaves y amplias; sirven para separar niveles de contenido.</div>
+    <div class="tile"><strong>Iconografía</strong>Geométrica, sencilla y consistente. Evitar mezclar estilos.</div>
+  </div>
+</section>
+<section id="composicion">
+  <div class="section-kicker">07 / Diseño aplicado</div><h2>Composición e interfaz</h2>
+  <p>La composición debe ser modular, ordenada y adaptable. La interfaz de referencia utiliza una cabecera destacada, navegación lateral, área de trabajo clara y componentes agrupados en tarjetas.</p>
+  <div class="example-ui">
+    <div class="example-head"><b>◆ rocodrigo</b><span style="font-size:12px">Panel de proyectos　●</span></div>
+    <div class="example-body">
+      <div class="example-side"><b style="font-size:10px;letter-spacing:.1em">NAVEGACIÓN</b><span class="selected">◆ Inicio</span><span>◇ Proyectos</span><span>◇ Recursos</span></div>
+      <div class="example-content"><div class="example-card"><small style="color:#667085">ESPACIO DE TRABAJO</small><h3 style="margin:5px 0">Construir algo útil</h3><p style="font-size:13px;color:#667085">Información clara, jerarquía visual y acciones reconocibles.</p><span class="example-button">Ver proyectos →</span></div></div>
+    </div>
+  </div>
+  <h3>Principios de composición</h3>
+  <ul><li>Una jerarquía clara: título, contexto, contenido y acción.</li><li>Espacio en blanco suficiente para evitar la saturación.</li><li>Tarjetas blancas sobre fondos verde grisáceos muy claros.</li><li>Cabeceras oscuras para identificar secciones y dar continuidad.</li><li>Elementos interactivos con estados visibles de reposo, foco y selección.</li><li>Diseño adaptable a móvil, tablet y escritorio.</li></ul>
+</section>
+<section id="voz">
+  <div class="section-kicker">08 / Identidad verbal</div><h2>Voz y tono</h2>
+  <p>La comunicación debe ser directa, cercana y técnicamente rigurosa. Se explica lo necesario sin recurrir a jerga cuando no aporta valor.</p>
+  <div class="grid2">
+    <div class="tile"><strong>La voz es…</strong>Clara, curiosa, honesta, colaborativa y resolutiva.</div>
+    <div class="tile"><strong>La voz evita…</strong>Promesas grandilocuentes, tecnicismos innecesarios y un tono excesivamente corporativo.</div>
+  </div>
+  <h3>Mensajes de referencia</h3>
+  <ul><li><b>Idea de marca:</b> «Tecnología con propósito».</li><li><b>Presentación:</b> «Desarrollo soluciones digitales mientras aprendo, experimento y comparto lo que construyo».</li><li><b>Enfoque de proyecto:</b> «Menos complejidad innecesaria. Más claridad, utilidad y colaboración».</li></ul>
+  <div class="callout">Al hablar de conocimientos o experiencia, ser preciso: diferenciar lo que ya está desarrollado, lo que se está aprendiendo y lo que se quiere explorar.</div>
+</section>
+<section id="aplicaciones">
+  <div class="section-kicker">09 / Puntos de contacto</div><h2>Aplicaciones de la identidad</h2>
+  <div class="grid2">
+    <div class="tile"><strong>Portfolio y web</strong>Cabecera petróleo, fondo claro, proyectos en tarjetas y acentos amarillos para acciones.</div>
+    <div class="tile"><strong>GitHub y documentación</strong>Nombre consistente, avatar con el rombo y capturas de proyectos limpias y legibles.</div>
+    <div class="tile"><strong>Presentaciones</strong>Portadas oscuras, títulos grandes, una idea principal por diapositiva y diagramas simples.</div>
+    <div class="tile"><strong>Redes profesionales</strong>Fotografía o avatar reconocible, nombre visible y una descripción breve centrada en el trabajo.</div>
+    <div class="tile"><strong>Documentos</strong>Ubuntu, títulos petróleo, separadores finos y llamadas destacadas en amarillo suave.</div>
+    <div class="tile"><strong>Aplicaciones digitales</strong>Componentes coherentes, navegación sencilla y estados accesibles.</div>
+  </div>
+</section>
+<section id="sistema">
+  <div class="section-kicker">10 / Sistema de marca</div><h2>Un sistema flexible, no una plantilla rígida</h2>
+  <p class="lead">La identidad debe poder vivir en una web, una aplicación, una presentación o un documento sin que todos los soportes parezcan idénticos. La coherencia nace de repetir unas pocas decisiones reconocibles.</p>
+  <div class="grid2">
+    <div class="tile"><strong>Modo petróleo</strong>Es el modo por defecto. Comunica estabilidad, claridad y tecnología. Se recomienda para el portfolio, el perfil profesional y herramientas digitales.</div>
+    <div class="tile"><strong>Modo dark red</strong>Es una variante expresiva. Aporta intensidad y personalidad. Puede utilizarse en portadas, proyectos destacados o bloques editoriales.</div>
+    <div class="tile"><strong>Amarillo como firma</strong>El amarillo cálido conecta ambas variantes y actúa como hilo conductor. Conviene mantenerlo en botones, pequeños símbolos, etiquetas y detalles.</div>
+    <div class="tile"><strong>Fondos neutros</strong>Blanco roto, gris verdoso muy claro y tinta oscura permiten que las dos familias cromáticas respiren y mantienen la legibilidad.</div>
+  </div>
+  <h3>Ejemplos de cabecera</h3>
+  <div class="grid2">
+    <div class="logo-stage"><div class="logo-lockup"><span class="symbol">R</span><span>rocodrigo<small>modo petróleo</small></span></div></div>
+    <div class="logo-stage logo-wine"><div class="logo-lockup"><span class="symbol">R</span><span>rocodrigo<small>modo dark red</small></span></div></div>
+  </div>
+  <h3>Gradientes recomendados</h3>
+  <div class="grid2">
+    <div class="tile"><strong>Petróleo</strong><div class="mini-bar"><span style="width:100%;background:linear-gradient(90deg,#20544f,#31817b,#429e96)"></span></div><code>#20544F → #31817B → #429E96</code></div>
+    <div class="tile"><strong>Dark red</strong><div class="mini-bar"><span style="width:100%;background:linear-gradient(90deg,#421b29,#702b3d,#98465a)"></span></div><code>#421B29 → #702B3D → #98465A</code></div>
+  </div>
+  <h3>Uso según el soporte</h3>
+  <ul>
+    <li><b>Portfolio:</b> petróleo como base; rojo vino para destacar una sección o proyecto concreto.</li>
+    <li><b>Aplicaciones:</b> petróleo para navegación y estructura; rojo vino para una zona diferenciada, nunca para estados de error por defecto.</li>
+    <li><b>Presentaciones:</b> alternar portadas petróleo y vino, manteniendo tipografía y amarillo.</li>
+    <li><b>Documentación:</b> fondo blanco, títulos petróleo y rojo vino solo en llamadas editoriales puntuales.</li>
+  </ul>
+</section>
+<section id="accesibilidad">
+  <div class="section-kicker">11 / Uso responsable</div><h2>Accesibilidad y legibilidad</h2>
+  <p>La identidad debe seguir siendo funcional cuando se utiliza en pantallas pequeñas, con poca luz o en documentos impresos. El color nunca debe ser el único medio para comunicar un estado.</p>
+  <div class="grid2">
+    <div class="tile"><strong>Texto sobre petróleo</strong>Usar blanco o tonos muy claros. Evitar texto amarillo pequeño sobre turquesa medio.</div>
+    <div class="tile"><strong>Texto sobre dark red</strong>Usar blanco o marfil. El rojo vino oscuro es adecuado para fondos de cabecera y bloques destacados.</div>
+    <div class="tile"><strong>Amarillo</strong>Funciona muy bien como superficie de botón con texto oscuro petróleo o vino. Evitar texto blanco sobre amarillo.</div>
+    <div class="tile"><strong>Estados</strong>Acompañar colores de estado con iconos, etiquetas o texto: no depender solo del rojo, verde o amarillo.</div>
+  </div>
+  <h3>Reglas prácticas</h3>
+  <ul><li>Mantener un tamaño de texto cómodo y un interlineado generoso.</li><li>Reservar los tonos medios para superficies, bordes e ilustraciones, no para texto pequeño.</li><li>Comprobar el contraste de cada combinación antes de publicarla.</li><li>En botones, asegurar que el foco de teclado sea visible.</li><li>En impresión, comprobar que el rojo oscuro no empaste y que el amarillo conserve suficiente definición.</li></ul>
+</section>
+<section id="normas">
+  <div class="section-kicker">10 / Consistencia</div><h2>Normas de uso</h2>
+  <div class="do-dont">
+    <div class="do"><b>✓ Recomendado</b><ul><li>Mantener la paleta y la jerarquía tipográfica.</li><li>Usar el amarillo con moderación.</li><li>Respetar márgenes y espacios.</li><li>Priorizar contraste y legibilidad.</li><li>Adaptar los componentes al contenido.</li></ul></div>
+    <div class="dont"><b>✕ Evitar</b><ul><li>Deformar o inclinar el identificador.</li><li>Usar muchos colores de acento a la vez.</li><li>Aplicar sombras fuertes a todos los elementos.</li><li>Mezclar familias tipográficas sin criterio.</li><li>Colocar texto pequeño sobre fondos de poco contraste.</li></ul></div>
+  </div>
+  <h3>Checklist antes de publicar</h3>
+  <ul><li>¿Se reconoce la marca aunque no aparezca el logotipo?</li><li>¿La información tiene una jerarquía fácil de seguir?</li><li>¿Los colores mantienen suficiente contraste?</li><li>¿La composición funciona en pantallas pequeñas?</li><li>¿El mensaje es honesto, claro y comprensible?</li></ul>
+  <div class="callout"><b>Principio final:</b> la identidad no consiste solo en repetir colores y formas. Consiste en mantener una misma manera de presentar, explicar y construir las cosas.</div>
+</section>
+</main>
+</div>
+<footer><span>rocodrigo · Manual de identidad visual y verbal</span><span>Versión 1.1 · Noviembre 2026 · Documento de trabajo ampliado</span></footer>
+</body>
+</html>
