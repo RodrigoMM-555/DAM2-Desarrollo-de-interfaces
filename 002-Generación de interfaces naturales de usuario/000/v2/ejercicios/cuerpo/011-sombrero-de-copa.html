@@ -1,0 +1,197 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta charset="utf-8">
+  <title>rocodrigo | Sombrero de copa</title>
+  <style>
+    body{background:#222;color:white;font-family:monospace}
+    #contenedor{position:relative;width:640px;height:480px}
+    video,canvas{position:absolute;left:0;top:0;width:640px;height:480px}
+    video{opacity:0}
+    canvas{z-index:2}
+    #escena3d{z-index:3;pointer-events:none}
+  </style>
+  <link rel="icon" href="../../img/logo.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="../css/ejercicios.css">
+</head>
+<body class="mv-ej mv-ej-camara">
+  <header class="mv-ej-cabecera">
+    <img src="../../img/logo.svg" alt="">
+    <span class="marca">rocodrigo | interfaz integrada</span>
+    <h1>Sombrero de copa · cara + manos</h1>
+    <a class="mv-ej-volver" href="../index.html">← Ejercicios</a>
+  </header>
+
+  <div id="contenedor">
+    <video id="video" width="640" height="480" autoplay muted playsinline></video>
+    <canvas id="canvas" width="640" height="480"></canvas>
+  </div>
+
+  <script type="module">
+    import {
+      FaceDetector,
+      FilesetResolver,
+      HandLandmarker
+    } from "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@latest";
+    import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.169.0/build/three.module.js";
+
+    const video = document.querySelector("#video");
+    const canvas = document.querySelector("#canvas");
+    const ctx = canvas.getContext("2d");
+    const ancho = canvas.width;
+    const alto = canvas.height;
+    const escena3d = document.createElement("canvas");
+    escena3d.id = "escena3d";
+    escena3d.width = ancho;
+    escena3d.height = alto;
+    document.querySelector("#contenedor").appendChild(escena3d);
+
+    const escena = new THREE.Scene();
+    const camara3d = new THREE.OrthographicCamera(0, ancho, alto, 0, -100, 100);
+    camara3d.position.z = 10;
+    const renderizador = new THREE.WebGLRenderer({
+      canvas: escena3d,
+      alpha: true,
+      antialias: true
+    });
+    renderizador.setSize(ancho, alto, false);
+    renderizador.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    escena.add(new THREE.AmbientLight(0xffffff, 2.2));
+
+    const sombrero3d = new THREE.Group();
+    const materialCopa = new THREE.MeshStandardMaterial({ color: 0x17474f, roughness: 0.38, metalness: 0.12 });
+    const materialAla = new THREE.MeshStandardMaterial({ color: 0x123b42, roughness: 0.45 });
+    const materialCinta = new THREE.MeshStandardMaterial({ color: 0xf2d06b, roughness: 0.3 });
+    const copa = new THREE.Mesh(new THREE.CylinderGeometry(0.9, 1, 2.4, 48), materialCopa);
+    const ala = new THREE.Mesh(new THREE.CylinderGeometry(1.55, 1.55, 0.18, 64), materialAla);
+    const cinta = new THREE.Mesh(new THREE.CylinderGeometry(1.02, 1.02, 0.28, 48), materialCinta);
+    copa.position.y = 1.25;
+    cinta.position.y = 0.38;
+    sombrero3d.add(copa, ala, cinta);
+    sombrero3d.visible = false;
+    escena.add(sombrero3d);
+
+    const stream = await navigator.mediaDevices.getUserMedia({
+      video: { width: ancho, height: alto }
+    });
+    video.srcObject = stream;
+    await video.play();
+
+    const vision = await FilesetResolver.forVisionTasks(
+      "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@latest/wasm"
+    );
+
+    const caraDetector = await FaceDetector.createFromOptions(vision, {
+      baseOptions: {
+        modelAssetPath:
+          "https://storage.googleapis.com/mediapipe-models/face_detector/blaze_face_short_range/float16/latest/blaze_face_short_range.tflite"
+      },
+      runningMode: "VIDEO",
+      minDetectionConfidence: 0.5
+    });
+
+    const manosDetector = await HandLandmarker.createFromOptions(vision, {
+      baseOptions: {
+        modelAssetPath:
+          "https://storage.googleapis.com/mediapipe-models/hand_landmarker/hand_landmarker/float16/latest/hand_landmarker.task"
+      },
+      runningMode: "VIDEO",
+      numHands: 2,
+      minHandDetectionConfidence: 0.5,
+      minHandPresenceConfidence: 0.5,
+      minTrackingConfidence: 0.5
+    });
+
+    let sombreroPuesto = true;
+    let ultimoGesto = 0;
+    let pinzaActiva = false;
+    let ultimaCara = null;
+
+    function distancia(a, b) {
+      return Math.hypot(a.x - b.x, a.y - b.y);
+    }
+
+    function colocarSombrero(caja) {
+      const centroX = caja.originX + caja.width / 2;
+      const baseY = caja.originY + caja.height * 0.08;
+      const escala = caja.width / 2.9;
+      sombrero3d.position.set(centroX, alto - baseY, 0);
+      sombrero3d.scale.set(escala, escala, escala);
+      sombrero3d.rotation.z = 0;
+      sombrero3d.visible = sombreroPuesto;
+    }
+
+    function dibujarMano(puntos) {
+      const conexiones = [
+        [0, 1], [1, 2], [2, 3], [3, 4], [0, 5], [5, 6], [6, 7],
+        [7, 8], [5, 9], [9, 10], [10, 11], [11, 12], [9, 13],
+        [13, 14], [14, 15], [15, 16], [13, 17], [17, 18], [18, 19],
+        [19, 20], [0, 17]
+      ];
+      ctx.strokeStyle = "#f2d06b";
+      ctx.lineWidth = 3;
+      for (const [a, b] of conexiones) {
+        ctx.beginPath();
+        ctx.moveTo(puntos[a].x * ancho, puntos[a].y * alto);
+        ctx.lineTo(puntos[b].x * ancho, puntos[b].y * alto);
+        ctx.stroke();
+      }
+      for (const punto of puntos) {
+        ctx.fillStyle = "#dceeed";
+        ctx.beginPath();
+        ctx.arc(punto.x * ancho, punto.y * alto, 4, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    }
+
+    function comprobarGesto(manos, caja) {
+      if (!caja) return false;
+      const sombreroX = (caja.originX + caja.width / 2) / ancho;
+      const sombreroY = (caja.originY + caja.height * 0.05) / alto;
+      const radio = Math.max(caja.width / ancho, 0.18);
+
+      for (const puntos of manos) {
+        const pinza = distancia(puntos[4], puntos[8]) < 0.07;
+        const dedo = puntos[8];
+        const cercaDelSombrero =
+          Math.hypot(dedo.x - sombreroX, dedo.y - sombreroY) < radio;
+        if (pinza && cercaDelSombrero) return true;
+      }
+      return false;
+    }
+
+    function detectar() {
+      ctx.drawImage(video, 0, 0, ancho, alto);
+      const tiempo = performance.now();
+      const caras = caraDetector.detectForVideo(video, tiempo);
+      const manos = manosDetector.detectForVideo(video, tiempo);
+      const deteccion = caras.detections[0];
+      ultimaCara = deteccion?.boundingBox ?? null;
+
+      const gesto = comprobarGesto(manos.landmarks, ultimaCara);
+      if (gesto && !pinzaActiva && tiempo - ultimoGesto > 900) {
+        sombreroPuesto = !sombreroPuesto;
+        ultimoGesto = tiempo;
+      }
+      pinzaActiva = gesto;
+
+      for (const puntos of manos.landmarks) dibujarMano(puntos);
+      if (ultimaCara) colocarSombrero(ultimaCara);
+      renderizador.render(escena, camara3d);
+
+      ctx.fillStyle = "rgba(18,59,66,.86)";
+      ctx.fillRect(10, 10, 330, 72);
+      ctx.fillStyle = "#fff";
+      ctx.font = "14px monospace";
+      ctx.fillText(`Sombrero: ${sombreroPuesto ? "puesto" : "quitado"}`, 20, 33);
+      ctx.fillText("Haz pinza con pulgar e índice cerca de la cabeza", 20, 55);
+      ctx.fillText(`Cara: ${caras.detections.length} · Manos: ${manos.landmarks.length}`, 20, 75);
+
+      requestAnimationFrame(detectar);
+    }
+
+    detectar();
+  </script>
+</body>
+</html>

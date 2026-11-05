@@ -1,9 +1,9 @@
 /**
- * mavr | iu
+ * jocarsa | iu
  * Control de la interfaz mediante programación orientada a objetos.
  *
  * JavaScript no admite "|" dentro de un identificador, así que el
- * namespace técnico equivalente es `mavr.iu`.
+ * namespace técnico equivalente es `jocarsa.iu`.
  *
  * Índice de clases
  *   DOM, Utilidades .......... ayudas generales
@@ -18,8 +18,8 @@
  *   GestorColumnas ........... minimizar y redimensionar columnas
  *   AplicacionIU ............. orquesta todo lo anterior y pinta las vistas
  */
-window.mavr = window.mavr || {};
-window.mavr.iu = window.mavr.iu || {};
+window.jocarsa = window.jocarsa || {};
+window.jocarsa.iu = window.jocarsa.iu || {};
 
 (() => {
   "use strict";
@@ -49,7 +49,7 @@ window.mavr.iu = window.mavr.iu || {};
     /** Color suave y estable para cada texto (misma palabra = mismo color). */
     static colorTexto(texto) {
       const h = Utilidades.hashTexto(texto);
-      return `hsl(${16 + (h % 20)},${55 + (h % 15)}%,${52 + (h % 10)}%)`;
+      return `hsl(${h % 360}, 65%, 55%)`;
     }
 
     /** Evita que un texto se interprete como HTML. */
@@ -527,20 +527,30 @@ window.mavr.iu = window.mavr.iu || {};
     }
 
     alternar(columna, boton) {
-      if (columna.classList.contains("compacto")) {
-        // Restauramos el ancho que tenía antes de contraerse
-        const ancho = parseFloat(columna.dataset.ancho) || 220;
-        columna.classList.remove("compacto");
-        columna.style.width = columna.style.flexBasis = `${ancho}px`;
-        boton.textContent = "◀";
-        boton.title = "Minimizar";
-      } else {
-        columna.dataset.ancho = columna.getBoundingClientRect().width;
-        columna.classList.add("compacto");
-        boton.textContent = "▶";
-        boton.title = "Restaurar";
-      }
-      this.alAnotar(`click en minimizar · ${columna.getAttribute("aria-label")}`);
+        if (columna.classList.contains("compacto")) {
+            const ancho = parseFloat(columna.dataset.ancho) || 220;
+
+            columna.classList.remove("compacto");
+            columna.style.width = columna.style.flexBasis = `${ancho}px`;
+
+            boton.textContent = "◀";
+            boton.title = "Minimizar";
+            boton.setAttribute("aria-label", "Minimizar columna");
+            boton.setAttribute("aria-expanded", "true");
+        } else {
+            columna.dataset.ancho = columna.getBoundingClientRect().width;
+
+            columna.classList.add("compacto");
+
+            boton.textContent = "▶";
+            boton.title = "Restaurar";
+            boton.setAttribute("aria-label", "Restaurar columna");
+            boton.setAttribute("aria-expanded", "false");
+        }
+
+        this.alAnotar(
+            `click en minimizar · ${columna.getAttribute("aria-label")}`
+        );
     }
 
     restaurar(columna) {
@@ -578,6 +588,395 @@ window.mavr.iu = window.mavr.iu || {};
       separador.addEventListener("pointercancel", terminar, { once: true });
     }
   }
+
+  /* =========================================================
+     UD2 · Interfaces naturales
+     Asistente flotante: lenguaje natural (Ollama local),
+     voz a texto (SpeechRecognition) y texto a voz (SpeechSynthesis)
+     ========================================================= */
+
+  /**
+   * Convierte el Markdown que devuelve el modelo en HTML seguro.
+   * Soporta títulos, párrafos, listas, citas, código y tablas.
+   * Todo el texto se escapa antes de insertarlo.
+   */
+  class MarkdownIU {
+    static inline(texto) {
+      return Utilidades.escapar(texto)
+        .replace(/`([^`]+)`/g, "<code>$1</code>")
+        .replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>")
+        .replace(/\*([^*]+)\*/g, "<em>$1</em>");
+    }
+
+    /** Los modelos a veces usan barras y guiones Unicode o espacios invisibles. */
+    static normalizar(texto) {
+      return String(texto || "")
+        .replace(/\r/g, "")
+        .replace(/[｜¦│]/g, "|")
+        .replace(/[‐‑‒–—−]/g, "-")
+        .replace(/ /g, " ")
+        .replace(/[​-‍﻿]/g, "");
+    }
+
+    static celdas(linea) {
+      return linea.trim().replace(/^\|/, "").replace(/\|$/, "").split("|").map((c) => c.trim());
+    }
+
+    static esFila(linea) {
+      return linea.includes("|") && MarkdownIU.celdas(linea).length >= 2;
+    }
+
+    static esSeparador(linea) {
+      return MarkdownIU.esFila(linea) && MarkdownIU.celdas(linea).every((c) => /^:?-{2,}:?$/.test(c.replace(/\s+/g, "")));
+    }
+
+    static convertir(markdown) {
+      let md = MarkdownIU.normalizar(markdown).trim();
+
+      // 1. Si el modelo envuelve todo en ```markdown … ```, lo desenvolvemos
+      md = md.replace(/```(?:markdown|md)\s*\n([\s\S]*?)```/gi, (_, cuerpo) => cuerpo.trim());
+
+      // 2. Una tabla metida por error en un bloque ``` sin lenguaje sale del bloque
+      md = md.replace(/```(text|txt)?\s*\n([\s\S]*?)```/gi, (todo, _lang, cuerpo) => {
+        const lineas = cuerpo.split("\n").filter((l) => l.trim());
+        return lineas.length >= 2 && MarkdownIU.esFila(lineas[0]) && MarkdownIU.esSeparador(lineas[1]) ? cuerpo : todo;
+      });
+
+      // 3. Apartamos los bloques de código reales para no tocarlos
+      const bloques = [];
+      md = md.replace(/```[^\n]*\n([\s\S]*?)```/g, (_, cuerpo) => `@@CODIGO${bloques.push(cuerpo) - 1}@@`);
+
+      const lineas = md.split("\n");
+      const html = [];
+      let i = 0;
+
+      while (i < lineas.length) {
+        const linea = lineas[i];
+        let m;
+
+        if (MarkdownIU.esFila(linea) && MarkdownIU.esSeparador(lineas[i + 1] || "")) {
+          const cabecera = MarkdownIU.celdas(linea);
+          const filas = [];
+          i += 2;
+          while (i < lineas.length && lineas[i].trim() && MarkdownIU.esFila(lineas[i])) {
+            filas.push(MarkdownIU.celdas(lineas[i++]));
+          }
+          html.push(`<div class="mv-ia-tabla"><table>
+            <thead><tr>${cabecera.map((c) => `<th>${MarkdownIU.inline(c)}</th>`).join("")}</tr></thead>
+            <tbody>${filas.map((f) => `<tr>${cabecera.map((_, j) => `<td>${MarkdownIU.inline(f[j] || "")}</td>`).join("")}</tr>`).join("")}</tbody>
+          </table></div>`);
+          continue;
+        }
+
+        if (/^\s*[-*]\s+/.test(linea) || /^\s*\d+\.\s+/.test(linea)) {
+          const ordenada = /^\s*\d+\.\s+/.test(linea);
+          const patron = ordenada ? /^\s*\d+\.\s+/ : /^\s*[-*]\s+/;
+          const elementos = [];
+          while (i < lineas.length && patron.test(lineas[i])) {
+            elementos.push(`<li>${MarkdownIU.inline(lineas[i++].replace(patron, ""))}</li>`);
+          }
+          html.push(ordenada ? `<ol>${elementos.join("")}</ol>` : `<ul>${elementos.join("")}</ul>`);
+          continue;
+        }
+
+        if ((m = linea.match(/^(#{1,3})\s+(.+)/))) {
+          const nivel = m[1].length + 1; // # -> h2, ## -> h3, ### -> h4
+          html.push(`<h${nivel}>${MarkdownIU.inline(m[2])}</h${nivel}>`);
+        } else if ((m = linea.match(/^>\s?(.*)/))) {
+          html.push(`<blockquote>${MarkdownIU.inline(m[1])}</blockquote>`);
+        } else if ((m = linea.trim().match(/^@@CODIGO(\d+)@@$/))) {
+          html.push(`<pre><code>${Utilidades.escapar(bloques[m[1]])}</code></pre>`);
+        } else if (linea.trim()) {
+          html.push(`<p>${MarkdownIU.inline(linea)}</p>`);
+        }
+        i++;
+      }
+      return html.join("\n");
+    }
+
+    /** Texto limpio para leerlo en voz alta (sin símbolos de Markdown ni código). */
+    static aTextoPlano(markdown) {
+      return String(markdown || "")
+        .replace(/```[\s\S]*?```/g, " ")
+        .replace(/\|/g, " ")
+        .replace(/[#*_>`~-]/g, " ")
+        .replace(/\s+/g, " ")
+        .trim();
+    }
+  }
+
+  /**
+   * Web Speech API: reconocimiento (voz -> texto) y síntesis (texto -> voz).
+   */
+  class VozIU {
+    constructor(idioma = "es-ES") {
+      this.idioma = idioma;
+      this.Reconocimiento = window.SpeechRecognition || window.webkitSpeechRecognition;
+      this.reconocimiento = null;
+      this.escuchando = false;
+    }
+
+    get puedeEscuchar() {
+      return Boolean(this.Reconocimiento);
+    }
+
+    get puedeHablar() {
+      return "speechSynthesis" in window;
+    }
+
+    /** Escucha una frase y llama a alResultado con el texto reconocido. */
+    escuchar({ alEmpezar, alResultado, alError, alTerminar }) {
+      if (this.escuchando) {
+        this.reconocimiento.stop();
+        return;
+      }
+      this.reconocimiento = new this.Reconocimiento();
+      this.reconocimiento.lang = this.idioma;
+      this.reconocimiento.interimResults = false;
+      this.reconocimiento.continuous = false;
+
+      this.reconocimiento.addEventListener("start", () => { this.escuchando = true; alEmpezar?.(); });
+      this.reconocimiento.addEventListener("result", (e) => alResultado(e.results[0][0].transcript));
+      this.reconocimiento.addEventListener("error", (e) => alError?.(e.error));
+      this.reconocimiento.addEventListener("end", () => { this.escuchando = false; alTerminar?.(); });
+      this.reconocimiento.start();
+    }
+
+    /** Lee un texto en voz alta con una voz en español si el sistema la tiene. */
+    hablar(texto) {
+      if (!this.puedeHablar || !texto) return;
+      speechSynthesis.cancel();
+      const mensaje = new SpeechSynthesisUtterance(texto);
+      mensaje.lang = this.idioma;
+      const voz = speechSynthesis.getVoices().find((v) => v.lang === this.idioma);
+      if (voz) mensaje.voice = voz;
+      speechSynthesis.speak(mensaje);
+    }
+
+    callar() {
+      if (this.puedeHablar) speechSynthesis.cancel();
+    }
+  }
+
+  /**
+   * Ventana flotante del asistente: se arrastra, se minimiza y se redimensiona.
+   * Envía el prompt a ollama.php y pinta la respuesta en el escenario.
+   */
+  class AsistenteIU {
+    constructor(aplicacion) {
+      this.app = aplicacion;
+      this.voz = new VozIU("es-ES");
+      this.enviando = false;
+
+      this.ventana = DOM.uno("#mvAsistente");
+      this.asa = DOM.uno("#mvAsistenteBarra");
+      this.entrada = DOM.uno("#mvAsistenteEntrada");
+      this.microfono = DOM.uno("#mvAsistenteMicro");
+      this.enviar = DOM.uno("#mvAsistenteEnviar");
+      this.hablarRespuesta = DOM.uno("#mvAsistenteHablar");
+      this.estado = DOM.uno("#mvAsistenteEstado");
+      this.minimizar = DOM.uno("#mvAsistenteMinimizar");
+      this.redimensionador = DOM.uno("#mvAsistenteRedimensionar");
+
+      this.activarEventos();
+      this.ajustarAltura();
+    }
+
+    activarEventos() {
+      // Escribir: Intro envía, Mayús + Intro hace salto de línea
+      this.entrada.addEventListener("input", () => this.ajustarAltura());
+      this.entrada.addEventListener("keydown", (e) => {
+        if (e.key === "Enter" && !e.shiftKey) {
+          e.preventDefault();
+          this.preguntar();
+        }
+      });
+      this.enviar.addEventListener("click", () => this.preguntar());
+
+      // Voz
+      if (this.voz.puedeEscuchar) {
+        this.microfono.addEventListener("click", () => this.dictar());
+      } else {
+        this.microfono.disabled = true;
+        this.microfono.title = "Reconocimiento de voz no disponible en este navegador (usa Chrome o Edge)";
+      }
+      if (!this.voz.puedeHablar) {
+        this.hablarRespuesta.disabled = true;
+      }
+      this.hablarRespuesta.addEventListener("change", () => {
+        if (!this.hablarRespuesta.checked) this.voz.callar();
+        this.app.anotar(`change · hablar respuesta ${this.hablarRespuesta.checked ? "activado" : "desactivado"}`);
+      });
+
+      // Ventana
+      this.asa.addEventListener("pointerdown", (e) => this.iniciarArrastre(e));
+      this.minimizar.addEventListener("click", () => this.alternarMinimizado());
+      this.redimensionador.addEventListener("pointerdown", (e) => this.iniciarRedimension(e));
+      window.addEventListener("resize", () => this.mantenerDentro());
+    }
+
+    /* ---------- Lenguaje natural ---------- */
+    async preguntar() {
+      const texto = this.entrada.value.trim();
+      if (!texto || this.enviando) return;
+
+      this.ocupado(true, "El modelo está generando la respuesta…");
+      this.app.anotar("submit · prompt al asistente");
+      try {
+        const respuesta = await fetch("ollama.php", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ mensaje: texto })
+        });
+        if (!respuesta.ok) throw new Error(`HTTP ${respuesta.status}`);
+        const datos = await respuesta.json();
+        const contenido = datos.respuesta ?? "No he podido responder.";
+
+        this.mostrarRespuesta(texto, contenido);
+        if (this.hablarRespuesta.checked) {
+          this.voz.hablar(MarkdownIU.aTextoPlano(contenido));
+        }
+        this.entrada.value = "";
+        this.ajustarAltura();
+        this.avisar("Escenario actualizado.", 2200);
+      } catch (error) {
+        console.error(error);
+        this.avisar("No se ha podido conectar con Ollama.");
+        this.app.toast.mostrar("error", "Asistente no disponible",
+          "Comprueba que Ollama está en marcha y que sirves el proyecto con PHP (php -S localhost:8000).");
+      } finally {
+        this.ocupado(false);
+        this.entrada.focus();
+      }
+    }
+
+    mostrarRespuesta(pregunta, contenido) {
+      const tarjeta = this.app.tarjeta(`
+        <p class="mv-ia-pregunta"><span>Tú</span>${Utilidades.escapar(pregunta)}</p>
+        <div class="mv-ia-resultado">${MarkdownIU.convertir(contenido)}</div>`);
+      this.app.pintar(tarjeta);
+      this.app.barra.actualizar({ vista: "Asistente", registros: null });
+      DOM.todos("#entidades article").forEach((a) => a.classList.remove("activo"));
+    }
+
+    /* ---------- Voz a texto ---------- */
+    dictar() {
+      this.voz.escuchar({
+        alEmpezar: () => {
+          this.microfono.classList.add("escuchando");
+          this.avisar("Escuchando…");
+          this.app.anotar("start · reconocimiento de voz");
+        },
+        alResultado: (texto) => {
+          this.entrada.value = this.entrada.value.trim() ? `${this.entrada.value.trim()} ${texto}` : texto;
+          this.ajustarAltura();
+          this.entrada.focus();
+          this.app.anotar(`result · «${texto}»`);
+        },
+        alError: (error) => {
+          this.avisar(error === "not-allowed" ? "Permiso de micrófono denegado." : "No se ha podido reconocer la voz.");
+        },
+        alTerminar: () => {
+          this.microfono.classList.remove("escuchando");
+          if (this.estado.textContent === "Escuchando…") this.avisar("");
+        }
+      });
+    }
+
+    /* ---------- Estado de la ventana ---------- */
+    ocupado(valor, mensaje = "") {
+      this.enviando = valor;
+      this.enviar.disabled = valor;
+      this.microfono.disabled = valor || !this.voz.puedeEscuchar;
+      this.ventana.classList.toggle("ocupado", valor);
+      if (mensaje) this.avisar(mensaje);
+    }
+
+    avisar(texto, borrarEn = 0) {
+      this.estado.textContent = texto;
+      if (borrarEn) {
+        setTimeout(() => { if (this.estado.textContent === texto) this.estado.textContent = ""; }, borrarEn);
+      }
+    }
+
+    ajustarAltura() {
+      this.entrada.style.height = "auto";
+      this.entrada.style.height = `${Math.min(this.entrada.scrollHeight, 150)}px`;
+    }
+
+    /** Pasa de "centrado abajo" a coordenadas fijas para poder moverla. */
+    fijarPosicion() {
+      const r = this.ventana.getBoundingClientRect();
+      Object.assign(this.ventana.style, { right: "auto", bottom: "auto", left: `${r.left}px`, top: `${r.top}px` });
+    }
+
+    limitar(left, top) {
+      const r = this.ventana.getBoundingClientRect();
+      const margen = 8;
+      const arriba = DOM.uno("body > header").offsetHeight + margen;
+      return {
+        left: Math.max(margen, Math.min(left, window.innerWidth - r.width - margen)),
+        top: Math.max(arriba, Math.min(top, window.innerHeight - r.height - margen))
+      };
+    }
+
+    mantenerDentro() {
+      if (!this.ventana.style.top) return;
+      const r = this.ventana.getBoundingClientRect();
+      const p = this.limitar(r.left, r.top);
+      Object.assign(this.ventana.style, { left: `${p.left}px`, top: `${p.top}px` });
+    }
+
+    iniciarArrastre(e) {
+      if (e.button !== 0 || e.target.closest("button")) return;
+      this.fijarPosicion();
+      const r = this.ventana.getBoundingClientRect();
+      const dx = e.clientX - r.left;
+      const dy = e.clientY - r.top;
+      this.ventana.classList.add("arrastrando");
+      this.asa.setPointerCapture(e.pointerId);
+
+      const mover = (ev) => {
+        const p = this.limitar(ev.clientX - dx, ev.clientY - dy);
+        Object.assign(this.ventana.style, { left: `${p.left}px`, top: `${p.top}px` });
+      };
+      const soltar = () => {
+        this.ventana.classList.remove("arrastrando");
+        this.asa.removeEventListener("pointermove", mover);
+      };
+      this.asa.addEventListener("pointermove", mover);
+      this.asa.addEventListener("pointerup", soltar, { once: true });
+      this.asa.addEventListener("pointercancel", soltar, { once: true });
+    }
+
+    alternarMinimizado() {
+      this.fijarPosicion();
+      const minimizada = this.ventana.classList.toggle("minimizado");
+      this.minimizar.textContent = minimizada ? "□" : "—";
+      this.minimizar.title = minimizada ? "Restaurar" : "Minimizar";
+      requestAnimationFrame(() => this.mantenerDentro());
+      this.app.anotar(`click · asistente ${minimizada ? "minimizado" : "restaurado"}`);
+    }
+
+    iniciarRedimension(e) {
+      e.preventDefault();
+      e.stopPropagation();
+      this.fijarPosicion();
+      const r = this.ventana.getBoundingClientRect();
+      const x0 = e.clientX, y0 = e.clientY;
+      this.redimensionador.setPointerCapture(e.pointerId);
+
+      const mover = (ev) => {
+        this.ventana.style.width = `${Math.max(360, Math.min(r.width + ev.clientX - x0, window.innerWidth - r.left - 8))}px`;
+        this.ventana.style.height = `${Math.max(110, Math.min(r.height + ev.clientY - y0, window.innerHeight - r.top - 8))}px`;
+      };
+      const soltar = () => this.redimensionador.removeEventListener("pointermove", mover);
+      this.redimensionador.addEventListener("pointermove", mover);
+      this.redimensionador.addEventListener("pointerup", soltar, { once: true });
+      this.redimensionador.addEventListener("pointercancel", soltar, { once: true });
+    }
+  }
+
 
   /* =========================================================
      Aplicación
@@ -625,6 +1024,7 @@ window.mavr.iu = window.mavr.iu || {};
       this.modal = new ModalIU();
       this.drawer = new DrawerIU();
       this.columnas = new GestorColumnas(this.anotar);
+      this.asistente = new AsistenteIU(this);
 
       this.renderMenu();
       this.renderEntidades();
@@ -827,7 +1227,7 @@ window.mavr.iu = window.mavr.iu || {};
             <legend>Números</legend>
             <label><span>Número (1-10, paso 0,1)</span><input type="number" name="numero" min="1" max="10" step="0.1"></label>
             <label><span>Rango <output id="salidaRango">50</output></span><input type="range" name="rango" min="0" max="100" value="50"></label>
-            <label><span>Medidor (meter)</span><meter id="medidor" min="0" max="100" low="30" high="80" optimum="50" value="50"></meter></label>
+            <label><span>Medidor (meter)</span><meter id="medidor" min="0" max="100" low="30" high="80" optimum="0" value="50"></meter></label>
           </fieldset>
 
           <fieldset>
@@ -870,7 +1270,7 @@ window.mavr.iu = window.mavr.iu || {};
             <div class="mv-campo"><span>Archivo elegido</span><output id="salidaArchivo">Ninguno</output></div>
             <input type="hidden" name="origen" value="vista-controles">
             <div class="mv-campo"><span>Input tipo button</span><input type="button" class="mv-btn secundario" value="Pulsar" id="inputBoton"></div>
-            <div class="mv-campo"><span>Input tipo image (envía)</span><input type="image" src="img/logo.svg" alt="Enviar" width="34" height="34"></div>
+            <div class="mv-campo"><span>Input tipo image (envía)</span><input type="image" src="https://static.rocodrigo.com/logos/white.svg" alt="Enviar" width="34" height="34"></div>
           </fieldset>
 
           <fieldset>
@@ -893,7 +1293,19 @@ window.mavr.iu = window.mavr.iu || {};
         const total = Number(form.precio.value || 0) * Number(form.cantidad.value || 0) * (1 + Number(form.iva.value));
         DOM.uno("#total", form).value = total.toLocaleString("es-ES", { style: "currency", currency: "EUR" });
         DOM.uno("#salidaRango", form).value = form.rango.value;
-        DOM.uno("#medidor", form).value = form.rango.value;
+        const medidor = DOM.uno("#medidor", form);
+        const valor = Number(form.rango.value);
+
+        medidor.value = valor;
+        medidor.classList.remove("verde", "amarillo", "rojo");
+
+        if (valor < 30) {
+            medidor.classList.add("verde");
+        } else if (valor < 70) {
+            medidor.classList.add("amarillo");
+        } else {
+            medidor.classList.add("rojo");
+        }
         DOM.uno("#salidaColor", form).value = form.color.value;
         DOM.uno("#contador", form).value = form.comentario.value.length;
         const obligatorios = DOM.todos("[required]", form);
@@ -1068,7 +1480,7 @@ window.mavr.iu = window.mavr.iu || {};
           </div>
         </div>`);
       DOM.uno("#demoModal", tarjeta).addEventListener("click", () =>
-        this.modal.abrir("Ejemplo de ventana modal", "<p>Ventana modal reutilizable de <strong>mavr | iu</strong>.</p>")
+        this.modal.abrir("Ejemplo de ventana modal", "<p>Ventana modal reutilizable de <strong>jocarsa | iu</strong>.</p>")
       );
       DOM.uno("#demoConfirmar", tarjeta).addEventListener("click", () =>
         this.modal.confirmar("¿Seguro?", "Esta acción es solo una demostración.", () =>
@@ -1085,7 +1497,7 @@ window.mavr.iu = window.mavr.iu || {};
       contenedor.innerHTML = `
         <main class="mv-login incrustado">
           <article class="mv-login-marca">
-            <img src="img/logo.svg" alt="">
+            <img src="https://static.rocodrigo.com/logos/white.svg" alt="">
             <h1>${Utilidades.escapar(this.estado.identidad.nombre)}</h1>
             <p>Pantalla de acceso como componente reutilizable.</p>
           </article>
@@ -1244,6 +1656,7 @@ window.mavr.iu = window.mavr.iu || {};
       // Teclado
       document.addEventListener("keydown", (e) => {
         if (e.key === "Escape") {
+          this.asistente.voz.callar();
           if (this.modal.abierto) this.modal.cerrar();
           else if (this.drawer.abierto) this.drawer.cerrar();
         } else if (e.ctrlKey && e.key.toLowerCase() === "k") {
@@ -1259,14 +1672,16 @@ window.mavr.iu = window.mavr.iu || {};
     }
   }
 
-  // Exponemos las clases en el namespace mavr.iu
-  Object.assign(window.mavr.iu, {
+  // Exponemos las clases en el namespace jocarsa.iu
+  Object.assign(window.jocarsa.iu, {
     DOM, Utilidades, OrigenDatos, Plantillas, EstadoIU, FichaIU, BarraEstado,
-    ToastIU, ModalIU, DrawerIU, FormularioIU, TablaIU, GestorColumnas, AplicacionIU
+    ToastIU, ModalIU, DrawerIU, FormularioIU, TablaIU, GestorColumnas,
+    MarkdownIU, VozIU, AsistenteIU, AplicacionIU
   });
 
   document.addEventListener("DOMContentLoaded", () => {
-    window.mavr.iu.aplicacion = new AplicacionIU();
-    window.mavr.iu.aplicacion.iniciar();
+    window.jocarsa.iu.aplicacion = new AplicacionIU();
+    window.jocarsa.iu.aplicacion.iniciar();
   });
 })();
+

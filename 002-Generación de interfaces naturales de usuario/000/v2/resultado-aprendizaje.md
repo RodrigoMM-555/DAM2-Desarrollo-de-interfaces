@@ -1,7 +1,7 @@
 # Resultado de aprendizaje · UD1 Generación de interfaces de usuario
 
-**Proyecto:** mavr | interfaz integrada (`003-UD1-completa`)
-**Autor:** Miguel Angel Vargas Rodriguez
+**Proyecto:** rocodrigo | interfaz integrada (`003-UD1-completa`)
+**Autor:** Rodrigo Menéndez Molina
 
 ## Resultado de aprendizaje
 
@@ -31,7 +31,7 @@ En mi proyecto he analizado el código base de jocarsa-iu: la estructura del HTM
 
 ### f) Se ha modificado el código generado por el editor visual.
 
-En mi proyecto he modificado el código en tres iteraciones (001, 002 y 003). Cambié la marca y los nombres y limité la cabecera general a `body > header`. Separé los componentes en plantillas externas (`templates/*.html`), y los datos en JSON: `menu.json` indica qué tabla y qué formulario usa cada módulo. Una misma clase pinta tablas con formatos de JSON distintos, la de clientes y la de productos. Por último, reorganicé todo el JavaScript en clases dentro del namespace `mavr.iu`: `AplicacionIU`, `TablaIU`, `FormularioIU`, `DrawerIU`, `ModalIU`, `ToastIU`, `GestorColumnas` y `BarraEstado`, cada una con su constructor, sus propiedades y sus métodos.
+En mi proyecto he modificado el código en tres iteraciones (001, 002 y 003). Cambié la marca y los nombres y limité la cabecera general a `body > header`. Separé los componentes en plantillas externas (`templates/*.html`), y los datos en JSON: `menu.json` indica qué tabla y qué formulario usa cada módulo. Una misma clase pinta tablas con formatos de JSON distintos, la de clientes y la de productos. Por último, reorganicé todo el JavaScript en clases dentro del namespace `jocarsa.iu`: `AplicacionIU`, `TablaIU`, `FormularioIU`, `DrawerIU`, `ModalIU`, `ToastIU`, `GestorColumnas` y `BarraEstado`, cada una con su constructor, sus propiedades y sus métodos.
 
 ### g) Se han asociado a los eventos las acciones correspondientes.
 

@@ -3,26 +3,26 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>mavr | interfaz integrada</title>
-  <link rel="shortcut icon" href="img/logo.svg" type="image/svg+xml">
+  <title>rocodrigo | interfaz integrada</title>
+  <link rel="shortcut icon" href="https://static.rocodrigo.com/logos/white.svg" type="image/svg+xml">
   <link rel="stylesheet" href="css/estilo.css">
 </head>
-<body class="mavr-iu">
+<body class="rocodrigo-iu">
 
   <!-- ==================== CABECERA ==================== -->
   <header>
     <div class="corporativo">
-      <img src="img/logo.svg" alt="">
-      <h1>mavr | interfaz integrada</h1>
+      <img src="https://static.rocodrigo.com/logos/white.svg" alt="">
+      <h1>rocodrigo | interfaz integrada</h1>
     </div>
     <div id="herramientas">
       <input id="buscador" type="search" placeholder="Buscar en Clientes…" title="Ctrl + K">
       <button id="nuevo" type="button" title="Alt + N">+ Nuevo</button>
     </div>
     <div id="usuario">
-      <div class="imagen">MA</div>
+      <div class="imagen">RM</div>
       <div>
-        <p>Miguel Angel Vargas Rodriguez</p>
+        <p>Rodrigo Menéndez Molina</p>
         <a href="login.html">Cerrar sesión</a>
       </div>
     </div>
@@ -82,6 +82,30 @@
   </div>
 
   <div class="mv-toast-pila" id="mvToasts" aria-live="polite"></div>
+
+  <!-- ==================== UD2 · ASISTENTE (interfaces naturales) ==================== -->
+  <section class="mv-asistente" id="mvAsistente" aria-label="Asistente de inteligencia artificial">
+    <div class="mv-asistente-barra" id="mvAsistenteBarra" title="Arrastra para mover">
+      <span class="mv-asistente-chispa">✦</span>
+      <span>Asistente local</span>
+      <span class="mv-asistente-en-linea" aria-label="Asistente disponible"></span>
+      <button class="mv-asistente-minimizar" id="mvAsistenteMinimizar" type="button" title="Minimizar" aria-label="Minimizar">—</button>
+    </div>
+    <div class="mv-asistente-redactar">
+      <textarea id="mvAsistenteEntrada" rows="1" placeholder="Escribe o dicta lo que necesitas…"></textarea>
+      <button class="mv-asistente-micro" id="mvAsistenteMicro" type="button" title="Entrada por voz" aria-label="Entrada por voz">🎤</button>
+      <button class="mv-asistente-enviar" id="mvAsistenteEnviar" type="button" title="Enviar (Intro)" aria-label="Enviar">➜</button>
+    </div>
+    <div class="mv-asistente-opciones">
+      <label class="mv-interruptor" title="Leer en voz alta la respuesta">
+        <input id="mvAsistenteHablar" type="checkbox">
+        <span class="mv-interruptor-pista"><span class="mv-interruptor-boton"></span></span>
+        <span>Hablar respuesta</span>
+      </label>
+      <span class="mv-asistente-estado" id="mvAsistenteEstado" aria-live="polite"></span>
+    </div>
+    <div class="mv-asistente-redimensionar" id="mvAsistenteRedimensionar" title="Arrastra para redimensionar"></div>
+  </section>
 
   <!-- Los <template> se cargan desde la carpeta templates/ (componentes externos) -->
   <script src="js/componentes.js"></script>
