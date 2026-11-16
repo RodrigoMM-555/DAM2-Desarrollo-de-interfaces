@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Espejo de peinados</title>
+<link href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;700&display=swap" rel="stylesheet">
+<script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
+<style>
+:root{--pet:#0f4c5c;--pet2:#15606f;--vino:#7b1e3a;--ama:#f4c430}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%}
+body{font-family:Ubuntu,system-ui,sans-serif;color:#fff;display:grid;place-items:center;
+ background:
+  linear-gradient(rgba(0,0,0,.28) 2px,transparent 2px) 0 0/64px 64px,
+  linear-gradient(90deg,rgba(0,0,0,.28) 2px,transparent 2px) 0 0/64px 64px,
+  radial-gradient(circle at 50% 30%,var(--pet2),var(--pet) 70%);}
+main{display:grid;gap:14px;justify-items:center;padding:12px}
+.frame{padding:14px;border-radius:26px;background:linear-gradient(145deg,#e9eef0,#8fa0a6 45%,#d6dde0);
+ box-shadow:0 18px 50px rgba(0,0,0,.55),inset 0 0 0 3px rgba(255,255,255,.6)}
+.glass{position:relative;overflow:hidden;border-radius:14px;background:#0a2a32;aspect-ratio:16/9;width:min(92vw,140vh)}
+.glass>*{position:absolute;inset:0}
+.mirror{transform:scaleX(-1)}
+.mirror video{width:100%;height:100%;object-fit:fill}
+.mirror a-scene{position:absolute!important;inset:0}
+#fx{width:100%;height:100%;pointer-events:none}
+.shine{pointer-events:none;background:linear-gradient(115deg,rgba(255,255,255,.16) 0 22%,transparent 22% 30%,rgba(255,255,255,.08) 30% 36%,transparent 36%)}
+.btn{position:absolute;inset:auto;width:clamp(64px,11%,104px);aspect-ratio:1;border-radius:50%;border:3px solid var(--ama);
+ color:#fff;font:700 clamp(22px,3.4vw,40px)/1 Ubuntu,sans-serif;display:grid;place-items:center;cursor:pointer;--p:0;
+ background:linear-gradient(to top,rgba(244,196,48,.75) calc(var(--p)*1%),rgba(15,76,92,.55) 0);backdrop-filter:blur(3px)}
+.btn:focus-visible{outline:3px solid #fff}
+#prev{left:3%;top:50%;translate:0 -50%}
+#next{right:3%;top:50%;translate:0 -50%}
+#col{right:3%;top:5%;width:clamp(48px,7%,72px);background-color:var(--vino)}
+#nombre{position:absolute;inset:auto;left:50%;bottom:5%;translate:-50% 0;padding:8px 26px;border-radius:999px;
+ background:var(--vino);border:2px solid var(--ama);font-weight:700;font-size:clamp(16px,2.4vw,28px);white-space:nowrap}
+#estado{position:absolute;inset:auto;left:3%;top:5%;padding:6px 14px;border-radius:999px;font-size:clamp(12px,1.5vw,16px);background:rgba(0,0,0,.5)}
+#estado.on{background:rgba(244,196,48,.9);color:#222}
+#msg{display:grid;place-items:center;text-align:center;padding:24px;background:rgba(10,42,50,.92);font-size:20px;z-index:5}
+#msg.hide{display:none}
+.ayuda{margin:0;max-width:760px;text-align:center;font-size:15px;line-height:1.5;color:#d7ecef}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<main>
+ <div class="frame">
+  <div class="glass" id="glass">
+   <div class="mirror">
+    <video id="cam" autoplay playsinline muted></video>
+    <a-scene embedded vr-mode-ui="enabled:false" device-orientation-permission-ui="enabled:false"
+             loading-screen="enabled:false" background="transparent:true" renderer="alpha:true">
+     <a-entity camera="fov:50" look-controls="enabled:false" wasd-controls="enabled:false" position="0 0 0"></a-entity>
+     <a-light type="ambient" intensity=".9"></a-light>
+     <a-light type="directional" intensity=".8" position="1 2 2"></a-light>
+     <a-entity id="hair" visible="false"></a-entity>
+    </a-scene>
+   </div>
+   <canvas id="fx"></canvas>
+   <div class="shine"></div>
+   <button class="btn" id="prev" aria-label="Peinado anterior">◀</button>
+   <button class="btn" id="next" aria-label="Peinado siguiente">▶</button>
+   <button class="btn" id="col" aria-label="Cambiar color">🎨</button>
+   <div id="nombre">Sin peinado</div>
+   <div id="estado">Muestra tu mano</div>
+   <div id="msg">Iniciando espejo…</div>
+  </div>
+ </div>
+ <p class="ayuda">Acerca el dedo índice a un botón y espera un momento, o junta pulgar e índice para pulsarlo.
+ También puedes pasar la mano abierta de lado a lado para rotar los peinados. Teclado: ← → y C.</p>
+</main>
+
+<script type="module">
+import {FilesetResolver,FaceLandmarker,HandLandmarker} from "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14";
+
+const $=s=>document.querySelector(s);
+const video=$('#cam'),glass=$('#glass'),fx=$('#fx'),hair=$('#hair'),msg=$('#msg');
+const COLORS=['#2b1a12','#8a4b1e','#e0b050','#c0392b','#2e86de','#e84393'];
+// ---- Peinados 3D: cabeza ≈ elipsoide (1 unidad = ancho de cara) ----
+const THREE=AFRAME.THREE,V3=(x,y,z)=>new THREE.Vector3(x,y,z);
+const EC=V3(0,.1,-.2),ER=V3(.56,.78,.62);
+const rng=s=>()=>(s=s*16807%2147483647)/2147483647;
+const thr=d=>d.z>=0?.13+.54*d.z*d.z:.13+.63*d.z;      // línea de nacimiento del pelo
+const mat=c=>new THREE.MeshStandardMaterial({color:c,roughness:.7});
+const dark=c=>new THREE.Color(c).multiplyScalar(.5);
+const SPH=new THREE.SphereGeometry(1,8,6),CONE=new THREE.ConeGeometry(.5,1,6);
+function scalp(n,seed,grow=1.03,ok=()=>true,dy=0){
+ const R=rng(seed),o=[];
+ for(let g=0;o.length<n&&g<n*80;g++){
+  const d=V3(R()*2-1,R()*2-1,R()*2-1),l=d.lengthSq();
+  if(l>1||l<.1)continue;d.normalize();
+  if(d.y<thr(d)+dy||!ok(d))continue;
+  o.push({d,p:d.clone().multiply(ER).multiplyScalar(grow).add(EC),n:d.clone().divide(ER).normalize()});
+ }
+ return o;
+}
+function inst(grp,geo,pts,color,o={}){
+ const {sz=[.075,.2,.06],orient='flow',lift=0,jit=.08,rnd=.35}=o;
+ const im=new THREE.InstancedMesh(geo,new THREE.MeshStandardMaterial({roughness:.7}),pts.length);
+ const R=rng(11),hsl=new THREE.Color(color).getHSL({}),m=new THREE.Matrix4(),q=new THREE.Quaternion(),up=V3(0,1,0);
+ pts.forEach((s,i)=>{
+  let dir=s.n;
+  if(orient==='flow'){const dn=V3(0,-1,0);dir=dn.addScaledVector(s.n,-dn.dot(s.n));if(dir.lengthSq()<.05)dir.set(R()-.5,-.1,R()-.5);dir.normalize()}
+  else if(typeof orient==='function')dir=orient(s);
+  q.setFromUnitVectors(up,dir);
+  const k=1+(R()-.5)*rnd;
+  m.compose(s.p.clone().addScaledVector(s.n,lift),q,V3(sz[0]*k,sz[1]*k*(1+R()*.4),sz[2]*k));
+  im.setMatrixAt(i,m);
+  im.setColorAt(i,new THREE.Color().setHSL(hsl.h,hsl.s,Math.min(.95,Math.max(.03,hsl.l+(R()-.5)*jit*2))));
+ });
+ grp.add(im);
+}
+function locks(grp,pts,color,len,o={}){
+ const R=rng(5),hsl=new THREE.Color(color).getHSL({});
+ pts.forEach((s,i)=>{
+  const h=V3(s.d.x,0,s.d.z).normalize(),L=len*(.7+R()*.5),pa=[];
+  for(let k=0;k<=5;k++){const t=k/5;
+   pa.push(s.p.clone().addScaledVector(h,(o.flare??.1)*Math.sin(t*1.6)+.03).add(V3(Math.sin(t*4+i)*.03,-t*L,Math.cos(t*3+i)*.02)))}
+  grp.add(new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pa),12,o.r??.05,6),
+   mat(new THREE.Color().setHSL(hsl.h,hsl.s,Math.min(.95,Math.max(.03,hsl.l+(R()-.5)*.14))))));
+ });
+}
+function shell(color,grow){
+ const g=new THREE.SphereGeometry(1,40,28),pos=g.attributes.position,ix=g.index.array,keep=[],d=V3(0,0,0);
+ for(let i=0;i<ix.length;i+=3){let ok=true;
+  for(let k=0;k<3;k++){d.fromBufferAttribute(pos,ix[i+k]);if(d.y<thr(d)){ok=false;break}}
+  if(ok)keep.push(ix[i],ix[i+1],ix[i+2])}
+ g.setIndex(keep);g.scale(ER.x*grow,ER.y*grow,ER.z*grow);g.translate(EC.x,EC.y,EC.z);g.computeVertexNormals();
+ const m=mat(color);m.side=THREE.DoubleSide;return new THREE.Mesh(g,m);
+}
+// base = cabeza invisible que tapa el pelo que queda detrás + cuero cabelludo
+function base(color,grow){
+ const g=new THREE.Group(),oc=new THREE.Mesh(new THREE.SphereGeometry(1,24,16),new THREE.MeshBasicMaterial({colorWrite:false}));
+ oc.scale.copy(ER).multiplyScalar(.97);oc.position.copy(EC);oc.renderOrder=-1;g.add(oc);
+ g.add(shell(color,grow));return g;
+}
+const CAP=(g,c,n)=>inst(g,SPH,scalp(n,3,1.03),c);
+const STYLES=[
+ {n:'Sin peinado',b:()=>new THREE.Group()},
+ {n:'Corto',b:c=>{const g=base(c,1.02);CAP(g,c,320);return g}},
+ {n:'Afro',b:c=>{const g=base(c,1.15);
+  inst(g,SPH,scalp(170,9,1.28,()=>true,-.1),c,{sz:[.2,.2,.2],orient:'normal',rnd:.5});
+  inst(g,SPH,scalp(120,4,1.1),c,{sz:[.16,.16,.16],orient:'normal'});return g}},
+ {n:'Cresta',b:c=>{const g=base(dark(c),1.0);
+  inst(g,CONE,scalp(70,8,1.04,d=>Math.abs(d.x)<.16&&d.z>-.75&&d.y>.3),c,{sz:[.17,.55,.17],lift:.2,orient:s=>s.n.clone().add(V3(0,.6,.2)).normalize(),rnd:.6});return g}},
+ {n:'Melena larga',b:c=>{const g=base(c,1.02);CAP(g,c,300);
+  locks(g,scalp(46,6,1.0,d=>d.z<.3&&Math.abs(d.x)>.35&&d.y<.5),c,1.5,{r:.06,flare:.14});return g}},
+ {n:'Moño',b:c=>{const g=base(c,1.02);CAP(g,c,300);
+  const b=new THREE.Mesh(new THREE.SphereGeometry(.27,16,12),mat(c));b.position.set(0,1.0,-.2);g.add(b);
+  for(let i=0;i<3;i++){const r=new THREE.Mesh(new THREE.TorusGeometry(.27,.04,8,20),mat(dark(c)));r.position.copy(b.position);r.rotation.set(i*1.05,i*.7,0);g.add(r)}return g}},
+ {n:'Tupé',b:c=>{const g=base(c,1.02);CAP(g,c,280);
+  inst(g,SPH,scalp(130,12,1.06,d=>d.z>.05&&d.y>.55),c,{sz:[.11,.3,.1],lift:.05,rnd:.5,orient:s=>V3(0,1,.75).add(s.n).normalize()});return g}},
+ {n:'Coletas',b:c=>{const g=base(c,1.02);CAP(g,c,300);
+  [-1,1].forEach(sd=>{const o=V3(sd*.7,.3,-.1),b=new THREE.Mesh(new THREE.SphereGeometry(.14,12,8),mat(dark(c)));b.position.copy(o);g.add(b);
+   for(let i=0;i<8;i++){const a=i/8*6.28,p=[0,1,2,3,4].map(k=>o.clone().add(V3(sd*.06*k+Math.cos(a)*.1*(1+k*.1),-k*.22,Math.sin(a)*.1)));
+    g.add(new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(p),8,.04,5),mat(c)))}});return g}}
+];
+let cur=0,ci=2,pop=0;
+function render(){
+ const old=hair.getObject3D('mesh');
+ if(old)old.traverse(o=>{if(o.geometry&&o.geometry!==SPH&&o.geometry!==CONE)o.geometry.dispose();if(o.material)o.material.dispose()});
+ hair.setObject3D('mesh',STYLES[cur].b(COLORS[ci]));
+ $('#nombre').textContent=STYLES[cur].n}
+function go(d){cur=(cur+d+STYLES.length)%STYLES.length;pop=1;render()}
+const ACT={prev:()=>go(-1),next:()=>go(1),col:()=>{ci=(ci+1)%COLORS.length;pop=.6;render()}};
+document.querySelectorAll('.btn').forEach(b=>b.onclick=()=>ACT[b.id]());
+addEventListener('keydown',e=>{if(e.key==='ArrowLeft')go(-1);if(e.key==='ArrowRight')go(1);if(e.key==='c')ACT.col()});
+
+// ---- Posición del pelo según la cara ----
+const D=2,FOV=50,Hd=2*D*Math.tan(FOV/2*Math.PI/180);let Wd=Hd*16/9,AR=16/9;
+const lerp=(a,b,t)=>a+(b-a)*t;
+const S={p:V3(0,0,-D),q:new THREE.Quaternion(),s:1},qt=new THREE.Quaternion();
+// Pose 3D de la cabeza a partir de los puntos de la cara (giro, cabeceo e inclinación)
+function updateHair(f){
+ const lm=f.faceLandmarks[0],o=hair.object3D;
+ if(!lm){o.visible=false;return}
+ const P=i=>V3((lm[i].x-.5)*Wd,(.5-lm[i].y)*Hd,-lm[i].z*Wd);
+ const L=P(234),Rr=P(454),T=P(10),C=P(152);
+ const X=Rr.clone().sub(L);if(X.x<0)X.negate();X.normalize();
+ const Y=T.clone().sub(C).normalize(),Z=V3(0,0,0).crossVectors(X,Y).normalize();
+ Y.crossVectors(Z,X);
+ qt.setFromRotationMatrix(new THREE.Matrix4().makeBasis(X,Y,Z));
+ const w=L.distanceTo(Rr),k=o.visible?.5:1;
+ S.p.lerp(V3((T.x+C.x)/2,(T.y+C.y)/2,-D),k);S.q.slerp(qt,k);S.s=lerp(S.s,w,k);
+ pop*=.88;o.visible=true;
+ o.position.copy(S.p);o.quaternion.copy(S.q);o.scale.setScalar(S.s*(1+pop*.25));
+}
+
+// ---- Manos ----
+const dist=(a,b)=>Math.hypot((a.x-b.x)*AR,a.y-b.y);
+let hist=[],hover=null,hoverT=0,wasPinch=false,cool=0;
+const btns=[...document.querySelectorAll('.btn')];
+const estado=$('#estado');
+function updateHands(r,now){
+ const g=fx.getContext('2d');
+ if(fx.width!==glass.clientWidth){fx.width=glass.clientWidth;fx.height=glass.clientHeight}
+ const W=fx.width,H=fx.height;g.clearRect(0,0,W,H);
+ const h=r.landmarks[0];
+ estado.classList.toggle('on',!!h);
+ estado.textContent=h?'Mano detectada':'Muestra tu mano';
+ if(!h){hist=[];if(hover){hover.style.setProperty('--p',0);hover=null}wasPinch=false;return}
+ const X=p=>(1-p.x)*W,Y=p=>p.y*H;
+ // esqueleto escaneado
+ g.lineWidth=3;g.strokeStyle='rgba(244,196,48,.85)';g.fillStyle='#fff';
+ const con=HandLandmarker.HAND_CONNECTIONS||[];
+ for(const c of con){const a=h[c.start],b=h[c.end];g.beginPath();g.moveTo(X(a),Y(a));g.lineTo(X(b),Y(b));g.stroke()}
+ for(const p of h){g.beginPath();g.arc(X(p),Y(p),4,0,7);g.fill()}
+ const tip=h[8];
+ g.strokeStyle='#f4c430';g.lineWidth=4;g.beginPath();g.arc(X(tip),Y(tip),16,0,7);g.stroke();
+ // puntero y pellizco
+ const gr=glass.getBoundingClientRect(),cx=gr.left+(1-tip.x)*gr.width,cy=gr.top+tip.y*gr.height;
+ const pinch=dist(h[4],h[8])/dist(h[0],h[9])<.3;
+ let over=btns.find(b=>{const r=b.getBoundingClientRect(),m=12;return cx>r.left-m&&cx<r.right+m&&cy>r.top-m&&cy<r.bottom+m});
+ if(over!==hover){if(hover)hover.style.setProperty('--p',0);hover=over||null;hoverT=now}
+ if(hover){
+  const p=Math.min(1,(now-hoverT)/900);hover.style.setProperty('--p',p*100);
+  if((pinch&&!wasPinch)||p>=1){if(now>cool){ACT[hover.id]();cool=now+1000;hoverT=now+1000}}
+ }
+ wasPinch=pinch;
+ // deslizar la mano abierta
+ const px=1-h[9].x;hist.push({t:now,x:px});hist=hist.filter(q=>now-q.t<400);
+ if(!hover&&!pinch&&now>cool&&hist.length>3){
+  const d=hist[hist.length-1].x-hist[0].x;
+  if(Math.abs(d)>.38){go(d>0?1:-1);cool=now+1000;hist=[]}
+ }
+}
+
+// ---- Arranque ----
+async function init(){
+ try{
+  msg.textContent='Pidiendo acceso a la cámara…';
+  video.srcObject=await navigator.mediaDevices.getUserMedia({video:{width:1280,height:720,facingMode:'user'},audio:false});
+  await video.play();
+  AR=video.videoWidth/video.videoHeight;Wd=Hd*AR;
+  glass.style.aspectRatio=AR;glass.style.width=`min(92vw,${78*AR}vh)`;
+  msg.textContent='Cargando detectores de cara y manos…';
+  const fs=await FilesetResolver.forVisionTasks("https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14/wasm");
+  const base="https://storage.googleapis.com/mediapipe-models/";
+  const face=await FaceLandmarker.createFromOptions(fs,{baseOptions:{modelAssetPath:base+"face_landmarker/face_landmarker/float16/1/face_landmarker.task",delegate:"GPU"},runningMode:"VIDEO",numFaces:1});
+  const hands=await HandLandmarker.createFromOptions(fs,{baseOptions:{modelAssetPath:base+"hand_landmarker/hand_landmarker/float16/1/hand_landmarker.task",delegate:"GPU"},runningMode:"VIDEO",numHands:1});
+  const sc=document.querySelector('a-scene');if(!sc.hasLoaded)await new Promise(r=>sc.addEventListener('loaded',r));
+  render();msg.classList.add('hide');
+  let last=-1;
+  (function loop(){
+   if(video.readyState>=2&&video.currentTime!==last){
+    last=video.currentTime;const t=performance.now();
+    updateHair(face.detectForVideo(video,t));
+    updateHands(hands.detectForVideo(video,t),t);
+   }
+   requestAnimationFrame(loop);
+  })();
+ }catch(e){
+  msg.innerHTML='No se pudo iniciar el espejo.<br><small>'+(e.name==='NotAllowedError'?'Permite el acceso a la cámara y recarga la página.':'Abre la página desde http://localhost y revisa tu conexión.')+'</small>';
+  console.error(e);
+ }
+}
+init();
+</script>
+</body>
+</html>
