@@ -1,0 +1,4 @@
+{
+  "html.customData": ["./glyphcraft-kit/html-custom-data.json"],
+  "js/ts.implicitProjectConfig.checkJs": true
+}

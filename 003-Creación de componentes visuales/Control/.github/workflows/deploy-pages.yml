@@ -1,0 +1,39 @@
+# Despliegue en GitHub Pages.
+#
+# Este archivo solo funciona cuando el proyecto está en la RAÍZ de su propio
+# repositorio (GitHub ignora workflows dentro de subcarpetas). Al crear el
+# repo de GlyphCraft:
+#   1. Sube el contenido de esta carpeta a la raíz del repo nuevo.
+#   2. En Settings → Pages → Source, elige "GitHub Actions".
+#   3. Cada push a main publica en https://<usuario>.github.io/<repo>/
+#
+# No hay nada que compilar: se publica la carpeta tal cual.
+name: Desplegar en GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: .
+      - id: deployment
+        uses: actions/deploy-pages@v4

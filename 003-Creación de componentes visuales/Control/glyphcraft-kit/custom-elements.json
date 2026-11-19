@@ -1,0 +1,4363 @@
+{
+  "schemaVersion": "1.0.0",
+  "readme": "",
+  "modules": [
+    {
+      "kind": "javascript-module",
+      "path": "componentes/boton-runa/boton-runa.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "Botón con estética de runa tallada.\n\nPuede activarse con un clic normal o, si `hold-ms` es mayor que 0, exigir\nque se mantenga pulsado durante ese tiempo. El modo \"mantener\" sirve para\nacciones delicadas (como borrar todo) y para pulsar botones sin clic,\npor ejemplo con gestos.",
+          "name": "GcBotonRuna",
+          "cssProperties": [
+            {
+              "description": "Color de acento (borde, icono, brillo).",
+              "name": "--gc-rune-button-accent"
+            }
+          ],
+          "cssParts": [
+            {
+              "description": "El `<button>` interno.",
+              "name": "button"
+            },
+            {
+              "description": "Contenedor del icono.",
+              "name": "icon"
+            },
+            {
+              "description": "Texto principal.",
+              "name": "label"
+            },
+            {
+              "description": "Texto secundario.",
+              "name": "hint"
+            },
+            {
+              "description": "Barra de carga del modo mantener.",
+              "name": "charge"
+            }
+          ],
+          "slots": [
+            {
+              "description": "Texto principal del botón.",
+              "name": ""
+            },
+            {
+              "description": "Texto secundario bajo el principal (útil en menús).",
+              "name": "hint"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "tagName",
+              "type": {
+                "text": "string"
+              },
+              "static": true,
+              "default": "'gc-rune-button'"
+            },
+            {
+              "kind": "method",
+              "name": "define",
+              "static": true,
+              "description": "Registra `<gc-rune-button>` si no estaba registrado."
+            },
+            {
+              "kind": "field",
+              "name": "#internals",
+              "privacy": "private",
+              "type": {
+                "text": "ElementInternals"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#button",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLButtonElement"
+              },
+              "default": "(root.querySelector('button'))"
+            },
+            {
+              "kind": "field",
+              "name": "#icon",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLElement"
+              },
+              "default": "(root.querySelector('.icon'))"
+            },
+            {
+              "kind": "field",
+              "name": "#hovered",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "#charge",
+              "privacy": "private",
+              "type": {
+                "text": "number"
+              },
+              "default": "0"
+            },
+            {
+              "kind": "field",
+              "name": "#chargeSource",
+              "privacy": "private",
+              "type": {
+                "text": "ActivationSource | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#chargeStart",
+              "privacy": "private",
+              "type": {
+                "text": "number"
+              },
+              "default": "0"
+            },
+            {
+              "kind": "field",
+              "name": "#chargeFrame",
+              "privacy": "private",
+              "type": {
+                "text": "number"
+              },
+              "default": "0"
+            },
+            {
+              "kind": "field",
+              "name": "#activeTimer",
+              "privacy": "private",
+              "type": {
+                "text": "number"
+              },
+              "default": "0"
+            },
+            {
+              "kind": "field",
+              "name": "variant",
+              "return": {
+                "type": {
+                  "text": "RuneButtonVariant"
+                }
+              }
+            },
+            {
+              "kind": "field",
+              "name": "size",
+              "return": {
+                "type": {
+                  "text": "RuneButtonSize"
+                }
+              }
+            },
+            {
+              "kind": "field",
+              "name": "rune",
+              "return": {
+                "type": {
+                  "text": "string"
+                }
+              }
+            },
+            {
+              "kind": "field",
+              "name": "disabled",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              }
+            },
+            {
+              "kind": "field",
+              "name": "pressed",
+              "description": "Estado de interruptor: `true`/`false`, o `null` si no es un interruptor.",
+              "return": {
+                "type": {
+                  "text": "boolean | null"
+                }
+              }
+            },
+            {
+              "kind": "field",
+              "name": "holdMs",
+              "return": {
+                "type": {
+                  "text": "number"
+                }
+              }
+            },
+            {
+              "kind": "field",
+              "name": "state",
+              "return": {
+                "type": {
+                  "text": "RuneButtonState"
+                }
+              },
+              "readonly": true,
+              "type": {
+                "text": "RuneButtonState"
+              },
+              "description": "(Solo lectura) Estado de ejecución actual."
+            },
+            {
+              "kind": "field",
+              "name": "charge",
+              "return": {
+                "type": {
+                  "text": "number"
+                }
+              },
+              "readonly": true,
+              "type": {
+                "text": "number"
+              },
+              "description": "(Solo lectura) Carga acumulada en modo mantener, de 0 a 1."
+            },
+            {
+              "kind": "method",
+              "name": "activate",
+              "parameters": [
+                {
+                  "name": "source",
+                  "default": "'program'",
+                  "optional": true,
+                  "type": {
+                    "text": "ActivationSource"
+                  }
+                }
+              ],
+              "description": "Activa el botón desde código (por ejemplo, desde el cursor de la mano).",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "pulse",
+              "description": "Reproduce el destello de activación sin emitir ningún evento."
+            },
+            {
+              "kind": "method",
+              "name": "#setHovered",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "value",
+                  "type": {
+                    "text": "boolean"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "field",
+              "name": "#onClick",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "event",
+                  "type": {
+                    "text": "MouseEvent"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "field",
+              "name": "#onPointerDown",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "event",
+                  "type": {
+                    "text": "PointerEvent"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "field",
+              "name": "#onKeyDown",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "event",
+                  "type": {
+                    "text": "KeyboardEvent"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "field",
+              "name": "#onKeyUp",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "event",
+                  "type": {
+                    "text": "KeyboardEvent"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#startCharge",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "source",
+                  "type": {
+                    "text": "ActivationSource"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "field",
+              "name": "#tickCharge",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "#cancelCharge",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "#setCharge",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "value",
+                  "type": {
+                    "text": "number"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "field",
+              "name": "adoptedStyleSheets",
+              "type": {
+                "text": "array"
+              },
+              "default": "[baseStyles, styles]"
+            },
+            {
+              "kind": "field",
+              "name": "innerHTML",
+              "default": "` <button part=\"button\" type=\"button\"> <span part=\"icon\" class=\"icon\"></span> <span class=\"text\"> <span part=\"label\" class=\"label\"><slot></slot></span> <span part=\"hint\" class=\"hint\" hidden><slot name=\"hint\"></slot></span> </span> <span part=\"charge\" class=\"charge\" aria-hidden=\"true\"></span> </button>`"
+            }
+          ],
+          "events": [
+            {
+              "type": {
+                "text": "CustomEvent<{source: ActivationSource}>"
+              },
+              "description": "El botón se ha activado.",
+              "name": "rune-activate"
+            },
+            {
+              "type": {
+                "text": "CustomEvent<{charge: number}>"
+              },
+              "description": "La carga cambia mientras se mantiene pulsado.",
+              "name": "charge-change"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "variant",
+              "type": {
+                "text": "'primary' | 'ghost' | 'danger' | 'inscription'"
+              },
+              "description": "Estilo visual. Por defecto `primary`."
+            },
+            {
+              "name": "size",
+              "type": {
+                "text": "'sm' | 'md' | 'lg'"
+              },
+              "description": "Tamaño. Por defecto `md`."
+            },
+            {
+              "name": "rune",
+              "type": {
+                "text": "string"
+              },
+              "description": "Nombre del icono rúnico (ver `RUNE_NAMES`). Por defecto, sin icono."
+            },
+            {
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Desactiva el botón. Por defecto `false`."
+            },
+            {
+              "name": "hold-ms",
+              "type": {
+                "text": "number"
+              },
+              "description": "Milisegundos que hay que mantenerlo pulsado (0-10000). `0` = clic normal. Por defecto `0`."
+            },
+            {
+              "name": "pressed",
+              "type": {
+                "text": "'true' | 'false'"
+              },
+              "description": "Convierte el botón en interruptor (aria-pressed). Sin atributo, es un botón normal."
+            }
+          ],
+          "cssStates": [
+            {
+              "description": "Se está manteniendo pulsado.",
+              "name": "charging"
+            },
+            {
+              "description": "Acaba de activarse.",
+              "name": "active"
+            }
+          ],
+          "superclass": {
+            "name": "HTMLElement"
+          },
+          "tagName": "gc-rune-button",
+          "customElement": true,
+          "summary": "Botón temático con estados, icono rúnico y activación por pulsación mantenida."
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "GcBotonRuna",
+          "declaration": {
+            "name": "GcBotonRuna",
+            "module": "componentes/boton-runa/boton-runa.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "componentes/fondo-arcano/fondo-arcano.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "Fondo animado de motas de polvo mágico con ráfagas de chispas.\n\nUsa Canvas 2D (no WebGL) para ser ligero: se reserva el único contexto\nWebGL de la página para los efectos de hechizos. Cada color se pre-dibuja\nuna vez como \"sprite\" con degradado radial y luego se estampa con\n`drawImage`, que es mucho más rápido que crear degradados en cada mota.\n\nSi la persona ha pedido reducir el movimiento, se dibuja un único\nfotograma estático.",
+          "name": "GcFondoArcano",
+          "cssParts": [
+            {
+              "description": "Lienzo de las partículas.",
+              "name": "canvas"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "tagName",
+              "type": {
+                "text": "string"
+              },
+              "static": true,
+              "default": "'gc-arcane-backdrop'"
+            },
+            {
+              "kind": "method",
+              "name": "define",
+              "static": true,
+              "description": "Registra `<gc-arcane-backdrop>` si no estaba registrado."
+            },
+            {
+              "kind": "field",
+              "name": "#canvas",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLCanvasElement"
+              },
+              "default": "(root.querySelector('canvas'))"
+            },
+            {
+              "kind": "field",
+              "name": "#ctx",
+              "privacy": "private",
+              "type": {
+                "text": "CanvasRenderingContext2D"
+              },
+              "default": "ctx"
+            },
+            {
+              "kind": "field",
+              "name": "#motes",
+              "privacy": "private",
+              "type": {
+                "text": "Mote[]"
+              },
+              "default": "[]"
+            },
+            {
+              "kind": "field",
+              "name": "#sparks",
+              "privacy": "private",
+              "type": {
+                "text": "Spark[]"
+              },
+              "default": "[]"
+            },
+            {
+              "kind": "field",
+              "name": "#sprites",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLCanvasElement[]"
+              },
+              "default": "[]"
+            },
+            {
+              "kind": "field",
+              "name": "#width",
+              "privacy": "private",
+              "type": {
+                "text": "number"
+              },
+              "default": "0"
+            },
+            {
+              "kind": "field",
+              "name": "#height",
+              "privacy": "private",
+              "type": {
+                "text": "number"
+              },
+              "default": "0"
+            },
+            {
+              "kind": "field",
+              "name": "#pixelRatio",
+              "privacy": "private",
+              "type": {
+                "text": "number"
+              },
+              "default": "1"
+            },
+            {
+              "kind": "field",
+              "name": "#time",
+              "privacy": "private",
+              "type": {
+                "text": "number"
+              },
+              "default": "0"
+            },
+            {
+              "kind": "field",
+              "name": "#paused",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "#loop",
+              "privacy": "private",
+              "default": "new ControladorBucle((dt, t) => this.#frame(dt, t))"
+            },
+            {
+              "kind": "field",
+              "name": "#resize",
+              "privacy": "private",
+              "default": "new ControladorTamano(this, (info) => this.#onResize(info), { maxPixelRatio: 1.5 })"
+            },
+            {
+              "kind": "field",
+              "name": "#motion",
+              "privacy": "private",
+              "default": "new ControladorMovimientoReducido(() => this.#syncLoop())"
+            },
+            {
+              "kind": "field",
+              "name": "density",
+              "return": {
+                "type": {
+                  "text": "number"
+                }
+              }
+            },
+            {
+              "kind": "field",
+              "name": "palette",
+              "return": {
+                "type": {
+                  "text": "BackdropPalette"
+                }
+              }
+            },
+            {
+              "kind": "field",
+              "name": "moteCount",
+              "return": {
+                "type": {
+                  "text": "number"
+                }
+              },
+              "readonly": true,
+              "type": {
+                "text": "number"
+              },
+              "description": "(Solo lectura) Motas activas según tamaño y densidad."
+            },
+            {
+              "kind": "field",
+              "name": "running",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "readonly": true,
+              "type": {
+                "text": "boolean"
+              },
+              "description": "(Solo lectura) `true` si la animación está en marcha."
+            },
+            {
+              "kind": "method",
+              "name": "pause",
+              "description": "Congela la animación (por ejemplo, durante un hechizo exigente)."
+            },
+            {
+              "kind": "method",
+              "name": "resume",
+              "description": "Reanuda la animación tras `pause()`."
+            },
+            {
+              "kind": "method",
+              "name": "burst",
+              "parameters": [
+                {
+                  "name": "clientX",
+                  "type": {
+                    "text": "number"
+                  }
+                },
+                {
+                  "name": "clientY",
+                  "type": {
+                    "text": "number"
+                  }
+                },
+                {
+                  "name": "{ count = 28, spread = 1 }",
+                  "default": "{}"
+                },
+                {
+                  "name": "options",
+                  "optional": true,
+                  "type": {
+                    "text": "{ count?: number, spread?: number }"
+                  }
+                }
+              ],
+              "description": "Lanza una ráfaga de chispas desde un punto de la ventana.\n\nRecibe coordenadas de ventana (`clientX`/`clientY`) para poder pasarle\ndirectamente las de un evento de ratón o el centro de un botón.",
+              "return": {
+                "type": {
+                  "text": "number"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#syncLoop",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "#onResize",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "{ width, height, pixelRatio }"
+                },
+                {
+                  "name": "info",
+                  "type": {
+                    "text": "ResizeInfo"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#targetMoteCount",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "#syncMoteCount",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "#createMote",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "Mote"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#buildSprites",
+              "privacy": "private",
+              "description": "Pre-dibuja un sprite con halo por cada color de la paleta."
+            },
+            {
+              "kind": "method",
+              "name": "#frame",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "dt",
+                  "type": {
+                    "text": "number"
+                  }
+                },
+                {
+                  "name": "time",
+                  "type": {
+                    "text": "number"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#drawStatic",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "#draw",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "adoptedStyleSheets",
+              "type": {
+                "text": "array"
+              },
+              "default": "[baseStyles, styles]"
+            },
+            {
+              "kind": "field",
+              "name": "innerHTML",
+              "type": {
+                "text": "string"
+              },
+              "default": "'<canvas part=\"canvas\" aria-hidden=\"true\"></canvas><div class=\"vignette\"></div>'"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "density",
+              "type": {
+                "text": "number"
+              },
+              "description": "Densidad de motas de 0 a 1. Por defecto `0.5`."
+            },
+            {
+              "name": "palette",
+              "type": {
+                "text": "'arcane' | 'ember' | 'frost'"
+              },
+              "description": "Paleta de color. Por defecto `arcane`."
+            }
+          ],
+          "superclass": {
+            "name": "HTMLElement"
+          },
+          "tagName": "gc-arcane-backdrop",
+          "customElement": true,
+          "summary": "Fondo de partículas flotantes con ráfagas de chispas."
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "GcFondoArcano",
+          "declaration": {
+            "name": "GcFondoArcano",
+            "module": "componentes/fondo-arcano/fondo-arcano.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "componentes/glifo/glifo.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "Representación visual de un glifo (SVG).\n\nAdemás de dibujarlo, puede **enseñar a trazarlo** (`playTrace()` dibuja\nlos trazos en orden, con su número y su punto de inicio) y **activarlo**\n(`ignite()`: el glifo se ilumina y se consume).\n\nEl glifo se indica con `glyph-id` (se busca en `glyphLibrary`) o\nasignando directamente la propiedad `glyph`.",
+          "name": "GcGlifo",
+          "cssProperties": [
+            {
+              "description": "Color del glifo.",
+              "name": "--gc-glyph-ink"
+            },
+            {
+              "description": "Grosor del trazo (por defecto 2.2px).",
+              "name": "--gc-glyph-stroke"
+            },
+            {
+              "description": "Desenfoque del halo en unidades del glifo (radio = 1). Por defecto 0.035px.",
+              "name": "--gc-glyph-blur"
+            }
+          ],
+          "cssParts": [
+            {
+              "description": "El SVG.",
+              "name": "svg"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "tagName",
+              "type": {
+                "text": "string"
+              },
+              "static": true,
+              "default": "'gc-glyph'"
+            },
+            {
+              "kind": "method",
+              "name": "define",
+              "static": true
+            },
+            {
+              "kind": "field",
+              "name": "#glyph",
+              "privacy": "private",
+              "type": {
+                "text": "Glyph | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#svg",
+              "privacy": "private",
+              "type": {
+                "text": "SVGSVGElement"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#paths",
+              "privacy": "private",
+              "type": {
+                "text": "SVGPathElement[]"
+              },
+              "default": "[]"
+            },
+            {
+              "kind": "field",
+              "name": "#glowPaths",
+              "privacy": "private",
+              "type": {
+                "text": "SVGPathElement[]"
+              },
+              "default": "[]"
+            },
+            {
+              "kind": "field",
+              "name": "#markers",
+              "privacy": "private",
+              "type": {
+                "text": "SVGGElement[]"
+              },
+              "default": "[]"
+            },
+            {
+              "kind": "field",
+              "name": "#animations",
+              "privacy": "private",
+              "type": {
+                "text": "Animation[]"
+              },
+              "default": "[]"
+            },
+            {
+              "kind": "field",
+              "name": "#tracing",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "#traceToken",
+              "privacy": "private",
+              "type": {
+                "text": "number"
+              },
+              "default": "0"
+            },
+            {
+              "kind": "field",
+              "name": "#onLibraryChange",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "glyphId"
+            },
+            {
+              "kind": "field",
+              "name": "size"
+            },
+            {
+              "kind": "field",
+              "name": "mode"
+            },
+            {
+              "kind": "field",
+              "name": "glow"
+            },
+            {
+              "kind": "field",
+              "name": "ornate"
+            },
+            {
+              "kind": "field",
+              "name": "numbered"
+            },
+            {
+              "kind": "field",
+              "name": "glyph",
+              "return": {
+                "type": {
+                  "text": "Glyph | null"
+                }
+              },
+              "type": {
+                "text": "Glyph | null"
+              },
+              "description": "Glifo mostrado."
+            },
+            {
+              "kind": "field",
+              "name": "tracing",
+              "readonly": true,
+              "type": {
+                "text": "boolean"
+              },
+              "description": "(Solo lectura) Se está reproduciendo el trazado."
+            },
+            {
+              "kind": "method",
+              "name": "playTrace",
+              "parameters": [
+                {
+                  "name": "{ speed = 1, loop = false }",
+                  "default": "{}"
+                },
+                {
+                  "name": "options",
+                  "optional": true,
+                  "type": {
+                    "text": "{ speed?: number, loop?: boolean }"
+                  }
+                }
+              ],
+              "description": "Dibuja los trazos uno a uno, en el orden correcto.",
+              "return": {
+                "type": {
+                  "text": "Promise<boolean>"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "stop",
+              "description": "Detiene la animación y muestra el glifo completo."
+            },
+            {
+              "kind": "method",
+              "name": "ignite",
+              "parameters": [
+                {
+                  "name": "{ duration = 1400 }",
+                  "default": "{}"
+                },
+                {
+                  "name": "options",
+                  "optional": true,
+                  "type": {
+                    "text": "{ duration?: number }"
+                  }
+                }
+              ],
+              "description": "Activa el glifo: se ilumina, crece y se consume hasta desaparecer.\nTras la activación queda invisible hasta llamar a `reset()`.",
+              "return": {
+                "type": {
+                  "text": "Promise<void>"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "reset",
+              "description": "Vuelve a mostrar el glifo tras `ignite()` o `playTrace()`."
+            },
+            {
+              "kind": "method",
+              "name": "highlightStroke",
+              "parameters": [
+                {
+                  "name": "index",
+                  "type": {
+                    "text": "number | null"
+                  }
+                }
+              ],
+              "description": "Resalta un trazo (o ninguno con `null`) atenuando los demás."
+            },
+            {
+              "kind": "method",
+              "name": "#applySize",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "#resolve",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "#render",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "adoptedStyleSheets",
+              "type": {
+                "text": "array"
+              },
+              "default": "[baseStyles, styles]"
+            }
+          ],
+          "events": [
+            {
+              "type": {
+                "text": "CustomEvent<{glyphId: string}>"
+              },
+              "name": "trace-start"
+            },
+            {
+              "type": {
+                "text": "CustomEvent<{index: number}>"
+              },
+              "description": "Empieza a dibujarse el trazo `index`.",
+              "name": "trace-stroke"
+            },
+            {
+              "type": {
+                "text": "CustomEvent<{completed: boolean}>"
+              },
+              "description": "`completed` es false si se detuvo antes.",
+              "name": "trace-end"
+            },
+            {
+              "type": {
+                "text": "CustomEvent<{glyphId: string}>"
+              },
+              "description": "Terminó la activación.",
+              "name": "glyph-ignited"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "glyph-id",
+              "type": {
+                "text": "string"
+              },
+              "description": "Identificador en la biblioteca de glifos."
+            },
+            {
+              "name": "size",
+              "type": {
+                "text": "number"
+              },
+              "description": "Lado en píxeles (16-1024). Por defecto `160`."
+            },
+            {
+              "name": "glow",
+              "type": {
+                "text": "number"
+              },
+              "description": "Intensidad del halo (0-1). Por defecto `0.6`."
+            },
+            {
+              "name": "ornate",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Añade anillos decorativos exteriores."
+            },
+            {
+              "name": "numbered",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Muestra el número e inicio de cada trazo."
+            },
+            {
+              "type": {
+                "text": "'static' | 'ghost'"
+              },
+              "description": "`ghost` lo muestra tenue, como guía. Por defecto `static`.",
+              "name": "mode"
+            }
+          ],
+          "superclass": {
+            "name": "HTMLElement"
+          },
+          "tagName": "gc-glyph",
+          "customElement": true,
+          "summary": "Glifo en SVG con animación de trazado y activación."
+        },
+        {
+          "kind": "variable",
+          "name": "duration"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "GcGlifo",
+          "declaration": {
+            "name": "GcGlifo",
+            "module": "componentes/glifo/glifo.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "componentes/indicador-gesto/indicador-gesto.js",
+      "declarations": [
+        {
+          "kind": "variable",
+          "name": "GESTURE_STATES",
+          "description": "Estados válidos."
+        },
+        {
+          "kind": "class",
+          "description": "Indicador del gesto reconocido: icono, texto y anillo de progreso.\n\nEs un componente \"tonto\" (solo presentación): recibe el estado desde\nfuera y no sabe nada de cámaras ni del motor de gestos.",
+          "name": "GcIndicadorGesto",
+          "cssParts": [
+            {
+              "description": "Icono con el anillo.",
+              "name": "dial"
+            },
+            {
+              "description": "Texto del estado.",
+              "name": "label"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "tagName",
+              "type": {
+                "text": "string"
+              },
+              "static": true,
+              "default": "'gc-gesture-indicator'"
+            },
+            {
+              "kind": "method",
+              "name": "define",
+              "static": true
+            },
+            {
+              "kind": "field",
+              "name": "#internals",
+              "privacy": "private",
+              "type": {
+                "text": "ElementInternals"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#state",
+              "privacy": "private",
+              "type": {
+                "text": "GestureState"
+              },
+              "default": "'none'"
+            },
+            {
+              "kind": "field",
+              "name": "#progress",
+              "privacy": "private",
+              "type": {
+                "text": "number"
+              },
+              "default": "0"
+            },
+            {
+              "kind": "field",
+              "name": "#dial",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLElement"
+              },
+              "default": "(root.querySelector('.dial'))"
+            },
+            {
+              "kind": "field",
+              "name": "#icon",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLElement"
+              },
+              "default": "(root.querySelector('.icon-slot'))"
+            },
+            {
+              "kind": "field",
+              "name": "#label",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLElement"
+              },
+              "default": "(root.querySelector('.label'))"
+            },
+            {
+              "kind": "field",
+              "name": "state",
+              "return": {
+                "type": {
+                  "text": "GestureState"
+                }
+              },
+              "type": {
+                "text": "GestureState"
+              },
+              "description": "(Ejecución) Gesto actual. Por defecto `none`."
+            },
+            {
+              "kind": "field",
+              "name": "progress",
+              "type": {
+                "text": "number"
+              },
+              "description": "(Ejecución) Progreso de borrar/sellar (0-1). Por defecto 0."
+            },
+            {
+              "kind": "method",
+              "name": "#render",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "adoptedStyleSheets",
+              "type": {
+                "text": "array"
+              },
+              "default": "[baseStyles, styles]"
+            },
+            {
+              "kind": "field",
+              "name": "innerHTML",
+              "default": "` <span class=\"dial\" part=\"dial\"> <svg class=\"ring\" viewBox=\"0 0 40 40\" aria-hidden=\"true\"> <circle class=\"track\" cx=\"20\" cy=\"20\" r=\"18\"/> <circle class=\"value\" cx=\"20\" cy=\"20\" r=\"18\" pathLength=\"1\"/> </svg> <span class=\"icon-slot\"></span> </span> <span class=\"label\" part=\"label\"></span>`"
+            }
+          ],
+          "attributes": [
+            {
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Solo el icono, sin texto.",
+              "name": "compact"
+            }
+          ],
+          "cssStates": [
+            {
+              "description": "| idle | pointing | drawing | erasing | sealing - Gesto actual.",
+              "name": "none"
+            }
+          ],
+          "superclass": {
+            "name": "HTMLElement"
+          },
+          "tagName": "gc-gesture-indicator",
+          "customElement": true,
+          "summary": "Muestra qué gesto se está reconociendo."
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "GESTURE_STATES",
+          "declaration": {
+            "name": "GESTURE_STATES",
+            "module": "componentes/indicador-gesto/indicador-gesto.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "GcIndicadorGesto",
+          "declaration": {
+            "name": "GcIndicadorGesto",
+            "module": "componentes/indicador-gesto/indicador-gesto.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "componentes/deslizador-runa/deslizador-runa.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "Deslizador rúnico **asociado a formularios**.\n\nPor dentro usa un `<input type=\"range\">` nativo (teclado y lectores de\npantalla funcionan sin trabajo extra) y por fuera se comporta como un\ncontrol de formulario gracias a `ElementInternals`.",
+          "name": "GcDeslizadorRuna",
+          "cssProperties": [
+            {
+              "name": "--gc-rune-slider-accent"
+            }
+          ],
+          "cssParts": [
+            {
+              "name": "input"
+            },
+            {
+              "name": "value"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "tagName",
+              "type": {
+                "text": "string"
+              },
+              "static": true,
+              "default": "'gc-rune-slider'"
+            },
+            {
+              "kind": "field",
+              "name": "formAssociated",
+              "type": {
+                "text": "boolean"
+              },
+              "static": true,
+              "default": "true"
+            },
+            {
+              "kind": "method",
+              "name": "define",
+              "static": true
+            },
+            {
+              "kind": "field",
+              "name": "#internals",
+              "privacy": "private",
+              "type": {
+                "text": "ElementInternals"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#input",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLInputElement"
+              },
+              "default": "(root.querySelector('input'))"
+            },
+            {
+              "kind": "field",
+              "name": "#valueText",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLElement"
+              },
+              "default": "(root.querySelector('.value'))"
+            },
+            {
+              "kind": "field",
+              "name": "#formatter",
+              "privacy": "private",
+              "type": {
+                "text": "(value: number) => string"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#dirty",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "min",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "max",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "step",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "value",
+              "type": {
+                "text": "number"
+              },
+              "description": "(Ejecución) Valor actual."
+            },
+            {
+              "kind": "field",
+              "name": "formatter",
+              "type": {
+                "text": "(value: number) => string"
+              },
+              "description": "(Diseño) Cómo se muestra el valor. Por defecto, el número."
+            },
+            {
+              "kind": "field",
+              "name": "name",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "form",
+              "readonly": true,
+              "type": {
+                "text": "HTMLFormElement | null"
+              },
+              "description": "(Solo lectura)"
+            },
+            {
+              "kind": "method",
+              "name": "formResetCallback"
+            },
+            {
+              "kind": "method",
+              "name": "formDisabledCallback",
+              "parameters": [
+                {
+                  "name": "disabled",
+                  "type": {
+                    "text": "boolean"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#syncAttributes",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "changed",
+                  "optional": true,
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#sync",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "adoptedStyleSheets",
+              "type": {
+                "text": "array"
+              },
+              "default": "[baseStyles, styles]"
+            },
+            {
+              "kind": "field",
+              "name": "innerHTML",
+              "default": "` <label> <span class=\"label\"></span> <span class=\"value\" part=\"value\" aria-hidden=\"true\"></span> <input type=\"range\" part=\"input\"> </label>`"
+            }
+          ],
+          "events": [
+            {
+              "type": {
+                "text": "InputEvent"
+              },
+              "description": "Mientras se arrastra (evento nativo del input interno).",
+              "name": "input"
+            },
+            {
+              "type": {
+                "text": "CustomEvent<{value: number}>"
+              },
+              "description": "Al soltar o con el teclado.",
+              "name": "change"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "label",
+              "type": {
+                "text": "string"
+              },
+              "description": "Texto de la etiqueta."
+            },
+            {
+              "name": "min",
+              "type": {
+                "text": "number"
+              },
+              "description": "Mínimo. Por defecto `0`."
+            },
+            {
+              "name": "max",
+              "type": {
+                "text": "number"
+              },
+              "description": "Máximo. Por defecto `100`."
+            },
+            {
+              "name": "step",
+              "type": {
+                "text": "number"
+              },
+              "description": "Paso. Por defecto `1`."
+            },
+            {
+              "name": "value",
+              "type": {
+                "text": "number"
+              },
+              "description": "Valor inicial (y valor al restablecer el formulario)."
+            },
+            {
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              }
+            },
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "Nombre del campo en el formulario.",
+              "name": "name"
+            }
+          ],
+          "superclass": {
+            "name": "HTMLElement"
+          },
+          "tagName": "gc-rune-slider",
+          "customElement": true,
+          "summary": "Deslizador para formularios."
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "GcDeslizadorRuna",
+          "declaration": {
+            "name": "GcDeslizadorRuna",
+            "module": "componentes/deslizador-runa/deslizador-runa.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "componentes/interruptor-runa/interruptor-runa.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "Interruptor rúnico de dos estados, **asociado a formularios**.\n\nCon `static formAssociated = true` y `ElementInternals`, el navegador lo\ntrata como un control de formulario: participa en el envío (`name` /\n`value`), se restablece con `form.reset()` y aparece en `form.elements`.\nEl elemento interno tiene el rol accesible `switch` y toma su nombre del\ntexto de la etiqueta.",
+          "name": "GcInterruptorRuna",
+          "cssProperties": [
+            {
+              "name": "--gc-rune-toggle-accent"
+            }
+          ],
+          "cssParts": [
+            {
+              "name": "track"
+            },
+            {
+              "name": "thumb"
+            }
+          ],
+          "slots": [
+            {
+              "description": "Etiqueta.",
+              "name": ""
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "tagName",
+              "type": {
+                "text": "string"
+              },
+              "static": true,
+              "default": "'gc-rune-toggle'"
+            },
+            {
+              "kind": "field",
+              "name": "formAssociated",
+              "type": {
+                "text": "boolean"
+              },
+              "static": true,
+              "default": "true"
+            },
+            {
+              "kind": "method",
+              "name": "define",
+              "static": true
+            },
+            {
+              "kind": "field",
+              "name": "#internals",
+              "privacy": "private",
+              "type": {
+                "text": "ElementInternals"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#control",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLElement"
+              },
+              "default": "(root.querySelector('.control'))"
+            },
+            {
+              "kind": "field",
+              "name": "#checked",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "#dirty",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "checked",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "(Ejecución) Estado actual."
+            },
+            {
+              "kind": "field",
+              "name": "disabled"
+            },
+            {
+              "kind": "field",
+              "name": "name",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "value",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "form",
+              "readonly": true,
+              "type": {
+                "text": "HTMLFormElement | null"
+              },
+              "description": "(Solo lectura) Formulario al que pertenece."
+            },
+            {
+              "kind": "method",
+              "name": "toggle",
+              "description": "Cambia de estado como si se pulsara (emite `change`)."
+            },
+            {
+              "kind": "method",
+              "name": "formResetCallback"
+            },
+            {
+              "kind": "method",
+              "name": "formStateRestoreCallback",
+              "parameters": [
+                {
+                  "name": "state",
+                  "type": {
+                    "text": "string | null"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "formDisabledCallback",
+              "parameters": [
+                {
+                  "name": "disabled",
+                  "type": {
+                    "text": "boolean"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#toggleByUser",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "#sync",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "adoptedStyleSheets",
+              "type": {
+                "text": "array"
+              },
+              "default": "[baseStyles, styles]"
+            },
+            {
+              "kind": "field",
+              "name": "innerHTML",
+              "default": "` <span class=\"control\" role=\"switch\" tabindex=\"0\"> <span class=\"track\" part=\"track\"><span class=\"thumb\" part=\"thumb\"></span></span> <slot></slot> </span>`"
+            }
+          ],
+          "events": [
+            {
+              "type": {
+                "text": "CustomEvent<{checked: boolean}>"
+              },
+              "description": "Cambia por acción de la persona.",
+              "name": "change"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "checked",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Estado inicial (también es el valor al restablecer el formulario)."
+            },
+            {
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Desactivado."
+            },
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "Nombre del campo en el formulario.",
+              "name": "name"
+            },
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "Valor enviado cuando está activado. Por defecto `on`.",
+              "name": "value"
+            }
+          ],
+          "cssStates": [
+            {
+              "name": "checked"
+            }
+          ],
+          "superclass": {
+            "name": "HTMLElement"
+          },
+          "tagName": "gc-rune-toggle",
+          "customElement": true,
+          "summary": "Interruptor para formularios."
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "GcInterruptorRuna",
+          "declaration": {
+            "name": "GcInterruptorRuna",
+            "module": "componentes/interruptor-runa/interruptor-runa.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "componentes/medidor-arcano/medidor-arcano.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "Indicador de progreso con tres estilos: anillo con número (precisión),\nsellos (aciertos para aprender un glifo) o barra.\n\nUsa `ElementInternals` para exponer el rol ARIA `meter` y su valor: los\nlectores de pantalla lo anuncian como un medidor real.",
+          "name": "GcMedidorArcano",
+          "cssProperties": [
+            {
+              "description": "Color principal.",
+              "name": "--gc-meter-color"
+            },
+            {
+              "description": "Diámetro del anillo.",
+              "name": "--gc-meter-size"
+            }
+          ],
+          "cssParts": [
+            {
+              "name": "label"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "tagName",
+              "type": {
+                "text": "string"
+              },
+              "static": true,
+              "default": "'gc-arcane-meter'"
+            },
+            {
+              "kind": "method",
+              "name": "define",
+              "static": true
+            },
+            {
+              "kind": "field",
+              "name": "#internals",
+              "privacy": "private",
+              "type": {
+                "text": "ElementInternals"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#root",
+              "privacy": "private",
+              "type": {
+                "text": "ShadowRoot"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#shown",
+              "privacy": "private",
+              "type": {
+                "text": "number"
+              },
+              "default": "0"
+            },
+            {
+              "kind": "field",
+              "name": "#countFrame",
+              "privacy": "private",
+              "type": {
+                "text": "number"
+              },
+              "default": "0"
+            },
+            {
+              "kind": "field",
+              "name": "#previous",
+              "privacy": "private",
+              "type": {
+                "text": "number"
+              },
+              "default": "0"
+            },
+            {
+              "kind": "field",
+              "name": "value"
+            },
+            {
+              "kind": "field",
+              "name": "max"
+            },
+            {
+              "kind": "field",
+              "name": "variant",
+              "return": {
+                "type": {
+                  "text": "MeterVariant"
+                }
+              }
+            },
+            {
+              "kind": "field",
+              "name": "label"
+            },
+            {
+              "kind": "field",
+              "name": "threshold",
+              "return": {
+                "type": {
+                  "text": "number | null"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "setValue",
+              "parameters": [
+                {
+                  "name": "value",
+                  "type": {
+                    "text": "number"
+                  }
+                },
+                {
+                  "name": "{ animate = true }",
+                  "default": "{}"
+                },
+                {
+                  "name": "options",
+                  "optional": true,
+                  "type": {
+                    "text": "{ animate?: boolean }"
+                  }
+                }
+              ],
+              "description": "Cambia el valor, con o sin animación del número."
+            },
+            {
+              "kind": "method",
+              "name": "#update",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "animate",
+                  "type": {
+                    "text": "boolean"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#animateNumber",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "target",
+                  "type": {
+                    "text": "number"
+                  }
+                },
+                {
+                  "name": "animate",
+                  "type": {
+                    "text": "boolean"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "field",
+              "name": "role",
+              "type": {
+                "text": "string"
+              },
+              "default": "'meter'"
+            },
+            {
+              "kind": "field",
+              "name": "adoptedStyleSheets",
+              "type": {
+                "text": "array"
+              },
+              "default": "[baseStyles, styles]"
+            },
+            {
+              "kind": "field",
+              "name": "innerHTML",
+              "default": "` <div class=\"ring\"> <svg viewBox=\"0 0 40 40\" aria-hidden=\"true\"> <circle class=\"track\" cx=\"20\" cy=\"20\" r=\"18\"/> <circle class=\"value\" cx=\"20\" cy=\"20\" r=\"18\" pathLength=\"1\"/> <line class=\"threshold\" x1=\"38\" y1=\"20\" x2=\"41.5\" y2=\"20\"/> </svg> <span class=\"number\" aria-hidden=\"true\">0</span> </div> <div class=\"seals\" aria-hidden=\"true\"></div> <div class=\"bar\" aria-hidden=\"true\"><span></span></div> <span class=\"label\" part=\"label\"></span>`"
+            }
+          ],
+          "events": [
+            {
+              "type": {
+                "text": "CustomEvent<{value: number, max: number}>"
+              },
+              "description": "El valor alcanza el máximo.",
+              "name": "meter-complete"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "value",
+              "type": {
+                "text": "number"
+              },
+              "description": "Valor actual (0-max). Por defecto `0`."
+            },
+            {
+              "name": "max",
+              "type": {
+                "text": "number"
+              },
+              "description": "Valor máximo (> 0). Por defecto `100`."
+            },
+            {
+              "name": "variant",
+              "type": {
+                "text": "'ring' | 'seals' | 'bar'"
+              },
+              "description": "Estilo. Por defecto `ring`."
+            },
+            {
+              "name": "label",
+              "type": {
+                "text": "string"
+              },
+              "description": "Etiqueta visible y accesible."
+            },
+            {
+              "name": "threshold",
+              "type": {
+                "text": "number"
+              },
+              "description": "Valor a superar: añade una marca y los estados `passed`/`failed`."
+            }
+          ],
+          "cssStates": [
+            {
+              "description": "El valor alcanza `threshold`.",
+              "name": "passed"
+            },
+            {
+              "description": "Hay `threshold` y no se alcanza (con valor > 0).",
+              "name": "failed"
+            }
+          ],
+          "superclass": {
+            "name": "HTMLElement"
+          },
+          "tagName": "gc-arcane-meter",
+          "customElement": true,
+          "summary": "Indicador de progreso o precisión."
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "GcMedidorArcano",
+          "declaration": {
+            "name": "GcMedidorArcano",
+            "module": "componentes/medidor-arcano/medidor-arcano.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "componentes/capa-mano/capa-mano.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "Dibuja las manos detectadas: puntos de referencia, articulaciones,\nconexiones y el estado del gesto (color, anillo de progreso, cursor).\n\nSirve para que la persona entienda qué está viendo el programa y corrija\nsu postura. Puede colocarse:\n- encima de `<gc-camera-preview>` (mismo `fit` y `mirror`);\n- sobre el lienzo de dibujo, mostrando solo una `region` de la imagen\n  (la zona calibrada) con `fit=\"fill\"`.",
+          "name": "GcCapaMano",
+          "cssParts": [
+            {
+              "description": "Lienzo de dibujo.",
+              "name": "canvas"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "tagName",
+              "type": {
+                "text": "string"
+              },
+              "static": true,
+              "default": "'gc-hand-overlay'"
+            },
+            {
+              "kind": "method",
+              "name": "define",
+              "static": true
+            },
+            {
+              "kind": "field",
+              "name": "#canvas",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLCanvasElement"
+              },
+              "default": "(root.querySelector('canvas'))"
+            },
+            {
+              "kind": "field",
+              "name": "#ctx",
+              "privacy": "private",
+              "type": {
+                "text": "CanvasRenderingContext2D"
+              },
+              "default": "(this.#canvas.getContext('2d'))"
+            },
+            {
+              "kind": "field",
+              "name": "#frame",
+              "privacy": "private",
+              "type": {
+                "text": "HandFrame | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#gestures",
+              "privacy": "private",
+              "type": {
+                "text": "HandGestureInfo[]"
+              },
+              "default": "[]"
+            },
+            {
+              "kind": "field",
+              "name": "#region",
+              "privacy": "private",
+              "default": "FULL_REGION",
+              "type": {
+                "text": "Rect"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#guide",
+              "privacy": "private",
+              "type": {
+                "text": "Rect | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#width",
+              "privacy": "private",
+              "type": {
+                "text": "number"
+              },
+              "default": "0"
+            },
+            {
+              "kind": "field",
+              "name": "#height",
+              "privacy": "private",
+              "type": {
+                "text": "number"
+              },
+              "default": "0"
+            },
+            {
+              "kind": "field",
+              "name": "#pixelRatio",
+              "privacy": "private",
+              "type": {
+                "text": "number"
+              },
+              "default": "1"
+            },
+            {
+              "kind": "field",
+              "name": "#frameRequest",
+              "privacy": "private",
+              "type": {
+                "text": "number"
+              },
+              "default": "0"
+            },
+            {
+              "kind": "field",
+              "name": "#present",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "#lastSeen",
+              "privacy": "private",
+              "type": {
+                "text": "number"
+              },
+              "default": "0"
+            },
+            {
+              "kind": "field",
+              "name": "#resize",
+              "privacy": "private",
+              "default": "new ControladorTamano(this, ({ width, height, pixelRatio }) => { this.#width = width; this.#height = height; this.#pixelRatio = pixelRatio; this.#canvas.width = Math.round(width * pixelRatio); this.#canvas.height = Math.round(height * pixelRatio); this.#draw(); })"
+            },
+            {
+              "kind": "field",
+              "name": "variant",
+              "return": {
+                "type": {
+                  "text": "OverlayVariant"
+                }
+              }
+            },
+            {
+              "kind": "field",
+              "name": "mirror"
+            },
+            {
+              "kind": "field",
+              "name": "fit"
+            },
+            {
+              "kind": "field",
+              "name": "region",
+              "return": {
+                "type": {
+                  "text": "Rect"
+                }
+              },
+              "type": {
+                "text": "Rect"
+              },
+              "description": "(Diseño) Parte de la imagen que se muestra, normalizada. Por defecto toda."
+            },
+            {
+              "kind": "field",
+              "name": "guide",
+              "return": {
+                "type": {
+                  "text": "Rect | null"
+                }
+              },
+              "type": {
+                "text": "Rect | null"
+              },
+              "description": "(Diseño) Rectángulo guía (p. ej. zona de trazado), normalizado a la imagen."
+            },
+            {
+              "kind": "field",
+              "name": "frame",
+              "type": {
+                "text": "HandFrame | null"
+              },
+              "description": "(Ejecución) Último fotograma de manos."
+            },
+            {
+              "kind": "field",
+              "name": "gestures",
+              "type": {
+                "text": "HandGestureInfo[]"
+              },
+              "description": "(Ejecución) Estado de gesto de cada mano."
+            },
+            {
+              "kind": "field",
+              "name": "handCount",
+              "readonly": true,
+              "type": {
+                "text": "number"
+              },
+              "description": "(Solo lectura) Manos en el último fotograma."
+            },
+            {
+              "kind": "method",
+              "name": "projectPoint",
+              "parameters": [
+                {
+                  "name": "point",
+                  "type": {
+                    "text": "{ x: number, y: number }"
+                  }
+                }
+              ],
+              "description": "Convierte un punto normalizado de la imagen a píxeles de este elemento,\naplicando `region`, `fit` y `mirror`. Útil para alinear otras capas.",
+              "return": {
+                "type": {
+                  "text": "{ x: number, y: number }"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "clear",
+              "description": "Borra el dibujo y olvida el último fotograma."
+            },
+            {
+              "kind": "method",
+              "name": "validateRect",
+              "static": true,
+              "parameters": [
+                {
+                  "name": "value",
+                  "type": {
+                    "text": "unknown"
+                  }
+                },
+                {
+                  "name": "name",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "Comprueba que un rectángulo normalizado es válido.",
+              "return": {
+                "type": {
+                  "text": "Rect"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#trackPresence",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "frame",
+                  "type": {
+                    "text": "HandFrame | null"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#requestDraw",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "#project",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "p",
+                  "type": {
+                    "text": "{ x: number, y: number }"
+                  }
+                }
+              ],
+              "description": "Convierte un punto normalizado de la imagen a píxeles del lienzo."
+            },
+            {
+              "kind": "method",
+              "name": "#draw",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "#drawHand",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "pts",
+                  "type": {
+                    "text": "{ x: number, y: number }[]"
+                  }
+                },
+                {
+                  "name": "color",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#drawGesture",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "gesture",
+                  "type": {
+                    "text": "HandGestureInfo"
+                  }
+                },
+                {
+                  "name": "pts",
+                  "type": {
+                    "text": "{ x: number, y: number }[]"
+                  }
+                },
+                {
+                  "name": "color",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "Indicadores del gesto: anillo de progreso (borrar/sellar) o cursor."
+            },
+            {
+              "kind": "method",
+              "name": "#drawGuide",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "rect",
+                  "type": {
+                    "text": "Rect"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "field",
+              "name": "adoptedStyleSheets",
+              "type": {
+                "text": "array"
+              },
+              "default": "[baseStyles, styles]"
+            },
+            {
+              "kind": "field",
+              "name": "innerHTML",
+              "type": {
+                "text": "string"
+              },
+              "default": "'<canvas part=\"canvas\" aria-hidden=\"true\"></canvas>'"
+            }
+          ],
+          "events": [
+            {
+              "type": {
+                "text": "CustomEvent<{count: number, handedness: string[]}>"
+              },
+              "description": "Aparecen manos tras no haber ninguna.",
+              "name": "hand-detected"
+            },
+            {
+              "type": {
+                "text": "CustomEvent<{}>"
+              },
+              "description": "Dejan de verse manos durante 300 ms.",
+              "name": "hand-lost"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "variant",
+              "type": {
+                "text": "'skeleton' | 'constellation' | 'minimal'"
+              },
+              "description": "Estilo: esqueleto, constelación o mínimo. Por defecto `skeleton`."
+            },
+            {
+              "name": "mirror",
+              "type": {
+                "text": "'on' | 'off'"
+              },
+              "description": "Dibujar en espejo. Por defecto `on`."
+            },
+            {
+              "name": "fit",
+              "type": {
+                "text": "'cover' | 'contain' | 'fill'"
+              },
+              "description": "Ajuste de la imagen a la caja. Por defecto `cover`."
+            }
+          ],
+          "superclass": {
+            "name": "HTMLElement"
+          },
+          "tagName": "gc-hand-overlay",
+          "customElement": true,
+          "summary": "Visualización de manos y gestos."
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "GcCapaMano",
+          "declaration": {
+            "name": "GcCapaMano",
+            "module": "componentes/capa-mano/capa-mano.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "componentes/lienzo-glifo/lienzo-glifo.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "Lienzo donde se dibujan los trazos de un glifo con tinta luminosa.\n\nNo sabe de dónde vienen los puntos: los recibe por métodos\n(`beginStroke` / `addPoint` / `endStroke`) desde los gestos de la mano, o\ndel ratón y la pantalla táctil si `pointer-input` está activo.\n\nLas coordenadas son **normalizadas** (0-1 en cada eje), así los trazos no\ndependen del tamaño en pantalla. Para glifos sin deformar, usa un\nelemento cuadrado.",
+          "name": "GcLienzoGlifo",
+          "cssParts": [
+            {
+              "description": "El lienzo.",
+              "name": "canvas"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "tagName",
+              "type": {
+                "text": "string"
+              },
+              "static": true,
+              "default": "'gc-glyph-canvas'"
+            },
+            {
+              "kind": "method",
+              "name": "define",
+              "static": true
+            },
+            {
+              "kind": "field",
+              "name": "#canvas",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLCanvasElement"
+              },
+              "default": "(root.querySelector('canvas'))"
+            },
+            {
+              "kind": "field",
+              "name": "#ctx",
+              "privacy": "private",
+              "type": {
+                "text": "CanvasRenderingContext2D"
+              },
+              "default": "(this.#canvas.getContext('2d'))"
+            },
+            {
+              "kind": "field",
+              "name": "#strokes",
+              "privacy": "private",
+              "type": {
+                "text": "Stroke[]"
+              },
+              "default": "[]"
+            },
+            {
+              "kind": "field",
+              "name": "#current",
+              "privacy": "private",
+              "type": {
+                "text": "Stroke | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#width",
+              "privacy": "private",
+              "type": {
+                "text": "number"
+              },
+              "default": "0"
+            },
+            {
+              "kind": "field",
+              "name": "#height",
+              "privacy": "private",
+              "type": {
+                "text": "number"
+              },
+              "default": "0"
+            },
+            {
+              "kind": "field",
+              "name": "#pixelRatio",
+              "privacy": "private",
+              "type": {
+                "text": "number"
+              },
+              "default": "1"
+            },
+            {
+              "kind": "field",
+              "name": "#drawRequest",
+              "privacy": "private",
+              "type": {
+                "text": "number"
+              },
+              "default": "0"
+            },
+            {
+              "kind": "field",
+              "name": "#pointerId",
+              "privacy": "private",
+              "type": {
+                "text": "number"
+              },
+              "default": "-1"
+            },
+            {
+              "kind": "field",
+              "name": "#clearing",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "#guide",
+              "privacy": "private",
+              "type": {
+                "text": "{ x: number, y: number }[][] | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#feedback",
+              "privacy": "private",
+              "type": {
+                "text": "StrokeGrade[]"
+              },
+              "default": "[]"
+            },
+            {
+              "kind": "field",
+              "name": "#resize",
+              "privacy": "private",
+              "default": "new ControladorTamano(this, ({ width, height, pixelRatio }) => { this.#width = width; this.#height = height; this.#pixelRatio = pixelRatio; this.#canvas.width = Math.round(width * pixelRatio); this.#canvas.height = Math.round(height * pixelRatio); this.#draw(); })"
+            },
+            {
+              "kind": "field",
+              "name": "ink"
+            },
+            {
+              "kind": "field",
+              "name": "lineWidth"
+            },
+            {
+              "kind": "field",
+              "name": "maxStrokes"
+            },
+            {
+              "kind": "field",
+              "name": "pointerInput"
+            },
+            {
+              "kind": "field",
+              "name": "readonly"
+            },
+            {
+              "kind": "field",
+              "name": "guideStyle"
+            },
+            {
+              "kind": "field",
+              "name": "guideNext"
+            },
+            {
+              "kind": "field",
+              "name": "guide",
+              "return": {
+                "type": {
+                  "text": "{ x: number, y: number }[][] | null"
+                }
+              },
+              "type": {
+                "text": "{ x: number, y: number }[][] | null"
+              },
+              "description": "(Diseño) Trazos modelo que se muestran como guía."
+            },
+            {
+              "kind": "field",
+              "name": "feedback",
+              "return": {
+                "type": {
+                  "text": "StrokeGrade[]"
+                }
+              },
+              "type": {
+                "text": "StrokeGrade[]"
+              },
+              "description": "(Ejecución) Corrección por trazo: colorea cada trazo. Se borra al cambiar los trazos."
+            },
+            {
+              "kind": "field",
+              "name": "strokes",
+              "return": {
+                "type": {
+                  "text": "Stroke[]"
+                }
+              },
+              "readonly": true,
+              "type": {
+                "text": "Stroke[]"
+              },
+              "description": "(Solo lectura) Copia de los trazos terminados."
+            },
+            {
+              "kind": "field",
+              "name": "strokeCount",
+              "readonly": true,
+              "type": {
+                "text": "number"
+              },
+              "description": "(Solo lectura) Número de trazos terminados."
+            },
+            {
+              "kind": "field",
+              "name": "isDrawing",
+              "readonly": true,
+              "type": {
+                "text": "boolean"
+              },
+              "description": "(Solo lectura) Hay un trazo en curso."
+            },
+            {
+              "kind": "method",
+              "name": "beginStroke",
+              "parameters": [
+                {
+                  "name": "point",
+                  "description": "Normalizado (0-1).",
+                  "type": {
+                    "text": "{ x: number, y: number }"
+                  }
+                },
+                {
+                  "name": "{ source = 'program' }",
+                  "default": "{}"
+                },
+                {
+                  "name": "options",
+                  "optional": true,
+                  "type": {
+                    "text": "{ source?: StrokeSource }"
+                  }
+                }
+              ],
+              "description": "Empieza un trazo.",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "addPoint",
+              "parameters": [
+                {
+                  "name": "point",
+                  "type": {
+                    "text": "{ x: number, y: number }"
+                  }
+                }
+              ],
+              "description": "Añade un punto al trazo en curso. Los puntos casi idénticos al anterior se ignoran.",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "endStroke",
+              "description": "Termina el trazo en curso. Si es demasiado corto, se descarta.",
+              "return": {
+                "type": {
+                  "text": "Stroke | null"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "cancelStroke",
+              "description": "Descarta el trazo en curso sin guardarlo."
+            },
+            {
+              "kind": "method",
+              "name": "undo",
+              "description": "Elimina el último trazo.",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "clear",
+              "parameters": [
+                {
+                  "name": "{ animated = true }",
+                  "default": "{}"
+                },
+                {
+                  "name": "options",
+                  "optional": true,
+                  "type": {
+                    "text": "{ animated?: boolean }"
+                  }
+                }
+              ],
+              "description": "Borra todos los trazos, con un desvanecimiento opcional.\nEmite `glyph-clearing` antes (cancelable) y `glyph-cleared` después.",
+              "return": {
+                "type": {
+                  "text": "Promise<boolean>"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "loadStrokes",
+              "parameters": [
+                {
+                  "name": "strokes",
+                  "type": {
+                    "text": "Stroke[]"
+                  }
+                }
+              ],
+              "description": "Sustituye los trazos (por ejemplo, para restaurar un dibujo guardado)."
+            },
+            {
+              "kind": "method",
+              "name": "toJSON",
+              "description": "Datos serializables del dibujo."
+            },
+            {
+              "kind": "method",
+              "name": "strokeLength",
+              "static": true,
+              "parameters": [
+                {
+                  "name": "points",
+                  "type": {
+                    "text": "{ x: number, y: number }[]"
+                  }
+                }
+              ],
+              "description": "Longitud de un trazo (en unidades normalizadas)."
+            },
+            {
+              "kind": "method",
+              "name": "#toPoint",
+              "static": true,
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "point",
+                  "type": {
+                    "text": "{ x: number, y: number }"
+                  }
+                },
+                {
+                  "name": "t",
+                  "default": "performance.now()",
+                  "optional": true,
+                  "type": {
+                    "text": "number"
+                  }
+                }
+              ],
+              "description": "Valida y normaliza un punto.",
+              "return": {
+                "type": {
+                  "text": "StrokePoint"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#changed",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "#updateLabel",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "#normalize",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "event",
+                  "type": {
+                    "text": "PointerEvent"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "field",
+              "name": "#onPointerDown",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "event",
+                  "type": {
+                    "text": "PointerEvent"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "field",
+              "name": "#onPointerMove",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "event",
+                  "type": {
+                    "text": "PointerEvent"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "field",
+              "name": "#onPointerUp",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "event",
+                  "type": {
+                    "text": "PointerEvent"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#requestDraw",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "#draw",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "#drawGuide",
+              "privacy": "private",
+              "description": "Guía: trazos modelo discontinuos; el siguiente, más visible y con su inicio marcado."
+            },
+            {
+              "kind": "method",
+              "name": "#drawStroke",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "stroke",
+                  "type": {
+                    "text": "Stroke"
+                  }
+                },
+                {
+                  "name": "live",
+                  "type": {
+                    "text": "boolean"
+                  }
+                },
+                {
+                  "name": "grade",
+                  "description": "Corrección (cambia el color de la tinta).",
+                  "type": {
+                    "text": "StrokeGrade"
+                  }
+                }
+              ],
+              "description": "Dibuja un trazo en dos pasadas: halo ancho y tenue + núcleo brillante.\nLas curvas pasan por los puntos medios entre muestras para suavizarlo."
+            },
+            {
+              "kind": "field",
+              "name": "adoptedStyleSheets",
+              "type": {
+                "text": "array"
+              },
+              "default": "[baseStyles, styles]"
+            },
+            {
+              "kind": "field",
+              "name": "innerHTML",
+              "type": {
+                "text": "string"
+              },
+              "default": "'<canvas part=\"canvas\"></canvas>'"
+            }
+          ],
+          "events": [
+            {
+              "type": {
+                "text": "CustomEvent<{point: StrokePoint, source: StrokeSource}>"
+              },
+              "description": "Empieza un trazo.",
+              "name": "drawing-started"
+            },
+            {
+              "type": {
+                "text": "CustomEvent<{stroke: Stroke | null, accepted: boolean, index: number}>"
+              },
+              "description": "Termina un trazo (rechazado si es demasiado corto).",
+              "name": "drawing-ended"
+            },
+            {
+              "type": {
+                "text": "CustomEvent<{count: number}>"
+              },
+              "description": "Cambia el número de trazos.",
+              "name": "strokes-changed"
+            },
+            {
+              "type": {
+                "text": "CustomEvent<{count: number}>"
+              },
+              "description": "Va a borrarse todo. **Cancelable** con `preventDefault()`.",
+              "name": "glyph-clearing"
+            },
+            {
+              "type": {
+                "text": "CustomEvent<{count: number}>"
+              },
+              "description": "Se ha borrado todo.",
+              "name": "glyph-cleared"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "ink",
+              "type": {
+                "text": "string"
+              },
+              "description": "Color de la tinta (cualquier color CSS). Por defecto dorado `#e8c675`."
+            },
+            {
+              "name": "line-width",
+              "type": {
+                "text": "number"
+              },
+              "description": "Grosor en píxeles (1-40). Por defecto `4`."
+            },
+            {
+              "name": "guide-style",
+              "type": {
+                "text": "'ghost' | 'faint' | 'none'"
+              },
+              "description": "Visibilidad de la guía. Por defecto `ghost`."
+            },
+            {
+              "name": "guide-next",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Resalta en la guía el siguiente trazo que toca dibujar."
+            },
+            {
+              "type": {
+                "text": "number"
+              },
+              "description": "Máximo de trazos (1-200). Por defecto `32`.",
+              "name": "max-strokes"
+            },
+            {
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Permite dibujar con ratón o pantalla táctil.",
+              "name": "pointer-input"
+            },
+            {
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Impide añadir trazos.",
+              "name": "readonly"
+            }
+          ],
+          "superclass": {
+            "name": "HTMLElement"
+          },
+          "tagName": "gc-glyph-canvas",
+          "customElement": true,
+          "summary": "Área de dibujo de glifos."
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "GcLienzoGlifo",
+          "declaration": {
+            "name": "GcLienzoGlifo",
+            "module": "componentes/lienzo-glifo/lienzo-glifo.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "componentes/susurro/susurro.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "Avisos efímeros con estética de susurro arcano (notificaciones).\n\nSe coloca una sola vez en la página y se usa mediante su método `show()`.\nEl contenido siempre se inserta como texto (nunca como HTML), así que es\nseguro mostrar mensajes con datos externos.\n\nAccesibilidad: la región es `role=\"status\"` (lectores de pantalla la\nanuncian sin interrumpir) y los avisos de error usan `role=\"alert\"`.",
+          "name": "GcSusurro",
+          "cssParts": [
+            {
+              "description": "Cada aviso.",
+              "name": "whisper"
+            },
+            {
+              "description": "Botón de cerrar.",
+              "name": "close"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "tagName",
+              "type": {
+                "text": "string"
+              },
+              "static": true,
+              "default": "'gc-whisper'"
+            },
+            {
+              "kind": "method",
+              "name": "define",
+              "static": true,
+              "description": "Registra `<gc-whisper>` si no estaba registrado."
+            },
+            {
+              "kind": "field",
+              "name": "#active",
+              "privacy": "private",
+              "default": "new Map()",
+              "type": {
+                "text": "Map<string, ActiveWhisper>"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#nextId",
+              "privacy": "private",
+              "type": {
+                "text": "number"
+              },
+              "default": "1"
+            },
+            {
+              "kind": "field",
+              "name": "#root",
+              "privacy": "private",
+              "type": {
+                "text": "ShadowRoot"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "position",
+              "return": {
+                "type": {
+                  "text": "WhisperPosition"
+                }
+              }
+            },
+            {
+              "kind": "field",
+              "name": "maxVisible",
+              "return": {
+                "type": {
+                  "text": "number"
+                }
+              }
+            },
+            {
+              "kind": "field",
+              "name": "count",
+              "return": {
+                "type": {
+                  "text": "number"
+                }
+              },
+              "readonly": true,
+              "type": {
+                "text": "number"
+              },
+              "description": "(Solo lectura) Avisos visibles ahora mismo."
+            },
+            {
+              "kind": "method",
+              "name": "show",
+              "parameters": [
+                {
+                  "name": "options",
+                  "type": {
+                    "text": "WhisperOptions"
+                  }
+                }
+              ],
+              "description": "Muestra un aviso.",
+              "return": {
+                "type": {
+                  "text": "string"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "dismiss",
+              "parameters": [
+                {
+                  "name": "id",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "Retira un aviso.",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "dismissAll",
+              "description": "Retira todos los avisos.",
+              "return": {
+                "type": {
+                  "text": "number"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#render",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "id",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "type",
+                  "type": {
+                    "text": "WhisperType"
+                  }
+                },
+                {
+                  "name": "title",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "message",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "Construye el aviso con `textContent` para no interpretar HTML ajeno."
+            },
+            {
+              "kind": "method",
+              "name": "#startTimer",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "entry",
+                  "type": {
+                    "text": "ActiveWhisper"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#pauseTimer",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "entry",
+                  "type": {
+                    "text": "ActiveWhisper"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#enforceLimit",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "#remove",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "id",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "reason",
+                  "type": {
+                    "text": "DismissReason"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#reducedMotion",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "adoptedStyleSheets",
+              "type": {
+                "text": "array"
+              },
+              "default": "[baseStyles, styles]"
+            }
+          ],
+          "events": [
+            {
+              "type": {
+                "text": "CustomEvent<{id: string, type: WhisperType, title: string, message: string}>"
+              },
+              "description": "Se ha mostrado un aviso.",
+              "name": "whisper-shown"
+            },
+            {
+              "type": {
+                "text": "CustomEvent<{id: string, reason: DismissReason}>"
+              },
+              "description": "Se ha retirado un aviso.",
+              "name": "whisper-dismissed"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "position",
+              "type": {
+                "text": "'top-end' | 'top-center' | 'bottom-end' | 'bottom-center'"
+              },
+              "description": "Esquina donde aparecen. Por defecto `top-end`."
+            },
+            {
+              "name": "max-visible",
+              "type": {
+                "text": "number"
+              },
+              "description": "Máximo de avisos simultáneos (1-10). Por defecto `3`."
+            }
+          ],
+          "superclass": {
+            "name": "HTMLElement"
+          },
+          "tagName": "gc-whisper",
+          "customElement": true,
+          "summary": "Pila de notificaciones temporales."
+        },
+        {
+          "kind": "variable",
+          "name": "id",
+          "default": "`whisper-${this.#nextId++}`"
+        },
+        {
+          "kind": "variable",
+          "name": "element"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "GcSusurro",
+          "declaration": {
+            "name": "GcSusurro",
+            "module": "componentes/susurro/susurro.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "componentes/tarjeta-glifo/tarjeta-glifo.js",
+      "declarations": [
+        {
+          "kind": "variable",
+          "name": "ELEMENT_LABELS",
+          "description": "Nombres en castellano de cada tipo de magia."
+        },
+        {
+          "kind": "class",
+          "description": "Entrada del grimorio: miniatura del glifo, nombre, tipo de magia,\ndificultad y sellos de aprendizaje.\n\nEs un ejemplo de **composición**: reutiliza `<gc-glyph>` y\n`<gc-arcane-meter>` dentro de su Shadow DOM.",
+          "name": "GcTarjetaGlifo",
+          "cssProperties": [
+            {
+              "description": "Color del texto y del glifo.",
+              "name": "--gc-glyph-card-ink"
+            },
+            {
+              "description": "Color de lo destacado.",
+              "name": "--gc-glyph-card-accent"
+            }
+          ],
+          "cssParts": [
+            {
+              "description": "El botón de la tarjeta.",
+              "name": "card"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "tagName",
+              "type": {
+                "text": "string"
+              },
+              "static": true,
+              "default": "'gc-glyph-card'"
+            },
+            {
+              "kind": "method",
+              "name": "define",
+              "static": true
+            },
+            {
+              "kind": "field",
+              "name": "#root",
+              "privacy": "private",
+              "type": {
+                "text": "ShadowRoot"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#onLibraryChange",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "glyphId"
+            },
+            {
+              "kind": "field",
+              "name": "progress"
+            },
+            {
+              "kind": "field",
+              "name": "required"
+            },
+            {
+              "kind": "field",
+              "name": "learned"
+            },
+            {
+              "kind": "field",
+              "name": "mastered"
+            },
+            {
+              "kind": "field",
+              "name": "selected"
+            },
+            {
+              "kind": "method",
+              "name": "select",
+              "description": "Selecciona la tarjeta (como si se pulsara)."
+            },
+            {
+              "kind": "method",
+              "name": "#render",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "adoptedStyleSheets",
+              "type": {
+                "text": "array"
+              },
+              "default": "[baseStyles, styles]"
+            },
+            {
+              "kind": "field",
+              "name": "innerHTML",
+              "default": "` <button part=\"card\" type=\"button\"> <gc-glyph size=\"56\"></gc-glyph> <span> <span class=\"name\"></span> <span class=\"meta\"><span class=\"element\"></span> · <span class=\"stars\"></span></span> </span> <span class=\"status\"> <span class=\"badge\"></span> <gc-arcane-meter variant=\"seals\"></gc-arcane-meter> </span> </button>`"
+            }
+          ],
+          "events": [
+            {
+              "type": {
+                "text": "CustomEvent<{glyphId: string}>"
+              },
+              "description": "Se ha elegido la tarjeta.",
+              "name": "glyph-select"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "glyph-id",
+              "type": {
+                "text": "string"
+              },
+              "description": "Glifo de la biblioteca."
+            },
+            {
+              "name": "progress",
+              "type": {
+                "text": "number"
+              },
+              "description": "Aciertos conseguidos. Por defecto `0`."
+            },
+            {
+              "name": "required",
+              "type": {
+                "text": "number"
+              },
+              "description": "Aciertos necesarios para aprenderlo. Por defecto `3`."
+            },
+            {
+              "name": "learned",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "El glifo está aprendido."
+            },
+            {
+              "name": "mastered",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "El glifo está dominado."
+            },
+            {
+              "name": "selected",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Es la página abierta del grimorio."
+            }
+          ],
+          "superclass": {
+            "name": "HTMLElement"
+          },
+          "tagName": "gc-glyph-card",
+          "customElement": true,
+          "summary": "Tarjeta de un glifo del grimorio."
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "ELEMENT_LABELS",
+          "declaration": {
+            "name": "ELEMENT_LABELS",
+            "module": "componentes/tarjeta-glifo/tarjeta-glifo.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "GcTarjetaGlifo",
+          "declaration": {
+            "name": "GcTarjetaGlifo",
+            "module": "componentes/tarjeta-glifo/tarjeta-glifo.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "componentes/vista-camara/vista-camara.js",
+      "declarations": [
+        {
+          "kind": "variable",
+          "name": "CAMERA_ERROR_MESSAGES",
+          "type": {
+            "text": "Record<CameraErrorReason, string>"
+          },
+          "default": "{ denied: 'Has bloqueado el permiso de cámara. Actívalo desde el icono del candado de la barra de direcciones.', notfound: 'No se ha encontrado ninguna cámara conectada.', busy: 'La cámara está ocupada por otra aplicación. Ciérrala y vuelve a intentarlo.', insecure: 'La cámara solo funciona en páginas seguras (https:// o localhost).', unknown: 'No se ha podido iniciar la cámara.', }",
+          "description": "Mensajes comprensibles para cada tipo de error."
+        },
+        {
+          "kind": "class",
+          "description": "Previsualización de la cámara.\n\nGestiona el permiso, el flujo de vídeo y sus errores. Los elementos\nhijos se superponen al vídeo, lo que permite componer:\n\n```html\n<gc-camera-preview>\n  <gc-hand-overlay></gc-hand-overlay>\n</gc-camera-preview>\n```\n\nEl vídeo se **muestra** en espejo (como un espejo real) pero la imagen que\nse entrega a `frameSource` no está invertida: así el reconocimiento de\nmanos distingue bien izquierda y derecha.\n\nLa cámara se apaga sola al quitar el componente del documento.",
+          "name": "GcVistaCamara",
+          "cssProperties": [
+            {
+              "description": "Opacidad del vídeo (por defecto 1).",
+              "name": "--gc-camera-opacity"
+            },
+            {
+              "description": "Filtro CSS del vídeo.",
+              "name": "--gc-camera-filter"
+            }
+          ],
+          "cssParts": [
+            {
+              "description": "El vídeo.",
+              "name": "video"
+            }
+          ],
+          "slots": [
+            {
+              "description": "Capas superpuestas al vídeo.",
+              "name": ""
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "tagName",
+              "type": {
+                "text": "string"
+              },
+              "static": true,
+              "default": "'gc-camera-preview'"
+            },
+            {
+              "kind": "method",
+              "name": "define",
+              "static": true
+            },
+            {
+              "kind": "method",
+              "name": "listDevices",
+              "static": true,
+              "description": "Lista las cámaras disponibles. Los nombres solo aparecen tras conceder permiso.",
+              "return": {
+                "type": {
+                  "text": "Promise<{ deviceId: string, label: string }[]>"
+                }
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#internals",
+              "privacy": "private",
+              "type": {
+                "text": "ElementInternals"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#video",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLVideoElement"
+              },
+              "default": "(root.querySelector('video'))"
+            },
+            {
+              "kind": "field",
+              "name": "#stream",
+              "privacy": "private",
+              "type": {
+                "text": "MediaStream | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#status",
+              "privacy": "private",
+              "type": {
+                "text": "CameraStatus"
+              },
+              "default": "'idle'"
+            },
+            {
+              "kind": "field",
+              "name": "#lastError",
+              "privacy": "private",
+              "type": {
+                "text": "CameraErrorReason | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#request",
+              "privacy": "private",
+              "type": {
+                "text": "number"
+              },
+              "default": "0",
+              "description": "Cuenta las llamadas a start() para descartar respuestas antiguas."
+            },
+            {
+              "kind": "field",
+              "name": "mirror"
+            },
+            {
+              "kind": "field",
+              "name": "fit"
+            },
+            {
+              "kind": "field",
+              "name": "facing"
+            },
+            {
+              "kind": "field",
+              "name": "resolution",
+              "return": {
+                "type": {
+                  "text": "CameraResolution"
+                }
+              }
+            },
+            {
+              "kind": "field",
+              "name": "deviceId"
+            },
+            {
+              "kind": "field",
+              "name": "videoHidden"
+            },
+            {
+              "kind": "field",
+              "name": "status",
+              "return": {
+                "type": {
+                  "text": "CameraStatus"
+                }
+              },
+              "readonly": true,
+              "type": {
+                "text": "CameraStatus"
+              },
+              "description": "(Solo lectura) Estado de la cámara."
+            },
+            {
+              "kind": "field",
+              "name": "frameSource",
+              "readonly": true,
+              "type": {
+                "text": "HTMLVideoElement"
+              },
+              "description": "(Solo lectura) Vídeo sin espejo para analizarlo."
+            },
+            {
+              "kind": "field",
+              "name": "videoSize",
+              "readonly": true,
+              "type": {
+                "text": "{ width: number, height: number }"
+              },
+              "description": "(Solo lectura) Resolución real."
+            },
+            {
+              "kind": "field",
+              "name": "lastError",
+              "readonly": true,
+              "type": {
+                "text": "CameraErrorReason | null"
+              },
+              "description": "(Solo lectura) Último error."
+            },
+            {
+              "kind": "method",
+              "name": "start",
+              "description": "Pide permiso y enciende la cámara.",
+              "return": {
+                "type": {
+                  "text": "Promise<boolean>"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "stop",
+              "description": "Apaga la cámara (se apaga el piloto de la webcam)."
+            },
+            {
+              "kind": "method",
+              "name": "classifyError",
+              "static": true,
+              "parameters": [
+                {
+                  "name": "error",
+                  "type": {
+                    "text": "unknown"
+                  }
+                }
+              ],
+              "description": "Traduce un error de `getUserMedia` a un motivo comprensible.",
+              "return": {
+                "type": {
+                  "text": "CameraErrorReason"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#fail",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "reason",
+                  "type": {
+                    "text": "CameraErrorReason"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#onTrackEnded",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "stream",
+                  "type": {
+                    "text": "MediaStream"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#releaseStream",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "#setStatus",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "status",
+                  "type": {
+                    "text": "CameraStatus"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "field",
+              "name": "adoptedStyleSheets",
+              "type": {
+                "text": "array"
+              },
+              "default": "[baseStyles, styles]"
+            },
+            {
+              "kind": "field",
+              "name": "innerHTML",
+              "type": {
+                "text": "string"
+              },
+              "default": "'<video part=\"video\" playsinline muted autoplay></video><slot></slot>'"
+            }
+          ],
+          "events": [
+            {
+              "type": {
+                "text": "CustomEvent<{width: number, height: number, deviceId: string}>"
+              },
+              "description": "La cámara emite imagen.",
+              "name": "camera-ready"
+            },
+            {
+              "type": {
+                "text": "CustomEvent<{reason: CameraErrorReason, message: string}>"
+              },
+              "description": "No se ha podido iniciar.",
+              "name": "camera-error"
+            },
+            {
+              "type": {
+                "text": "CustomEvent<{reason: 'user' | 'ended'}>"
+              },
+              "description": "La cámara se ha apagado.",
+              "name": "camera-stopped"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "mirror",
+              "type": {
+                "text": "'on' | 'off'"
+              },
+              "description": "Mostrar el vídeo en espejo. Por defecto `on`."
+            },
+            {
+              "name": "fit",
+              "type": {
+                "text": "'cover' | 'contain'"
+              },
+              "description": "Ajuste del vídeo a la caja. Por defecto `cover`."
+            },
+            {
+              "name": "facing",
+              "type": {
+                "text": "'user' | 'environment'"
+              },
+              "description": "Cámara frontal o trasera. Por defecto `user`."
+            },
+            {
+              "name": "resolution",
+              "type": {
+                "text": "'low' | 'medium' | 'high'"
+              },
+              "description": "Resolución pedida. Por defecto `medium` (640×480)."
+            },
+            {
+              "name": "device-id",
+              "type": {
+                "text": "string"
+              },
+              "description": "Cámara concreta (ver `listDevices()`)."
+            },
+            {
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Oculta la imagen pero mantiene la cámara activa.",
+              "name": "video-hidden"
+            }
+          ],
+          "cssStates": [
+            {
+              "description": "La cámara está emitiendo.",
+              "name": "live"
+            }
+          ],
+          "superclass": {
+            "name": "HTMLElement"
+          },
+          "tagName": "gc-camera-preview",
+          "customElement": true,
+          "summary": "Acceso a la cámara con gestión de permisos y errores."
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "CAMERA_ERROR_MESSAGES",
+          "declaration": {
+            "name": "CAMERA_ERROR_MESSAGES",
+            "module": "componentes/vista-camara/vista-camara.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "GcVistaCamara",
+          "declaration": {
+            "name": "GcVistaCamara",
+            "module": "componentes/vista-camara/vista-camara.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "componentes/escenario-hechizo/escenario-hechizo.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "Escenario 3D donde se manifiestan los hechizos (Three.js / WebGL).\n\nSe coloca encima del lienzo de dibujo, con el mismo tamaño: las\ncoordenadas de `cast()` son las mismas (0-1), así el hechizo brota\nexactamente del glifo dibujado. El lienzo WebGL es transparente y se\nextiende más allá de la caja (`overflow`) para que las llamas o los rayos\npuedan salir del círculo.\n\nCada lanzamiento combina la secuencia de activación común (el glifo se\nenciende, se consume y estalla) con el efecto del elemento.\n\nEl bucle de animación solo funciona mientras hay efectos activos, y el\ncontexto WebGL se libera al quitar el componente.",
+          "name": "GcEscenarioHechizo",
+          "cssParts": [
+            {
+              "name": "canvas"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "tagName",
+              "type": {
+                "text": "string"
+              },
+              "static": true,
+              "default": "'gc-spell-stage'"
+            },
+            {
+              "kind": "method",
+              "name": "define",
+              "static": true
+            },
+            {
+              "kind": "field",
+              "name": "spells",
+              "static": true,
+              "description": "Hechizos disponibles.",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "registerSpell",
+              "static": true,
+              "default": "registerSpell",
+              "description": "Registra un hechizo propio (ver `registerSpell`)."
+            },
+            {
+              "kind": "field",
+              "name": "#renderer",
+              "privacy": "private",
+              "type": {
+                "text": "THREE.WebGLRenderer | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#scene",
+              "privacy": "private",
+              "default": "new THREE.Scene()"
+            },
+            {
+              "kind": "field",
+              "name": "#camera",
+              "privacy": "private",
+              "default": "new THREE.PerspectiveCamera(FOV, 1, 0.1, 60)"
+            },
+            {
+              "kind": "field",
+              "name": "#sizeScale",
+              "privacy": "private",
+              "default": "new THREE.Uniform(1)"
+            },
+            {
+              "kind": "field",
+              "name": "#entries",
+              "privacy": "private",
+              "type": {
+                "text": "{ effect: Efecto, start: number, added: boolean, cast: number }[]"
+              },
+              "default": "[]"
+            },
+            {
+              "kind": "field",
+              "name": "#casts",
+              "privacy": "private",
+              "default": "new Map()",
+              "type": {
+                "text": "Map<number, { spell: string, remaining: number, resolve: (v: boolean) => void }>"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#nextCast",
+              "privacy": "private",
+              "type": {
+                "text": "number"
+              },
+              "default": "1"
+            },
+            {
+              "kind": "field",
+              "name": "#time",
+              "privacy": "private",
+              "type": {
+                "text": "number"
+              },
+              "default": "0"
+            },
+            {
+              "kind": "field",
+              "name": "#width",
+              "privacy": "private",
+              "type": {
+                "text": "number"
+              },
+              "default": "0"
+            },
+            {
+              "kind": "field",
+              "name": "#height",
+              "privacy": "private",
+              "type": {
+                "text": "number"
+              },
+              "default": "0"
+            },
+            {
+              "kind": "field",
+              "name": "#pixelRatio",
+              "privacy": "private",
+              "type": {
+                "text": "number"
+              },
+              "default": "1"
+            },
+            {
+              "kind": "field",
+              "name": "#loop",
+              "privacy": "private",
+              "default": "new ControladorBucle((dt) => this.#frame(dt))"
+            },
+            {
+              "kind": "field",
+              "name": "#resize",
+              "privacy": "private",
+              "default": "new ControladorTamano(this, (info) => this.#onResize(info), { maxPixelRatio: 2 })"
+            },
+            {
+              "kind": "field",
+              "name": "quality",
+              "return": {
+                "type": {
+                  "text": "StageQuality"
+                }
+              }
+            },
+            {
+              "kind": "field",
+              "name": "overflow"
+            },
+            {
+              "kind": "field",
+              "name": "ready",
+              "readonly": true,
+              "type": {
+                "text": "boolean"
+              },
+              "description": "(Solo lectura) WebGL inicializado."
+            },
+            {
+              "kind": "field",
+              "name": "isCasting",
+              "readonly": true,
+              "type": {
+                "text": "boolean"
+              },
+              "description": "(Solo lectura) Hay algún hechizo en curso."
+            },
+            {
+              "kind": "field",
+              "name": "stats",
+              "readonly": true,
+              "type": {
+                "text": "{ effects: number, particles: number }"
+              },
+              "description": "(Solo lectura) Efectos y partículas activos."
+            },
+            {
+              "kind": "method",
+              "name": "cast",
+              "parameters": [
+                {
+                  "name": "spellId",
+                  "description": "Uno o varios de `GcEscenarioHechizo.spells`.",
+                  "type": {
+                    "text": "string | string[]"
+                  }
+                },
+                {
+                  "name": "{ x = 0.5, y = 0.5, radius = 0.4, strokes = [], intensity = 1, stability = 1 }",
+                  "default": "{}"
+                },
+                {
+                  "name": "options",
+                  "optional": true,
+                  "type": {
+                    "text": "CastOptions"
+                  }
+                }
+              ],
+              "description": "Lanza un hechizo (o varios combinados) sobre el glifo dibujado.\n\nCon varios hechizos la activación es única (con el color del primero) y\ntodos los efectos estallan a la vez: así se combinan en el laboratorio.",
+              "return": {
+                "type": {
+                  "text": "Promise<boolean>"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "clear",
+              "description": "Detiene y elimina todos los efectos en curso."
+            },
+            {
+              "kind": "method",
+              "name": "#init",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "#onResize",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "{ width, height, pixelRatio }"
+                },
+                {
+                  "name": "info",
+                  "type": {
+                    "text": "ResizeInfo"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#frame",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "dt",
+                  "type": {
+                    "text": "number"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#finish",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "entry",
+                  "type": {
+                    "text": "{ effect: Efecto, cast: number }"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#render",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "adoptedStyleSheets",
+              "type": {
+                "text": "array"
+              },
+              "default": "[baseStyles, styles]"
+            }
+          ],
+          "events": [
+            {
+              "type": {
+                "text": "CustomEvent<{}>"
+              },
+              "description": "WebGL está listo.",
+              "name": "stage-ready"
+            },
+            {
+              "type": {
+                "text": "CustomEvent<{reason: string}>"
+              },
+              "description": "No hay WebGL disponible.",
+              "name": "stage-error"
+            },
+            {
+              "type": {
+                "text": "CustomEvent<{spell: string}>"
+              },
+              "description": "Empieza un hechizo.",
+              "name": "spell-cast"
+            },
+            {
+              "type": {
+                "text": "CustomEvent<{spell: string}>"
+              },
+              "description": "Termina un hechizo.",
+              "name": "spell-finished"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "quality",
+              "type": {
+                "text": "'low' | 'medium' | 'high'"
+              },
+              "description": "Partículas y resolución. Por defecto `medium`."
+            },
+            {
+              "name": "overflow",
+              "type": {
+                "text": "number"
+              },
+              "description": "Cuánto se extiende el lienzo fuera de la caja por cada lado (0-1). Por defecto `0.25`."
+            }
+          ],
+          "superclass": {
+            "name": "HTMLElement"
+          },
+          "tagName": "gc-spell-stage",
+          "customElement": true,
+          "summary": "Efectos mágicos en 3D."
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "GcEscenarioHechizo",
+          "declaration": {
+            "name": "GcEscenarioHechizo",
+            "module": "componentes/escenario-hechizo/escenario-hechizo.js"
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,28 @@
+{
+  "compilerOptions": {
+    "checkJs": true,
+    "allowJs": true,
+    "noEmit": true,
+    "strict": false,
+    "strictNullChecks": true,
+    "noImplicitAny": false,
+    "target": "ES2022",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "lib": ["ES2023", "DOM", "DOM.Iterable"],
+    "types": [],
+    "skipLibCheck": true,
+    "paths": {
+      "glyphcraft-kit": ["./glyphcraft-kit/glyphcraft-kit.js"],
+      "glyphcraft-kit/nucleo": ["./glyphcraft-kit/nucleo.js"],
+      "glyphcraft-kit/seguimiento": ["./glyphcraft-kit/seguimiento.js"],
+      "glyphcraft-kit/efectos": ["./glyphcraft-kit/efectos.js"],
+      "glyphcraft-kit/glifos": ["./glyphcraft-kit/glifos.js"],
+      "glyphcraft-kit/sinteticos": ["./glyphcraft-kit/sinteticos.js"],
+      "three": ["./lib/tipos.d.ts"],
+      "@mediapipe/tasks-vision": ["./lib/tipos.d.ts"]
+    }
+  },
+  "include": ["*.js", "nucleo/**/*.js", "servicios/**/*.js", "vistas/**/*.js", "catalogo/**/*.js", "glyphcraft-kit/**/*.js", "lib/tipos.d.ts"],
+  "exclude": ["**/*.prueba.js", "pruebas", "lib/three", "lib/mediapipe"]
+}

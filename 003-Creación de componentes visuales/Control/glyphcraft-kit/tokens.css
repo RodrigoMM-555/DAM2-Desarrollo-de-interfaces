@@ -1,0 +1,57 @@
+/*
+ * glyphcraft-kit · Design tokens
+ *
+ * Variables CSS globales que definen la identidad visual. Las custom
+ * properties atraviesan el Shadow DOM, así que cambiarlas aquí (o en
+ * cualquier contenedor) retematiza todos los componentes sin tocar su
+ * código. Cada componente trae valores de respaldo, por lo que también
+ * funcionan sin importar este archivo.
+ */
+:root {
+  /* Fondos: de la oscuridad del taller a los tonos de tinta */
+  --gc-color-void: #07060f;
+  --gc-color-night: #0e0c1f;
+  --gc-color-deep: #171433;
+  --gc-color-indigo: #2a2560;
+
+  /* Energía mágica */
+  --gc-color-violet: #8b6cf0;
+  --gc-color-azure: #6fb6ff;
+  --gc-color-gold: #e8c675;
+  --gc-color-gold-dim: #a8894a;
+  --gc-color-ember: #ff8a4c;
+  --gc-color-frost: #a8e6ff;
+
+  /* Texto */
+  --gc-color-ink: #ece7ff;
+  --gc-color-muted: #a6a1c9;
+  --gc-color-parchment: #efe4cc;
+
+  /* Estados */
+  --gc-color-success: #7fe0b5;
+  --gc-color-warning: #f2c36b;
+  --gc-color-danger: #ff6b7d;
+
+  /* Tipografía */
+  --gc-font-display: 'Cinzel', 'Cormorant SC', Georgia, serif;
+  --gc-font-body: 'Cormorant Garamond', 'EB Garamond', Georgia, serif;
+
+  /* Brillos */
+  --gc-glow-gold: 0 0 14px rgb(232 198 117 / 0.45);
+  --gc-glow-violet: 0 0 22px rgb(139 108 240 / 0.5);
+  --gc-glow-azure: 0 0 18px rgb(111 182 255 / 0.45);
+
+  /* Movimiento */
+  --gc-ease-arcane: cubic-bezier(0.22, 0.8, 0.24, 1);
+  --gc-duration-fast: 160ms;
+  --gc-duration: 320ms;
+  --gc-duration-slow: 700ms;
+
+  /* Espaciado */
+  --gc-space-1: 0.25rem;
+  --gc-space-2: 0.5rem;
+  --gc-space-3: 1rem;
+  --gc-space-4: 1.5rem;
+  --gc-space-5: 2.5rem;
+  --gc-space-6: 4rem;
+}

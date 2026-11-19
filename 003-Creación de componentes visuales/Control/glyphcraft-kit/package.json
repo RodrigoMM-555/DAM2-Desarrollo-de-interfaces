@@ -1,0 +1,67 @@
+{
+  "name": "glyphcraft-kit",
+  "version": "2.0.0",
+  "description": "Web Components y lógica de reconocimiento gestual para dibujar glifos mágicos con las manos.",
+  "keywords": [
+    "web-components",
+    "custom-elements",
+    "gestures",
+    "hand-tracking",
+    "mediapipe",
+    "three",
+    "glyphs"
+  ],
+  "author": "Rodrigo Menéndez Molina",
+  "license": "MIT",
+  "type": "module",
+  "main": "./glyphcraft-kit.js",
+  "customElements": "custom-elements.json",
+  "exports": {
+    ".": "./glyphcraft-kit.js",
+    "./nucleo": "./nucleo.js",
+    "./seguimiento": "./seguimiento.js",
+    "./efectos": "./efectos.js",
+    "./glifos": "./glifos.js",
+    "./sinteticos": "./sinteticos.js",
+    "./tokens.css": "./tokens.css",
+    "./custom-elements.json": "./custom-elements.json",
+    "./html-custom-data.json": "./html-custom-data.json"
+  },
+  "files": [
+    "*.js",
+    "tokens.css",
+    "componentes",
+    "controladores",
+    "efectos",
+    "glifos",
+    "iconos",
+    "interno",
+    "nucleo",
+    "seguimiento",
+    "sinteticos",
+    "docs",
+    "custom-elements.json",
+    "html-custom-data.json",
+    "README.md",
+    "CHANGELOG.md",
+    "LICENSE",
+    "!**/*.prueba.js"
+  ],
+  "sideEffects": [
+    "./glyphcraft-kit.js",
+    "./efectos.js",
+    "*.css"
+  ],
+  "peerDependencies": {
+    "three": ">=0.170",
+    "@mediapipe/tasks-vision": ">=0.10"
+  },
+  "peerDependenciesMeta": {
+    "three": {
+      "optional": true
+    },
+    "@mediapipe/tasks-vision": {
+      "optional": true
+    }
+  }
+}

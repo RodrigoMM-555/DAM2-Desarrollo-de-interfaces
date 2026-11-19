@@ -1,0 +1,4 @@
+# El proyecto no usa npm, pero por si se ejecutan las herramientas opcionales
+# de la biblioteca (analizador de componentes, npm pack):
+node_modules/
+*.tgz

@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>GlyphCraft</title>
+    <meta name="description" content="Dibuja glifos mágicos con tus manos frente a la cámara y despierta su magia." />
+    <meta name="theme-color" content="#07060f" />
+    <meta name="color-scheme" content="dark" />
+    <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+    <link rel="stylesheet" href="lib/fuentes/fuentes.css" />
+    <link rel="stylesheet" href="glyphcraft-kit/tokens.css" />
+    <link rel="stylesheet" href="estilo.css" />
+    <!--
+      Mapa de importaciones: traduce los nombres "three", "glyphcraft-kit"…
+      a archivos del proyecto. Es nativo del navegador (no hace falta Vite).
+    -->
+    <script type="importmap">
+      {
+        "imports": {
+          "three": "./lib/three/three.module.js",
+          "@mediapipe/tasks-vision": "./lib/mediapipe/vision_bundle.mjs",
+          "glyphcraft-kit": "./glyphcraft-kit/glyphcraft-kit.js",
+          "glyphcraft-kit/nucleo": "./glyphcraft-kit/nucleo.js",
+          "glyphcraft-kit/seguimiento": "./glyphcraft-kit/seguimiento.js",
+          "glyphcraft-kit/efectos": "./glyphcraft-kit/efectos.js",
+          "glyphcraft-kit/glifos": "./glyphcraft-kit/glifos.js",
+          "glyphcraft-kit/sinteticos": "./glyphcraft-kit/sinteticos.js"
+        }
+      }
+    </script>
+  </head>
+  <body>
+    <gc-app></gc-app>
+    <noscript>GlyphCraft necesita JavaScript para funcionar.</noscript>
+    <script type="module" src="codigo.js"></script>
+  </body>
+</html>

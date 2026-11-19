@@ -1,0 +1,47 @@
+/* Estilos del catálogo de componentes (página de documentación). */
+*,
+*::before,
+*::after { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: var(--gc-color-void);
+  color: var(--gc-color-ink);
+  font-family: var(--gc-font-body);
+  font-size: 1.05rem;
+  line-height: 1.5;
+}
+code { font-family: ui-monospace, monospace; font-size: 0.85em; color: var(--gc-color-gold); }
+.pg-header, .pg-main, .pg-nav { inline-size: min(70rem, 100% - 2rem); margin-inline: auto; }
+.pg-header { padding-block: 2.5rem 1rem; }
+.pg-header h1 { font-family: var(--gc-font-display); font-weight: 400; letter-spacing: 0.06em; margin: 0; font-size: clamp(2rem, 5vw, 3rem); }
+.pg-kicker { font-family: var(--gc-font-display); letter-spacing: 0.3em; text-transform: uppercase; color: var(--gc-color-gold); font-size: 0.8rem; margin: 0; }
+.pg-back { color: var(--gc-color-azure); }
+.pg-nav { display: flex; flex-wrap: wrap; gap: 0.4rem 1rem; padding-block: 1rem; border-block: 1px solid rgb(232 198 117 / 0.2); position: sticky; top: 0; background: var(--gc-color-void); z-index: 5; }
+.pg-nav a { color: var(--gc-color-muted); font-family: ui-monospace, monospace; font-size: 0.85rem; text-decoration: none; }
+.pg-nav a:hover { color: var(--gc-color-gold); }
+.pg-component { padding-block: 2.5rem; border-block-end: 1px solid rgb(232 198 117 / 0.12); scroll-margin-top: 4rem; }
+.pg-component h2 { margin: 0; font-weight: 400; }
+.pg-component h3 { margin: 1rem 0 0.5rem; font-family: var(--gc-font-display); font-weight: 400; font-size: 0.85rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--gc-color-muted); }
+.pg-summary { color: var(--gc-color-muted); margin-block: 0.25rem 1rem; }
+.pg-grid { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); gap: 2rem; }
+.pg-demo { display: grid; place-items: center; align-content: center; gap: 1rem; min-block-size: 14rem; padding: 1.5rem; background: radial-gradient(circle at 50% 40%, rgb(42 37 96 / 0.5), transparent 70%), var(--gc-color-night); border: 1px solid rgb(232 198 117 / 0.15); }
+.pg-demo > gc-arcane-backdrop { inline-size: 100%; }
+.pg-demo form { inline-size: 100%; max-inline-size: 22rem; }
+.pg-attrs { display: grid; grid-template-columns: repeat(auto-fill, minmax(9rem, 1fr)); gap: 0.6rem; }
+.pg-attrs label { display: grid; gap: 0.2rem; font-family: ui-monospace, monospace; font-size: 0.8rem; color: var(--gc-color-muted); }
+.pg-attrs .pg-check { display: flex; align-items: center; gap: 0.4rem; }
+.pg-attrs input, .pg-attrs select { font: inherit; color: var(--gc-color-ink); background: var(--gc-color-void); border: 1px solid rgb(168 230 255 / 0.25); padding: 0.25rem 0.4rem; }
+.pg-methods, .pg-spells { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+.pg-button { font-family: ui-monospace, monospace; font-size: 0.8rem; color: var(--gc-color-gold); background: transparent; border: 1px solid rgb(232 198 117 / 0.4); padding: 0.25rem 0.6rem; cursor: pointer; }
+.pg-button:hover { background: rgb(232 198 117 / 0.1); }
+.pg-log { margin: 0; padding-inline-start: 1.2rem; font-family: ui-monospace, monospace; font-size: 0.75rem; color: var(--gc-color-azure); min-block-size: 5rem; overflow-wrap: anywhere; }
+.pg-log__empty { color: var(--gc-color-muted); list-style: none; margin-inline-start: -1.2rem; }
+.pg-hint { margin: 0; font-style: italic; color: var(--gc-color-muted); }
+.pg-stage { inline-size: 260px; aspect-ratio: 1; border-radius: 50%; border: 1px dashed rgb(232 198 117 / 0.3); }
+.pg-stage gc-spell-stage { inline-size: 100%; block-size: 100%; }
+.pg-api { margin-block-start: 1rem; }
+.pg-api summary { cursor: pointer; color: var(--gc-color-gold); font-family: var(--gc-font-display); letter-spacing: 0.08em; }
+.pg-api table { inline-size: 100%; border-collapse: collapse; margin-block: 0.75rem; font-size: 0.9rem; }
+.pg-api th, .pg-api td { text-align: start; padding: 0.35rem 0.5rem; border-block-end: 1px solid rgb(232 198 117 / 0.12); vertical-align: top; }
+.pg-api th { color: var(--gc-color-muted); font-weight: 400; }
+@media (max-width: 52rem) { .pg-grid { grid-template-columns: 1fr; } }

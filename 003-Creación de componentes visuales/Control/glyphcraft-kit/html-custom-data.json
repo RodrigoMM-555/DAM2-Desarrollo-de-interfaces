@@ -1,0 +1,475 @@
+{
+  "version": 1.1,
+  "tags": [
+    {
+      "name": "gc-arcane-backdrop",
+      "description": "Fondo de partículas flotantes con ráfagas de chispas.\n\nFondo animado de motas de polvo mágico con ráfagas de chispas.\n\nUsa Canvas 2D (no WebGL) para ser ligero: se reserva el único contexto\nWebGL de la página para los efectos de hechizos. Cada color se pre-dibuja\nuna vez como \"sprite\" con degradado radial y luego se estampa con\n`drawImage`, que es mucho más rápido que crear degradados en cada mota.\n\nSi la persona ha pedido reducir el movimiento, se dibuja un único\nfotograma estático.",
+      "attributes": [
+        {
+          "name": "density",
+          "description": "Densidad de motas de 0 a 1. Por defecto `0.5`."
+        },
+        {
+          "name": "palette",
+          "description": "Paleta de color. Por defecto `arcane`.",
+          "values": [
+            {
+              "name": "arcane"
+            },
+            {
+              "name": "ember"
+            },
+            {
+              "name": "frost"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "gc-arcane-meter",
+      "description": "Indicador de progreso o precisión.\n\nIndicador de progreso con tres estilos: anillo con número (precisión),\nsellos (aciertos para aprender un glifo) o barra.\n\nUsa `ElementInternals` para exponer el rol ARIA `meter` y su valor: los\nlectores de pantalla lo anuncian como un medidor real.",
+      "attributes": [
+        {
+          "name": "value",
+          "description": "Valor actual (0-max). Por defecto `0`."
+        },
+        {
+          "name": "max",
+          "description": "Valor máximo (> 0). Por defecto `100`."
+        },
+        {
+          "name": "variant",
+          "description": "Estilo. Por defecto `ring`.",
+          "values": [
+            {
+              "name": "ring"
+            },
+            {
+              "name": "seals"
+            },
+            {
+              "name": "bar"
+            }
+          ]
+        },
+        {
+          "name": "label",
+          "description": "Etiqueta visible y accesible."
+        },
+        {
+          "name": "threshold",
+          "description": "Valor a superar: añade una marca y los estados `passed`/`failed`."
+        }
+      ]
+    },
+    {
+      "name": "gc-camera-preview",
+      "description": "Acceso a la cámara con gestión de permisos y errores.\n\nPrevisualización de la cámara.\n\nGestiona el permiso, el flujo de vídeo y sus errores. Los elementos\nhijos se superponen al vídeo, lo que permite componer:\n\n```html\n<gc-camera-preview>\n  <gc-hand-overlay></gc-hand-overlay>\n</gc-camera-preview>\n```\n\nEl vídeo se **muestra** en espejo (como un espejo real) pero la imagen que\nse entrega a `frameSource` no está invertida: así el reconocimiento de\nmanos distingue bien izquierda y derecha.\n\nLa cámara se apaga sola al quitar el componente del documento.",
+      "attributes": [
+        {
+          "name": "mirror",
+          "description": "Mostrar el vídeo en espejo. Por defecto `on`.",
+          "values": [
+            {
+              "name": "on"
+            },
+            {
+              "name": "off"
+            }
+          ]
+        },
+        {
+          "name": "fit",
+          "description": "Ajuste del vídeo a la caja. Por defecto `cover`.",
+          "values": [
+            {
+              "name": "cover"
+            },
+            {
+              "name": "contain"
+            }
+          ]
+        },
+        {
+          "name": "facing",
+          "description": "Cámara frontal o trasera. Por defecto `user`.",
+          "values": [
+            {
+              "name": "user"
+            },
+            {
+              "name": "environment"
+            }
+          ]
+        },
+        {
+          "name": "resolution",
+          "description": "Resolución pedida. Por defecto `medium` (640×480).",
+          "values": [
+            {
+              "name": "low"
+            },
+            {
+              "name": "medium"
+            },
+            {
+              "name": "high"
+            }
+          ]
+        },
+        {
+          "name": "device-id",
+          "description": "Cámara concreta (ver `listDevices()`)."
+        },
+        {
+          "name": "video-hidden",
+          "description": "Oculta la imagen pero mantiene la cámara activa."
+        }
+      ]
+    },
+    {
+      "name": "gc-gesture-indicator",
+      "description": "Muestra qué gesto se está reconociendo.\n\nIndicador del gesto reconocido: icono, texto y anillo de progreso.\n\nEs un componente \"tonto\" (solo presentación): recibe el estado desde\nfuera y no sabe nada de cámaras ni del motor de gestos.",
+      "attributes": [
+        {
+          "name": "compact",
+          "description": "Solo el icono, sin texto."
+        }
+      ]
+    },
+    {
+      "name": "gc-glyph",
+      "description": "Glifo en SVG con animación de trazado y activación.\n\nRepresentación visual de un glifo (SVG).\n\nAdemás de dibujarlo, puede **enseñar a trazarlo** (`playTrace()` dibuja\nlos trazos en orden, con su número y su punto de inicio) y **activarlo**\n(`ignite()`: el glifo se ilumina y se consume).\n\nEl glifo se indica con `glyph-id` (se busca en `glyphLibrary`) o\nasignando directamente la propiedad `glyph`.",
+      "attributes": [
+        {
+          "name": "glyph-id",
+          "description": "Identificador en la biblioteca de glifos."
+        },
+        {
+          "name": "size",
+          "description": "Lado en píxeles (16-1024). Por defecto `160`."
+        },
+        {
+          "name": "glow",
+          "description": "Intensidad del halo (0-1). Por defecto `0.6`."
+        },
+        {
+          "name": "ornate",
+          "description": "Añade anillos decorativos exteriores."
+        },
+        {
+          "name": "numbered",
+          "description": "Muestra el número e inicio de cada trazo."
+        },
+        {
+          "name": "mode",
+          "description": "`ghost` lo muestra tenue, como guía. Por defecto `static`.",
+          "values": [
+            {
+              "name": "static"
+            },
+            {
+              "name": "ghost"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "gc-glyph-canvas",
+      "description": "Área de dibujo de glifos.\n\nLienzo donde se dibujan los trazos de un glifo con tinta luminosa.\n\nNo sabe de dónde vienen los puntos: los recibe por métodos\n(`beginStroke` / `addPoint` / `endStroke`) desde los gestos de la mano, o\ndel ratón y la pantalla táctil si `pointer-input` está activo.\n\nLas coordenadas son **normalizadas** (0-1 en cada eje), así los trazos no\ndependen del tamaño en pantalla. Para glifos sin deformar, usa un\nelemento cuadrado.",
+      "attributes": [
+        {
+          "name": "ink",
+          "description": "Color de la tinta (cualquier color CSS). Por defecto dorado `#e8c675`."
+        },
+        {
+          "name": "line-width",
+          "description": "Grosor en píxeles (1-40). Por defecto `4`."
+        },
+        {
+          "name": "guide-style",
+          "description": "Visibilidad de la guía. Por defecto `ghost`.",
+          "values": [
+            {
+              "name": "ghost"
+            },
+            {
+              "name": "faint"
+            },
+            {
+              "name": "none"
+            }
+          ]
+        },
+        {
+          "name": "guide-next",
+          "description": "Resalta en la guía el siguiente trazo que toca dibujar."
+        },
+        {
+          "name": "max-strokes",
+          "description": "Máximo de trazos (1-200). Por defecto `32`."
+        },
+        {
+          "name": "pointer-input",
+          "description": "Permite dibujar con ratón o pantalla táctil."
+        },
+        {
+          "name": "readonly",
+          "description": "Impide añadir trazos."
+        }
+      ]
+    },
+    {
+      "name": "gc-glyph-card",
+      "description": "Tarjeta de un glifo del grimorio.\n\nEntrada del grimorio: miniatura del glifo, nombre, tipo de magia,\ndificultad y sellos de aprendizaje.\n\nEs un ejemplo de **composición**: reutiliza `<gc-glyph>` y\n`<gc-arcane-meter>` dentro de su Shadow DOM.",
+      "attributes": [
+        {
+          "name": "glyph-id",
+          "description": "Glifo de la biblioteca."
+        },
+        {
+          "name": "progress",
+          "description": "Aciertos conseguidos. Por defecto `0`."
+        },
+        {
+          "name": "required",
+          "description": "Aciertos necesarios para aprenderlo. Por defecto `3`."
+        },
+        {
+          "name": "learned",
+          "description": "El glifo está aprendido."
+        },
+        {
+          "name": "mastered",
+          "description": "El glifo está dominado."
+        },
+        {
+          "name": "selected",
+          "description": "Es la página abierta del grimorio."
+        }
+      ]
+    },
+    {
+      "name": "gc-hand-overlay",
+      "description": "Visualización de manos y gestos.\n\nDibuja las manos detectadas: puntos de referencia, articulaciones,\nconexiones y el estado del gesto (color, anillo de progreso, cursor).\n\nSirve para que la persona entienda qué está viendo el programa y corrija\nsu postura. Puede colocarse:\n- encima de `<gc-camera-preview>` (mismo `fit` y `mirror`);\n- sobre el lienzo de dibujo, mostrando solo una `region` de la imagen\n  (la zona calibrada) con `fit=\"fill\"`.",
+      "attributes": [
+        {
+          "name": "variant",
+          "description": "Estilo: esqueleto, constelación o mínimo. Por defecto `skeleton`.",
+          "values": [
+            {
+              "name": "skeleton"
+            },
+            {
+              "name": "constellation"
+            },
+            {
+              "name": "minimal"
+            }
+          ]
+        },
+        {
+          "name": "mirror",
+          "description": "Dibujar en espejo. Por defecto `on`.",
+          "values": [
+            {
+              "name": "on"
+            },
+            {
+              "name": "off"
+            }
+          ]
+        },
+        {
+          "name": "fit",
+          "description": "Ajuste de la imagen a la caja. Por defecto `cover`.",
+          "values": [
+            {
+              "name": "cover"
+            },
+            {
+              "name": "contain"
+            },
+            {
+              "name": "fill"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "gc-rune-button",
+      "description": "Botón temático con estados, icono rúnico y activación por pulsación mantenida.\n\nBotón con estética de runa tallada.\n\nPuede activarse con un clic normal o, si `hold-ms` es mayor que 0, exigir\nque se mantenga pulsado durante ese tiempo. El modo \"mantener\" sirve para\nacciones delicadas (como borrar todo) y para pulsar botones sin clic,\npor ejemplo con gestos.",
+      "attributes": [
+        {
+          "name": "variant",
+          "description": "Estilo visual. Por defecto `primary`.",
+          "values": [
+            {
+              "name": "primary"
+            },
+            {
+              "name": "ghost"
+            },
+            {
+              "name": "danger"
+            },
+            {
+              "name": "inscription"
+            }
+          ]
+        },
+        {
+          "name": "size",
+          "description": "Tamaño. Por defecto `md`.",
+          "values": [
+            {
+              "name": "sm"
+            },
+            {
+              "name": "md"
+            },
+            {
+              "name": "lg"
+            }
+          ]
+        },
+        {
+          "name": "rune",
+          "description": "Nombre del icono rúnico (ver `RUNE_NAMES`). Por defecto, sin icono."
+        },
+        {
+          "name": "disabled",
+          "description": "Desactiva el botón. Por defecto `false`."
+        },
+        {
+          "name": "hold-ms",
+          "description": "Milisegundos que hay que mantenerlo pulsado (0-10000). `0` = clic normal. Por defecto `0`."
+        },
+        {
+          "name": "pressed",
+          "description": "Convierte el botón en interruptor (aria-pressed). Sin atributo, es un botón normal.",
+          "values": [
+            {
+              "name": "true"
+            },
+            {
+              "name": "false"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "gc-rune-slider",
+      "description": "Deslizador para formularios.\n\nDeslizador rúnico **asociado a formularios**.\n\nPor dentro usa un `<input type=\"range\">` nativo (teclado y lectores de\npantalla funcionan sin trabajo extra) y por fuera se comporta como un\ncontrol de formulario gracias a `ElementInternals`.",
+      "attributes": [
+        {
+          "name": "label",
+          "description": "Texto de la etiqueta."
+        },
+        {
+          "name": "min",
+          "description": "Mínimo. Por defecto `0`."
+        },
+        {
+          "name": "max",
+          "description": "Máximo. Por defecto `100`."
+        },
+        {
+          "name": "step",
+          "description": "Paso. Por defecto `1`."
+        },
+        {
+          "name": "value",
+          "description": "Valor inicial (y valor al restablecer el formulario)."
+        },
+        {
+          "name": "disabled",
+          "description": ""
+        },
+        {
+          "name": "name",
+          "description": "Nombre del campo en el formulario."
+        }
+      ]
+    },
+    {
+      "name": "gc-rune-toggle",
+      "description": "Interruptor para formularios.\n\nInterruptor rúnico de dos estados, **asociado a formularios**.\n\nCon `static formAssociated = true` y `ElementInternals`, el navegador lo\ntrata como un control de formulario: participa en el envío (`name` /\n`value`), se restablece con `form.reset()` y aparece en `form.elements`.\nEl elemento interno tiene el rol accesible `switch` y toma su nombre del\ntexto de la etiqueta.",
+      "attributes": [
+        {
+          "name": "checked",
+          "description": "Estado inicial (también es el valor al restablecer el formulario)."
+        },
+        {
+          "name": "disabled",
+          "description": "Desactivado."
+        },
+        {
+          "name": "name",
+          "description": "Nombre del campo en el formulario."
+        },
+        {
+          "name": "value",
+          "description": "Valor enviado cuando está activado. Por defecto `on`."
+        }
+      ]
+    },
+    {
+      "name": "gc-spell-stage",
+      "description": "Efectos mágicos en 3D.\n\nEscenario 3D donde se manifiestan los hechizos (Three.js / WebGL).\n\nSe coloca encima del lienzo de dibujo, con el mismo tamaño: las\ncoordenadas de `cast()` son las mismas (0-1), así el hechizo brota\nexactamente del glifo dibujado. El lienzo WebGL es transparente y se\nextiende más allá de la caja (`overflow`) para que las llamas o los rayos\npuedan salir del círculo.\n\nCada lanzamiento combina la secuencia de activación común (el glifo se\nenciende, se consume y estalla) con el efecto del elemento.\n\nEl bucle de animación solo funciona mientras hay efectos activos, y el\ncontexto WebGL se libera al quitar el componente.",
+      "attributes": [
+        {
+          "name": "quality",
+          "description": "Partículas y resolución. Por defecto `medium`.",
+          "values": [
+            {
+              "name": "low"
+            },
+            {
+              "name": "medium"
+            },
+            {
+              "name": "high"
+            }
+          ]
+        },
+        {
+          "name": "overflow",
+          "description": "Cuánto se extiende el lienzo fuera de la caja por cada lado (0-1). Por defecto `0.25`."
+        }
+      ]
+    },
+    {
+      "name": "gc-whisper",
+      "description": "Pila de notificaciones temporales.\n\nAvisos efímeros con estética de susurro arcano (notificaciones).\n\nSe coloca una sola vez en la página y se usa mediante su método `show()`.\nEl contenido siempre se inserta como texto (nunca como HTML), así que es\nseguro mostrar mensajes con datos externos.\n\nAccesibilidad: la región es `role=\"status\"` (lectores de pantalla la\nanuncian sin interrumpir) y los avisos de error usan `role=\"alert\"`.",
+      "attributes": [
+        {
+          "name": "position",
+          "description": "Esquina donde aparecen. Por defecto `top-end`.",
+          "values": [
+            {
+              "name": "top-end"
+            },
+            {
+              "name": "top-center"
+            },
+            {
+              "name": "bottom-end"
+            },
+            {
+              "name": "bottom-center"
+            }
+          ]
+        },
+        {
+          "name": "max-visible",
+          "description": "Máximo de avisos simultáneos (1-10). Por defecto `3`."
+        }
+      ]
+    }
+  ]
+}

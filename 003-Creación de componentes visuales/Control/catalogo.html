@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Catálogo de componentes · glyphcraft-kit</title>
+    <meta name="color-scheme" content="dark" />
+    <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+    <link rel="stylesheet" href="lib/fuentes/fuentes.css" />
+    <link rel="stylesheet" href="glyphcraft-kit/tokens.css" />
+    <link rel="stylesheet" href="catalogo/catalogo.css" />
+    <script type="importmap">
+      {
+        "imports": {
+          "three": "./lib/three/three.module.js",
+          "@mediapipe/tasks-vision": "./lib/mediapipe/vision_bundle.mjs",
+          "glyphcraft-kit": "./glyphcraft-kit/glyphcraft-kit.js",
+          "glyphcraft-kit/nucleo": "./glyphcraft-kit/nucleo.js",
+          "glyphcraft-kit/seguimiento": "./glyphcraft-kit/seguimiento.js",
+          "glyphcraft-kit/efectos": "./glyphcraft-kit/efectos.js",
+          "glyphcraft-kit/glifos": "./glyphcraft-kit/glifos.js",
+          "glyphcraft-kit/sinteticos": "./glyphcraft-kit/sinteticos.js"
+        }
+      }
+    </script>
+  </head>
+  <body>
+    <header class="pg-header">
+      <p class="pg-kicker">glyphcraft-kit</p>
+      <h1>Catálogo de componentes</h1>
+      <p>Cada componente con una demostración en vivo, controles para sus atributos, sus métodos y los eventos que emite. Generado a partir de <code>custom-elements.json</code>.</p>
+      <a class="pg-back" href="./">← Volver a GlyphCraft</a>
+    </header>
+    <nav class="pg-nav" aria-label="Componentes"></nav>
+    <main class="pg-main"></main>
+    <script type="module" src="catalogo/catalogo.js"></script>
+  </body>
+</html>
