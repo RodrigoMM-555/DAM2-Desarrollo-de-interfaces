@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<!--
+  rocodrigo | Creador de plantillas CSS accesibles (WCAG 2.2)
+  UD04 · Diseño de interfaces gráficas
+
+  El orden del código es el orden de lectura y de tabulación.
+  Convenciones que usa el JavaScript:
+    name="<variable>"        cada control del editor es una variable CSS (--<variable>)
+    error-<id del campo>     zona de error de cada campo
+    selector-<id del campo>  selector de color de cada campo hex
+  Los valores escritos en el HTML son la plantilla de partida «rocodrigo».
+-->
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Creador de plantillas accesibles · rocodrigo</title>
+  <link rel="stylesheet" href="css/estilo.css">
+  <!-- CSS de la vista previa: lo escribe js/editor.js con cada cambio -->
+  <style id="estilo-vista"></style>
+</head>
+<body>
+
+  <!-- =========================================================
+       Cabecera
+       ========================================================= -->
+  <header>
+    <h1>Creador de plantillas accesibles</h1>
+    <p>Diseña tu plantilla CSS (colores, tamaños, estados y formas), mira cómo queda
+      y comprueba al momento si cumple WCAG 2.2 AA.</p>
+  </header>
+
+  <main>
+
+    <!-- =========================================================
+         1. Mis plantillas
+         ========================================================= -->
+    <section aria-labelledby="titulo-plantillas">
+      <h2 id="titulo-plantillas">Mis plantillas</h2>
+
+      <div class="plantillas-acciones">
+        <div class="grupo-acciones">
+          <label for="lista-plantillas">Plantilla</label>
+          <div class="fila-controles">
+            <select id="lista-plantillas">
+              <optgroup label="De partida">
+                <option value="partida:rocodrigo">rocodrigo</option>
+                <option value="partida:neutra">Neutra</option>
+              </optgroup>
+              <!-- Las opciones de este grupo las crea js/almacen.js -->
+              <optgroup id="grupo-guardadas" label="Mis plantillas"></optgroup>
+            </select>
+            <button type="button" id="cargar-plantilla">Cargar</button>
+            <button type="button" id="borrar-plantilla" class="boton-secundario">Borrar</button>
+          </div>
+        </div>
+
+        <form id="formulario-guardar" class="grupo-acciones" novalidate>
+          <label for="nombre-plantilla">Nombre para guardar</label>
+          <div class="fila-controles">
+            <input type="text" id="nombre-plantilla" autocomplete="off"
+                   aria-describedby="ayuda-nombre-plantilla error-nombre-plantilla">
+            <button type="submit">Guardar plantilla</button>
+          </div>
+          <p id="ayuda-nombre-plantilla" class="ayuda">Se guarda en este navegador.</p>
+          <p id="error-nombre-plantilla" class="error" role="alert"></p>
+        </form>
+      </div>
+
+      <!-- Confirmaciones: guardada, cargada, borrada... -->
+      <p id="estado-plantillas" class="estado-mensaje" role="status"></p>
+    </section>
+
+    <!-- Zona de trabajo: editor + columna derecha. Es su propio contenedor
+         para que la columna fija (sticky) no baje más allá del editor. -->
+    <div class="zona-trabajo">
+
+    <!-- =========================================================
+         2. Editor
+         ========================================================= -->
+    <section aria-labelledby="titulo-editor">
+      <h2 id="titulo-editor">Editor</h2>
+      <p id="ayuda-colores" class="ayuda">Los cambios se ven al momento en la vista previa.
+        Colores en formato #RRGGBB o con el selector; tamaños en px.</p>
+
+      <form id="formulario-editor" novalidate>
+
+        <fieldset>
+          <legend>Colores base</legend>
+          <div class="rejilla-campos">
+            <div class="campo">
+              <label for="color-fondo">Fondo de la página</label>
+              <div class="fila-color">
+                <input type="text" id="color-fondo" name="color-fondo" value="#EDF4F2" autocomplete="off" spellcheck="false" aria-describedby="ayuda-colores error-color-fondo">
+                <input type="color" id="selector-color-fondo" aria-label="Elegir fondo de la página">
+              </div>
+              <p id="error-color-fondo" class="error" role="alert"></p>
+            </div>
+            <div class="campo">
+              <label for="color-superficie">Superficie (tarjetas)</label>
+              <div class="fila-color">
+                <input type="text" id="color-superficie" name="color-superficie" value="#FFFFFF" autocomplete="off" spellcheck="false" aria-describedby="ayuda-colores error-color-superficie">
+                <input type="color" id="selector-color-superficie" aria-label="Elegir superficie (tarjetas)">
+              </div>
+              <p id="error-color-superficie" class="error" role="alert"></p>
+            </div>
+            <div class="campo">
+              <label for="color-texto">Texto</label>
+              <div class="fila-color">
+                <input type="text" id="color-texto" name="color-texto" value="#172033" autocomplete="off" spellcheck="false" aria-describedby="ayuda-colores error-color-texto">
+                <input type="color" id="selector-color-texto" aria-label="Elegir texto">
+              </div>
+              <p id="error-color-texto" class="error" role="alert"></p>
+            </div>
+            <div class="campo">
+              <label for="color-secundario">Texto secundario</label>
+              <div class="fila-color">
+                <input type="text" id="color-secundario" name="color-secundario" value="#5B6678" autocomplete="off" spellcheck="false" aria-describedby="ayuda-colores error-color-secundario">
+                <input type="color" id="selector-color-secundario" aria-label="Elegir texto secundario">
+              </div>
+              <p id="error-color-secundario" class="error" role="alert"></p>
+            </div>
+            <div class="campo">
+              <label for="color-enlace">Enlaces</label>
+              <div class="fila-color">
+                <input type="text" id="color-enlace" name="color-enlace" value="#20544F" autocomplete="off" spellcheck="false" aria-describedby="ayuda-colores error-color-enlace">
+                <input type="color" id="selector-color-enlace" aria-label="Elegir enlaces">
+              </div>
+              <p id="error-color-enlace" class="error" role="alert"></p>
+            </div>
+          </div>
+        </fieldset>
+
+        <fieldset>
+          <legend>Botón principal</legend>
+          <div class="rejilla-campos">
+            <div class="campo">
+              <label for="boton-fondo">Fondo del botón</label>
+              <div class="fila-color">
+                <input type="text" id="boton-fondo" name="boton-fondo" value="#31817B" autocomplete="off" spellcheck="false" aria-describedby="ayuda-colores error-boton-fondo">
+                <input type="color" id="selector-boton-fondo" aria-label="Elegir fondo del botón">
+              </div>
+              <p id="error-boton-fondo" class="error" role="alert"></p>
+            </div>
+            <div class="campo">
+              <label for="boton-texto">Texto del botón</label>
+              <div class="fila-color">
+                <input type="text" id="boton-texto" name="boton-texto" value="#FFFFFF" autocomplete="off" spellcheck="false" aria-describedby="ayuda-colores error-boton-texto">
+                <input type="color" id="selector-boton-texto" aria-label="Elegir texto del botón">
+              </div>
+              <p id="error-boton-texto" class="error" role="alert"></p>
+            </div>
+            <div class="campo">
+              <label for="boton-hover">Fondo del botón en hover</label>
+              <div class="fila-color">
+                <input type="text" id="boton-hover" name="boton-hover" value="#20544F" autocomplete="off" spellcheck="false" aria-describedby="ayuda-colores error-boton-hover">
+                <input type="color" id="selector-boton-hover" aria-label="Elegir fondo del botón en hover">
+              </div>
+              <p id="error-boton-hover" class="error" role="alert"></p>
+            </div>
+            <div class="campo">
+              <label for="boton-active">Fondo del botón pulsado (active)</label>
+              <div class="fila-color">
+                <input type="text" id="boton-active" name="boton-active" value="#702B3D" autocomplete="off" spellcheck="false" aria-describedby="ayuda-colores error-boton-active">
+                <input type="color" id="selector-boton-active" aria-label="Elegir fondo del botón pulsado">
+              </div>
+              <p id="error-boton-active" class="error" role="alert"></p>
+            </div>
+            <div class="campo">
+              <label for="boton-deshabilitado-fondo">Fondo del botón deshabilitado</label>
+              <div class="fila-color">
+                <input type="text" id="boton-deshabilitado-fondo" name="boton-deshabilitado-fondo" value="#E3E8E8" autocomplete="off" spellcheck="false" aria-describedby="ayuda-colores error-boton-deshabilitado-fondo">
+                <input type="color" id="selector-boton-deshabilitado-fondo" aria-label="Elegir fondo del botón deshabilitado">
+              </div>
+              <p id="error-boton-deshabilitado-fondo" class="error" role="alert"></p>
+            </div>
+            <div class="campo">
+              <label for="boton-deshabilitado-texto">Texto del botón deshabilitado</label>
+              <div class="fila-color">
+                <input type="text" id="boton-deshabilitado-texto" name="boton-deshabilitado-texto" value="#5B6678" autocomplete="off" spellcheck="false" aria-describedby="ayuda-colores error-boton-deshabilitado-texto">
+                <input type="color" id="selector-boton-deshabilitado-texto" aria-label="Elegir texto del botón deshabilitado">
+              </div>
+              <p id="error-boton-deshabilitado-texto" class="error" role="alert"></p>
+            </div>
+          </div>
+        </fieldset>
+
+        <fieldset>
+          <legend>Formularios y mensajes</legend>
+          <div class="rejilla-campos">
+            <div class="campo">
+              <label for="campo-fondo">Fondo de los campos</label>
+              <div class="fila-color">
+                <input type="text" id="campo-fondo" name="campo-fondo" value="#FFFFFF" autocomplete="off" spellcheck="false" aria-describedby="ayuda-colores error-campo-fondo">
+                <input type="color" id="selector-campo-fondo" aria-label="Elegir fondo de los campos">
+              </div>
+              <p id="error-campo-fondo" class="error" role="alert"></p>
+            </div>
+            <div class="campo">
+              <label for="campo-borde">Borde de los campos</label>
+              <div class="fila-color">
+                <input type="text" id="campo-borde" name="campo-borde" value="#31817B" autocomplete="off" spellcheck="false" aria-describedby="ayuda-colores error-campo-borde">
+                <input type="color" id="selector-campo-borde" aria-label="Elegir borde de los campos">
+              </div>
+              <p id="error-campo-borde" class="error" role="alert"></p>
+            </div>
+            <div class="campo">
+              <label for="campo-borde-hover">Borde de los campos en hover</label>
+              <div class="fila-color">
+                <input type="text" id="campo-borde-hover" name="campo-borde-hover" value="#20544F" autocomplete="off" spellcheck="false" aria-describedby="ayuda-colores error-campo-borde-hover">
+                <input type="color" id="selector-campo-borde-hover" aria-label="Elegir borde de los campos en hover">
+              </div>
+              <p id="error-campo-borde-hover" class="error" role="alert"></p>
+            </div>
+            <div class="campo">
+              <label for="color-error">Mensajes de error</label>
+              <div class="fila-color">
+                <input type="text" id="color-error" name="color-error" value="#B34B43" autocomplete="off" spellcheck="false" aria-describedby="ayuda-colores error-color-error">
+                <input type="color" id="selector-color-error" aria-label="Elegir color de los mensajes de error">
+              </div>
+              <p id="error-color-error" class="error" role="alert"></p>
+            </div>
+            <div class="campo">
+              <label for="color-exito">Mensajes de éxito</label>
+              <div class="fila-color">
+                <input type="text" id="color-exito" name="color-exito" value="#28744D" autocomplete="off" spellcheck="false" aria-describedby="ayuda-colores error-color-exito">
+                <input type="color" id="selector-color-exito" aria-label="Elegir color de los mensajes de éxito">
+              </div>
+              <p id="error-color-exito" class="error" role="alert"></p>
+            </div>
+          </div>
+        </fieldset>
+
+        <fieldset>
+          <legend>Foco</legend>
+          <div class="rejilla-campos">
+            <div class="campo">
+              <label for="foco-color">Color del foco</label>
+              <div class="fila-color">
+                <input type="text" id="foco-color" name="foco-color" value="#20544F" autocomplete="off" spellcheck="false" aria-describedby="ayuda-colores error-foco-color">
+                <input type="color" id="selector-foco-color" aria-label="Elegir color del foco">
+              </div>
+              <p id="error-foco-color" class="error" role="alert"></p>
+            </div>
+            <div class="campo">
+              <label for="foco-grosor">Grosor del foco (px)</label>
+              <input type="number" id="foco-grosor" name="foco-grosor" value="3" min="1" max="10" step="1" aria-describedby="error-foco-grosor">
+              <p id="error-foco-grosor" class="error" role="alert"></p>
+            </div>
+            <div class="campo">
+              <label for="foco-separacion">Separación del foco (px)</label>
+              <input type="number" id="foco-separacion" name="foco-separacion" value="3" min="0" max="10" step="1" aria-describedby="error-foco-separacion">
+              <p id="error-foco-separacion" class="error" role="alert"></p>
+            </div>
+          </div>
+        </fieldset>
+
+        <fieldset>
+          <legend>Tipografía</legend>
+          <div class="rejilla-campos">
+            <div class="campo">
+              <label for="fuente">Fuente</label>
+              <!-- Solo fuentes del sistema: no se carga nada de internet -->
+              <select id="fuente" name="fuente">
+                <option value='Ubuntu, "Segoe UI", Arial, sans-serif' selected>Ubuntu (rocodrigo)</option>
+                <option value="system-ui, sans-serif">Fuente del sistema</option>
+                <option value="Arial, Helvetica, sans-serif">Arial</option>
+                <option value='Georgia, "Times New Roman", serif'>Georgia (con serifa)</option>
+                <option value='"Courier New", monospace'>Courier New (monoespaciada)</option>
+              </select>
+            </div>
+            <div class="campo">
+              <label for="tamano-base">Texto base (px)</label>
+              <input type="number" id="tamano-base" name="tamano-base" value="16" min="10" max="40" step="1" aria-describedby="error-tamano-base">
+              <p id="error-tamano-base" class="error" role="alert"></p>
+            </div>
+            <div class="campo">
+              <label for="tamano-pequeno">Texto pequeño (px)</label>
+              <input type="number" id="tamano-pequeno" name="tamano-pequeno" value="14" min="8" max="32" step="1" aria-describedby="error-tamano-pequeno">
+              <p id="error-tamano-pequeno" class="error" role="alert"></p>
+            </div>
+            <div class="campo">
+              <label for="tamano-h1">Título 1 (px)</label>
+              <input type="number" id="tamano-h1" name="tamano-h1" value="36" min="16" max="96" step="1" aria-describedby="error-tamano-h1">
+              <p id="error-tamano-h1" class="error" role="alert"></p>
+            </div>
+            <div class="campo">
+              <label for="tamano-h2">Título 2 (px)</label>
+              <input type="number" id="tamano-h2" name="tamano-h2" value="24" min="14" max="72" step="1" aria-describedby="error-tamano-h2">
+              <p id="error-tamano-h2" class="error" role="alert"></p>
+            </div>
+            <div class="campo">
+              <label for="interlineado">Interlineado</label>
+              <input type="number" id="interlineado" name="interlineado" value="1.5" min="1" max="3" step="0.1" aria-describedby="error-interlineado">
+              <p id="error-interlineado" class="error" role="alert"></p>
+            </div>
+            <div class="campo">
+              <label for="peso-titulos">Peso de los títulos</label>
+              <select id="peso-titulos" name="peso-titulos">
+                <option value="400">Normal (400)</option>
+                <option value="500">Medio (500)</option>
+                <option value="600">Seminegrita (600)</option>
+                <option value="700" selected>Negrita (700)</option>
+              </select>
+            </div>
+            <div class="campo campo-casilla">
+              <input type="checkbox" id="enlace-subrayado" name="enlace-subrayado" checked>
+              <label for="enlace-subrayado">Subrayar los enlaces</label>
+            </div>
+          </div>
+        </fieldset>
+
+        <fieldset>
+          <legend>Forma</legend>
+          <div class="rejilla-campos">
+            <div class="campo">
+              <label for="radio">Radio de las esquinas (px)</label>
+              <input type="number" id="radio" name="radio" value="10" min="0" max="40" step="1" aria-describedby="error-radio">
+              <p id="error-radio" class="error" role="alert"></p>
+            </div>
+            <div class="campo">
+              <label for="borde-grosor">Grosor de los bordes (px)</label>
+              <input type="number" id="borde-grosor" name="borde-grosor" value="2" min="1" max="8" step="1" aria-describedby="error-borde-grosor">
+              <p id="error-borde-grosor" class="error" role="alert"></p>
+            </div>
+            <div class="campo">
+              <label for="boton-relleno-v">Relleno vertical de botones y campos (px)</label>
+              <input type="number" id="boton-relleno-v" name="boton-relleno-v" value="10" min="0" max="40" step="1" aria-describedby="error-boton-relleno-v">
+              <p id="error-boton-relleno-v" class="error" role="alert"></p>
+            </div>
+            <div class="campo">
+              <label for="boton-relleno-h">Relleno horizontal de los botones (px)</label>
+              <input type="number" id="boton-relleno-h" name="boton-relleno-h" value="18" min="0" max="60" step="1" aria-describedby="error-boton-relleno-h">
+              <p id="error-boton-relleno-h" class="error" role="alert"></p>
+            </div>
+          </div>
+        </fieldset>
+
+      </form>
+    </section>
+
+    <!-- Columna derecha: en escritorio se queda fija mientras se edita -->
+    <div class="columna-derecha">
+
+      <!-- =========================================================
+           3. Accesibilidad
+           ========================================================= -->
+      <section aria-labelledby="titulo-accesibilidad">
+        <h2 id="titulo-accesibilidad">Accesibilidad</h2>
+        <label for="medidor">Comprobaciones que cumplen</label>
+        <meter id="medidor" min="0" max="1" value="0"></meter>
+        <!-- El texto da la misma información que la barra -->
+        <p id="texto-medidor" class="texto-medidor" aria-live="polite"></p>
+
+        <div id="bloque-avisos" class="aviso" hidden>
+          <h3>Recomendaciones (no cuentan en la barra)</h3>
+          <ul id="lista-avisos"></ul>
+        </div>
+
+        <h3>Comprobaciones (primero las que fallan)</h3>
+        <ul id="lista-comprobaciones" class="lista-criterios"></ul>
+      </section>
+
+      <!-- =========================================================
+           4. Vista previa
+           ========================================================= -->
+      <section aria-labelledby="titulo-vista">
+        <h2 id="titulo-vista">Vista previa</h2>
+        <p class="ayuda">Pasa el ratón, pulsa o llega con Tab al botón y a los campos para ver sus estados.</p>
+
+        <!-- Componentes reales con los estilos de la plantilla (#vista en estilo-vista) -->
+        <div id="vista" class="vista">
+          <h1>Título 1</h1>
+          <p>Texto de lectura sobre el fondo de la página con un <a href="#">enlace de ejemplo</a>.</p>
+          <p class="secundario">Texto secundario sobre el fondo.</p>
+
+          <div class="tarjeta">
+            <h2>Título 2 en una tarjeta</h2>
+            <p>Texto sobre la superficie con otro <a href="#">enlace</a>.</p>
+            <p class="secundario">Texto secundario en la tarjeta.</p>
+
+            <label for="vista-campo">Campo de ejemplo</label>
+            <input type="text" id="vista-campo" value="Texto escrito">
+
+            <label for="vista-campo-error">Campo con error</label>
+            <input type="text" id="vista-campo-error" value="#12" aria-invalid="true" aria-describedby="vista-mensaje-error">
+            <p id="vista-mensaje-error" class="mensaje-error">Error: escribe un color como #1565C0.</p>
+            <p class="mensaje-exito">Cambios guardados correctamente.</p>
+
+            <p class="botones-vista">
+              <button type="button">Botón principal</button>
+              <button type="button" disabled>Deshabilitado</button>
+            </p>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    </div>
+    <!-- Fin de la zona de trabajo -->
+
+    <!-- =========================================================
+         5. Exportar CSS
+         ========================================================= -->
+    <section aria-labelledby="titulo-exportar">
+      <h2 id="titulo-exportar">Exportar CSS</h2>
+      <label for="codigo-css">Código CSS de la plantilla (variables y estilos de los componentes)</label>
+      <textarea id="codigo-css" class="codigo" rows="14" readonly spellcheck="false"></textarea>
+      <div class="botonera">
+        <button type="button" id="copiar-css">Copiar CSS</button>
+        <button type="button" id="descargar-css" class="boton-contorno">Descargar .css</button>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- =========================================================
+       Pie
+       ========================================================= -->
+  <footer>
+    <p>rocodrigo · UD04 Diseño de interfaces gráficas</p>
+  </footer>
+
+  <!-- Orden: lógica sin DOM → ayudas comunes → editor → mis plantillas -->
+  <script src="js/contraste.js"></script>
+  <script src="js/comprobaciones.js"></script>
+  <script src="js/generador.js"></script>
+  <script src="js/comun.js"></script>
+  <script src="js/editor.js"></script>
+  <script src="js/almacen.js"></script>
+</body>
+</html>

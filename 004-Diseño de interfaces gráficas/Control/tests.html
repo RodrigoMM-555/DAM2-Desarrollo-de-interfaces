@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<!--
+  rocodrigo | Creador de plantillas · pruebas automáticas
+  Prueba las funciones sin DOM (contraste.js, comprobaciones.js
+  y generador.js) sin librerías.
+-->
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Pruebas · Creador de plantillas · rocodrigo</title>
+  <link rel="stylesheet" href="css/estilo.css">
+</head>
+<body>
+
+  <header>
+    <h1>Pruebas automáticas</h1>
+    <p>Comprueba las fórmulas de contraste, las comprobaciones de la plantilla y el CSS generado.</p>
+  </header>
+
+  <main>
+    <section aria-labelledby="titulo-resumen">
+      <h2 id="titulo-resumen">Resultado de las pruebas</h2>
+      <p id="resumen" class="texto-medidor"></p>
+      <ol id="lista-pruebas" class="lista-criterios"></ol>
+    </section>
+  </main>
+
+  <script src="js/contraste.js"></script>
+  <script src="js/comprobaciones.js"></script>
+  <script src="js/generador.js"></script>
+  <script>
+    "use strict";
+
+    const lista = document.getElementById("lista-pruebas");
+    let aprobadas = 0;
+    let fallidas = 0;
+
+    /** Redondea a 2 decimales para comparar con los valores de referencia. */
+    function redondear(numero) {
+      return Math.round(numero * 100) / 100;
+    }
+
+    /** Compara obtenido con esperado y lo muestra en la lista (texto + icono + color). */
+    function comprobar(descripcion, obtenido, esperado) {
+      const pasa = obtenido === esperado;
+      if (pasa) {
+        aprobadas++;
+      } else {
+        fallidas++;
+      }
+
+      const estado = document.createElement("span");
+      estado.className = pasa ? "estado cumple" : "estado no-cumple";
+      estado.textContent = pasa ? "✔ PASA" : "✖ FALLA";
+
+      const elemento = document.createElement("li");
+      elemento.append(estado, " " + descripcion);
+      if (!pasa) {
+        elemento.append(" (esperado: " + esperado + ", obtenido: " + obtenido + ")");
+      }
+      lista.append(elemento);
+    }
+
+    /* 1. Ratios de referencia */
+    comprobar("#FFFFFF sobre #1565C0 = 5,75:1", redondear(ratioContraste("#FFFFFF", "#1565C0")), 5.75);
+    comprobar("#5A5F66 sobre #E3E6EA = 5,14:1", redondear(ratioContraste("#5A5F66", "#E3E6EA")), 5.14);
+    comprobar("#BDBDBD sobre #FFFFFF = 1,88:1", redondear(ratioContraste("#BDBDBD", "#FFFFFF")), 1.88);
+    comprobar("#FFB300 sobre #FFFFFF = 1,79:1", redondear(ratioContraste("#FFB300", "#FFFFFF")), 1.79);
+    comprobar("Negro sobre blanco = 21:1", ratioContraste("#000000", "#FFFFFF"), 21);
+    comprobar("El orden no importa (blanco sobre negro = 21:1)", ratioContraste("#FFFFFF", "#000000"), 21);
+
+    /* 2. Decisiones de cumplimiento */
+    comprobar("#FFFFFF sobre #1565C0 cumple 1.4.3 (texto normal)", cumpleTextoNormal(ratioContraste("#FFFFFF", "#1565C0")), true);
+    comprobar("#5A5F66 sobre #E3E6EA cumple 1.4.3 (texto normal)", cumpleTextoNormal(ratioContraste("#5A5F66", "#E3E6EA")), true);
+    comprobar("#BDBDBD sobre #FFFFFF NO cumple 1.4.3 (texto normal)", cumpleTextoNormal(ratioContraste("#BDBDBD", "#FFFFFF")), false);
+    comprobar("#BDBDBD sobre #FFFFFF NO cumple 1.4.3 (texto grande)", cumpleTextoGrande(ratioContraste("#BDBDBD", "#FFFFFF")), false);
+    comprobar("#FFB300 sobre #FFFFFF NO cumple 1.4.11 (no textual)", cumpleNoTextual(ratioContraste("#FFB300", "#FFFFFF")), false);
+
+    /* 3. Límites exactos */
+    comprobar("4,5 cumple texto normal", cumpleTextoNormal(4.5), true);
+    comprobar("4,49 NO cumple texto normal", cumpleTextoNormal(4.49), false);
+    comprobar("3 cumple texto grande", cumpleTextoGrande(3), true);
+    comprobar("2,99 NO cumple no textual", cumpleNoTextual(2.99), false);
+
+    /* 4. Conversión y validación de hex */
+    comprobar("#1565C0 se convierte en RGB 21, 101, 192", JSON.stringify(hexARgb("#1565C0")), '{"r":21,"g":101,"b":192}');
+    comprobar("Luminancia del blanco = 1", luminanciaRelativa("#FFFFFF"), 1);
+    comprobar("Luminancia del negro = 0", luminanciaRelativa("#000000"), 0);
+    comprobar("«#1565c0» es válido (minúsculas)", esHexValido("#1565c0"), true);
+    comprobar("«1565C0» NO es válido (falta #)", esHexValido("1565C0"), false);
+    comprobar("«#12345» NO es válido (5 caracteres)", esHexValido("#12345"), false);
+    comprobar("«#GGGGGG» NO es válido (G no es hexadecimal)", esHexValido("#GGGGGG"), false);
+
+    /* 5. Tamaño de letra: decide el contraste exigido */
+    comprobar("24 px normal es texto grande", esTextoGrande(24, false), true);
+    comprobar("23,9 px normal NO es texto grande", esTextoGrande(23.9, false), false);
+    comprobar("18,66 px en negrita es texto grande", esTextoGrande(18.66, true), true);
+    comprobar("18 px en negrita NO es texto grande", esTextoGrande(18, true), false);
+    comprobar("14 px normal necesita 4,5:1", contrasteExigido(14, false), 4.5);
+    comprobar("24 px normal necesita 3:1", contrasteExigido(24, false), 3);
+    comprobar("Blanco sobre #429E96 (3,20:1) cumple a 24 px", cumpleTexto(ratioContraste("#FFFFFF", "#429E96"), 24, false), true);
+    comprobar("Blanco sobre #429E96 (3,20:1) NO cumple a 16 px", cumpleTexto(ratioContraste("#FFFFFF", "#429E96"), 16, false), false);
+    comprobar("16 px es tamaño recomendado", esTamanoRecomendado(16), true);
+    comprobar("14 px NO es tamaño recomendado", esTamanoRecomendado(14), false);
+
+    /* 6. Porcentaje de la barra de la plantilla */
+    comprobar("7 de 8 = 88 %", porcentajeCumplido(7, 8), 88);
+    comprobar("8 de 8 = 100 %", porcentajeCumplido(8, 8), 100);
+    comprobar("0 de 0 = 0 % (sin dividir entre cero)", porcentajeCumplido(0, 0), 0);
+
+    /* 7. Comprobaciones de una plantilla (comprobaciones.js) */
+
+    // Plantilla de prueba con los valores de partida rocodrigo
+    function plantillaPrueba() {
+      return {
+        "color-fondo": "#EDF4F2", "color-superficie": "#FFFFFF", "color-texto": "#172033",
+        "color-secundario": "#5B6678", "color-enlace": "#20544F",
+        "boton-fondo": "#31817B", "boton-texto": "#FFFFFF", "boton-hover": "#20544F", "boton-active": "#702B3D",
+        "boton-deshabilitado-fondo": "#E3E8E8", "boton-deshabilitado-texto": "#5B6678",
+        "campo-fondo": "#FFFFFF", "campo-borde": "#31817B", "campo-borde-hover": "#20544F",
+        "color-error": "#B34B43", "color-exito": "#28744D",
+        "foco-color": "#20544F", "foco-grosor": 3, "foco-separacion": 3,
+        "fuente": "Ubuntu, sans-serif", "tamano-base": 16, "tamano-pequeno": 14, "tamano-h1": 36, "tamano-h2": 24,
+        "interlineado": 1.5, "peso-titulos": "700",
+        "radio": 10, "borde-grosor": 2, "boton-relleno-v": 10, "boton-relleno-h": 18,
+        "enlace-subrayado": true
+      };
+    }
+
+    /** Busca una comprobación por su nombre. */
+    function buscar(resultados, nombre) {
+      return resultados.find((resultado) => resultado.nombre === nombre);
+    }
+
+    const rocodrigo = plantillaPrueba();
+    comprobar("La plantilla rocodrigo tiene 17 comprobaciones", comprobarPlantilla(rocodrigo).length, 17);
+    comprobar("La plantilla rocodrigo cumple todas", comprobarPlantilla(rocodrigo).every((r) => r.cumple), true);
+    comprobar("La plantilla rocodrigo no tiene avisos", avisosPlantilla(rocodrigo).length, 0);
+    comprobar("Altura de botones: 16 × 1,5 + 2 × 10 + 2 × 2 = 48 px", alturaObjetivo(rocodrigo), 48);
+
+    const sinSubrayar = plantillaPrueba();
+    sinSubrayar["enlace-subrayado"] = false;
+    comprobar("Sin subrayar se añade la comprobación 1.4.1 (18 en total)", comprobarPlantilla(sinSubrayar).length, 18);
+    comprobar("Enlace #20544F frente a texto #172033 (1,89:1) NO cumple 1.4.1",
+      buscar(comprobarPlantilla(sinSubrayar), "Enlaces sin subrayar frente al texto").cumple, false);
+
+    const hoverMalo = plantillaPrueba();
+    hoverMalo["boton-hover"] = "#79E5DC";
+    comprobar("Botón en hover blanco sobre #79E5DC NO cumple",
+      buscar(comprobarPlantilla(hoverMalo), "Botón en hover").cumple, false);
+    comprobar("…y el botón en estado normal sigue cumpliendo",
+      buscar(comprobarPlantilla(hoverMalo), "Botón").cumple, true);
+
+    const bordeClaro = plantillaPrueba();
+    bordeClaro["campo-borde"] = "#D5E2E2";
+    comprobar("Borde de campo #D5E2E2 sobre blanco (1,33:1) NO cumple 1.4.11",
+      buscar(comprobarPlantilla(bordeClaro), "Borde de los campos").cumple, false);
+
+    const botonPequeno = plantillaPrueba();
+    botonPequeno["tamano-base"] = 12;
+    botonPequeno["interlineado"] = 1;
+    botonPequeno["boton-relleno-v"] = 2;
+    botonPequeno["borde-grosor"] = 1;
+    comprobar("Botón de 12 + 4 + 2 = 18 px NO cumple 2.5.8 (mínimo 24 px)",
+      buscar(comprobarPlantilla(botonPequeno), "Altura de botones y campos").cumple, false);
+    comprobar("Texto de 12 px, interlineado 1 → 2 avisos", avisosPlantilla(botonPequeno).length, 2);
+
+    const textoGrande = plantillaPrueba();
+    textoGrande["tamano-base"] = 24;
+    textoGrande["color-texto"] = "#767676";   // 4,54:1 sobre blanco, 4,0:1 sobre el fondo
+    comprobar("Texto #767676 sobre el fondo cumple a 24 px (exige 3:1)",
+      buscar(comprobarPlantilla(textoGrande), "Texto sobre el fondo").cumple, true);
+
+    /* 8. CSS generado (generador.js) */
+    const cssExportado = generarCss(rocodrigo, "");
+    const cssVista = generarCss(rocodrigo, "#vista");
+    comprobar("16 px se exporta como 1rem", valorCss("tamano-base", 16), "1rem");
+    comprobar("El interlineado se exporta sin unidad", valorCss("interlineado", 1.5), "1.5");
+    comprobar("Subrayado sí → underline", valorCss("enlace-subrayado", true), "underline");
+    comprobar("Subrayado no → none", valorCss("enlace-subrayado", false), "none");
+    comprobar("El CSS exportado declara las variables en :root", cssExportado.startsWith(":root {"), true);
+    comprobar("El CSS exportado incluye --color-fondo: #EDF4F2;", cssExportado.includes("--color-fondo: #EDF4F2;"), true);
+    comprobar("El CSS exportado da estilo al hover del botón", cssExportado.includes("button:hover {"), true);
+    comprobar("El CSS de la vista previa solo afecta a #vista", cssVista.includes("#vista button:hover {"), true);
+    comprobar("El CSS de la vista previa no usa :root", cssVista.includes(":root"), false);
+
+    /* Resumen */
+    const total = aprobadas + fallidas;
+    document.getElementById("resumen").textContent = fallidas === 0
+      ? "✔ " + aprobadas + " de " + total + " pruebas superadas"
+      : "✖ " + fallidas + " de " + total + " pruebas fallan";
+  </script>
+</body>
+</html>

@@ -1,0 +1,388 @@
+/* =========================================================
+   rocodrigo | Creador de plantillas · hoja de estilo de la app
+   Paleta del manual de identidad rocodrigo.
+   Junto a cada color, su contraste comprobado (WCAG 2.2).
+   La vista previa NO usa este archivo: su CSS lo genera
+   js/generador.js con los valores de la plantilla.
+   ========================================================= */
+
+/* 1. Variables: paleta de la marca */
+:root {
+  --petroleo-900: #20544F;      /* blanco encima: 8,60:1 */
+  --petroleo-700: #31817B;      /* blanco encima: 4,61:1 · como borde sobre blanco: 4,61:1 */
+  --vino-700: #702B3D;          /* sobre blanco: 9,99:1 */
+  --amarillo: #F8CF69;          /* solo fondo o anillo claro: como texto sobre blanco da 1,49:1 */
+  --tinta: #172033;             /* sobre fondo: 14,58:1 · sobre blanco: 16,27:1 */
+  --secundario: #5B6678;        /* sobre blanco: 5,81:1 · sobre fondo: 5,20:1 */
+  --fondo: #EDF4F2;
+  --superficie: #FFFFFF;
+  --linea: #D5E2E2;             /* solo separadores decorativos (1,33:1) */
+  --ok: #28744D;                /* sobre --ok-fondo: 5,19:1 */
+  --ok-fondo: #EDF7F1;
+  --error: #B34B43;             /* sobre blanco: 5,24:1 · sobre --error-fondo: 4,77:1 */
+  --error-fondo: #FFF1EF;
+  --aviso-fondo: #FFF8E8;       /* tinta encima: 15,37:1 */
+  --deshabilitado-fondo: #E3E8E8;
+  --deshabilitado-texto: #5B6678;   /* 4,69:1 */
+
+  /* Sin fuentes externas: Ubuntu si está instalada; si no, las siguientes */
+  --fuente: Ubuntu, "Segoe UI", Arial, sans-serif;
+  --radio: 0.6rem;
+}
+
+/* 2. Base */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font: 1rem/1.5 var(--fuente);
+  color: var(--tinta);
+  background: var(--fondo);
+}
+
+header {
+  padding: 1.5rem 1rem;
+  color: #FFFFFF;
+  background: var(--petroleo-900);
+  border-bottom: 0.3rem solid var(--amarillo);   /* detalle decorativo */
+}
+
+header h1 {
+  margin: 0 0 0.25rem;
+  font-size: 1.75rem;
+}
+
+header p {
+  margin: 0;
+}
+
+main {
+  display: grid;
+  gap: 1rem;
+  max-width: 90rem;
+  margin: 0 auto;
+  padding: 1rem;
+}
+
+section {
+  padding: 1rem 1.25rem;
+  background: var(--superficie);
+  border-radius: var(--radio);
+}
+
+h2 {
+  margin-top: 0;
+  font-size: 1.35rem;
+  color: var(--petroleo-900);
+}
+
+h3 {
+  font-size: 1.1rem;
+}
+
+footer {
+  padding: 1rem;
+  font-size: 0.875rem;
+  text-align: center;
+  color: var(--secundario);
+}
+
+/* 3. Foco visible de dos tonos (2.4.7 y 1.4.11)
+   Anillo claro interior (box-shadow amarillo) + anillo oscuro exterior
+   (outline petróleo, 8,60:1 sobre blanco). Se ve sobre fondos claros y oscuros. */
+:focus-visible {
+  outline: 3px solid var(--petroleo-900);
+  outline-offset: 3px;
+  box-shadow: 0 0 0 3px var(--amarillo);
+}
+
+/* 4. Campos: normal, hover, foco (arriba) y error */
+.campo {
+  margin-bottom: 1rem;
+}
+
+label {
+  display: block;
+  margin-bottom: 0.25rem;
+  font-weight: 700;
+}
+
+input[type="text"],
+input[type="number"],
+select {
+  width: 100%;
+  max-width: 16rem;
+  padding: 0.5rem 0.75rem;
+  font: inherit;
+  color: var(--tinta);
+  background: var(--superficie);
+  border: 2px solid var(--petroleo-700);
+  border-radius: var(--radio);
+}
+
+/* Selector de color: mismo borde que los campos */
+input[type="color"] {
+  flex-shrink: 0;
+  width: 3rem;
+  height: 2.75rem;
+  padding: 0.15rem;
+  background: var(--superficie);
+  border: 2px solid var(--petroleo-700);
+  border-radius: var(--radio);
+  cursor: pointer;
+}
+
+input[type="text"]:hover,
+input[type="number"]:hover,
+input[type="color"]:hover,
+select:hover {
+  border-color: var(--petroleo-900);
+}
+
+/* Error: borde, fondo y mensaje de texto (nunca solo el color) */
+input[aria-invalid="true"] {
+  border-color: var(--error);
+  background: var(--error-fondo);
+}
+
+.ayuda {
+  margin: 0.25rem 0 0;
+  font-size: 0.875rem;
+  color: var(--secundario);
+}
+
+.error {
+  margin: 0.25rem 0 0;
+  font-weight: 700;
+  color: var(--error);
+}
+
+/* Vacío no ocupa sitio, pero sigue en la página para que role="alert" funcione */
+.error:empty {
+  margin: 0;
+}
+
+/* Campo hex + selector, o campo + botones, en la misma línea */
+.fila-color,
+.fila-controles {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.fila-color {
+  flex-wrap: nowrap;
+}
+
+/* Casilla con su etiqueta al lado */
+.campo-casilla {
+  align-self: center;
+}
+
+.campo-casilla label {
+  display: inline;
+  margin-left: 0.25rem;
+}
+
+/* 1,5rem = 24 px: tamaño mínimo de objetivo (2.5.8) */
+input[type="checkbox"] {
+  width: 1.5rem;
+  height: 1.5rem;
+  vertical-align: middle;
+  accent-color: var(--petroleo-700);
+}
+
+fieldset {
+  margin: 1rem 0 0;
+  padding: 0.75rem 1rem 0;
+  border: 2px solid var(--linea);   /* decorativo: agrupa, no es un control */
+  border-radius: var(--radio);
+}
+
+legend {
+  padding: 0 0.25rem;
+  font-weight: 700;
+  color: var(--petroleo-900);
+}
+
+/* Campos en columnas según el ancho disponible */
+.rejilla-campos {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(13rem, 1fr));
+  gap: 0 1rem;
+}
+
+/* 5. Botones: normal, hover, foco (arriba) y deshabilitado */
+button {
+  padding: 0.6rem 1.1rem;
+  font: inherit;
+  font-weight: 700;
+  color: #FFFFFF;
+  background: var(--petroleo-700);
+  border: 2px solid var(--petroleo-700);
+  border-radius: var(--radio);
+  cursor: pointer;
+}
+
+button:hover {
+  background: var(--petroleo-900);
+  border-color: var(--petroleo-900);
+}
+
+/* Acciones de borrar: en rojo vino */
+.boton-secundario {
+  color: var(--vino-700);
+  background: var(--superficie);
+  border-color: var(--vino-700);
+}
+
+.boton-secundario:hover {
+  color: #FFFFFF;
+  background: var(--vino-700);
+  border-color: var(--vino-700);
+}
+
+/* Acción alternativa: contorno petróleo */
+.boton-contorno {
+  color: var(--petroleo-900);
+  background: var(--superficie);
+}
+
+.boton-contorno:hover {
+  color: #FFFFFF;
+}
+
+button:disabled,
+button:disabled:hover {
+  color: var(--deshabilitado-texto);
+  background: var(--deshabilitado-fondo);
+  border-color: var(--deshabilitado-fondo);
+  cursor: not-allowed;
+}
+
+.botonera {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+/* 6. Mis plantillas */
+.plantillas-acciones {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem 3rem;
+}
+
+.estado-mensaje {
+  min-height: 1.5rem;
+  margin-bottom: 0;
+  font-weight: 700;
+  color: var(--petroleo-900);
+}
+
+/* 7. Accesibilidad */
+meter {
+  display: block;
+  width: 100%;
+  height: 1.5rem;
+  margin: 0.25rem 0;
+}
+
+.texto-medidor {
+  margin-top: 0;
+  font-weight: 700;
+}
+
+.lista-criterios {
+  padding-left: 0;
+  list-style: none;
+}
+
+.lista-criterios li {
+  margin-bottom: 0.5rem;
+}
+
+/* CUMPLE / NO CUMPLE: texto + icono + color */
+.estado {
+  display: inline-block;
+  padding: 0.1rem 0.5rem;
+  font-weight: 700;
+  border: 2px solid currentColor;
+  border-radius: 0.4rem;
+}
+
+.cumple {
+  color: var(--ok);
+  background: var(--ok-fondo);
+}
+
+.no-cumple {
+  color: var(--error);
+  background: var(--error-fondo);
+}
+
+/* Recomendaciones (no son fallos de WCAG) */
+.aviso {
+  padding: 0.5rem 0.75rem;
+  background: var(--aviso-fondo);
+  border-left: 0.3rem solid var(--amarillo);
+}
+
+.aviso h3 {
+  margin: 0.25rem 0;
+}
+
+/* 8. Zona de trabajo y vista previa (marco; el resto lo pone el CSS generado) */
+.zona-trabajo,
+.columna-derecha {
+  display: grid;
+  gap: 1rem;
+}
+
+.vista {
+  border: 2px solid var(--secundario);
+  border-radius: var(--radio);
+}
+
+/* 9. Exportar */
+.codigo {
+  display: block;
+  width: 100%;
+  margin-bottom: 1rem;
+  padding: 0.75rem;
+  font: 0.875rem/1.4 "Courier New", monospace;
+  color: var(--tinta);
+  background: var(--fondo);
+  border: 2px solid var(--petroleo-700);
+  border-radius: var(--radio);
+}
+
+/* 10. Escritorio: editor a la izquierda; accesibilidad y vista previa
+   a la derecha, fijas mientras se desplaza el editor.
+   El sticky solo se mueve dentro de .zona-trabajo: no tapa «Exportar CSS». */
+@media (min-width: 60rem) {
+  .zona-trabajo {
+    grid-template-columns: 1fr 1fr;
+    align-items: start;
+  }
+
+  .columna-derecha {
+    position: sticky;
+    top: 1rem;
+    max-height: calc(100vh - 2rem);
+    overflow-y: auto;
+  }
+
+  header {
+    padding: 2rem;
+  }
+
+  header h1 {
+    font-size: 2.25rem;
+  }
+}
