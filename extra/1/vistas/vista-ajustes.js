@@ -6,6 +6,7 @@
  */
 import { Vista } from './vista.js';
 import { ANTELACION } from '../servicios/ajustes.js';
+import { vozDisponible } from '../entrada/voz.js';
 
 class VistaAjustes extends Vista {
   pintar() {
@@ -56,8 +57,29 @@ class VistaAjustes extends Vista {
               <input type="checkbox" name="usarCamara" ${a.usarCamara ? 'checked' : ''} ${a.calibrado ? '' : 'disabled'} />
               <span>Jugar con la cámara</span>
             </label>
+            <label class="interruptor">
+              <input type="checkbox" name="vistaAR" ${a.vistaAR ? 'checked' : ''} />
+              <span>Realidad aumentada: jugar sobre tu imagen</span>
+            </label>
+            <p class="nota">Las notas caen sobre la imagen de la cámara, justo donde tienes que poner las manos,
+              y cada mano lleva un esqueleto virtual de su color.</p>
             <p class="nota">${a.calibrado ? `Retraso compensado: ${Math.round(a.latenciaCamara * 1000)} ms.` : 'Aún no está calibrada.'}
               <a href="#/calibracion">Calibrar la cámara</a></p>
+          </fieldset>
+
+          <fieldset>
+            <legend>Voz</legend>
+            <label class="interruptor">
+              <input type="checkbox" name="usarVoz" ${a.usarVoz ? 'checked' : ''} ${vozDisponible() ? '' : 'disabled'} />
+              <span>Órdenes de voz: «empezar», «pausa», «continuar», «reiniciar», «salir»</span>
+            </label>
+            <p class="nota">${vozDisponible()
+              ? 'Tienes las manos ocupadas: pausa la partida diciéndolo. En Chrome y Edge el reconocimiento lo hace un servicio en línea, así que tu voz sale del ordenador mientras está activado.'
+              : 'Tu navegador no tiene reconocimiento de voz (Firefox no lo incluye). Prueba con Chrome o Edge.'}</p>
+            <label class="interruptor">
+              <input type="checkbox" name="leerResultados" ${a.leerResultados ? 'checked' : ''} />
+              <span>Leer el resultado en voz alta al terminar</span>
+            </label>
           </fieldset>
 
           <fieldset>

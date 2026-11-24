@@ -18,7 +18,8 @@ import { EntradaTeclado, ETIQUETAS } from '../entrada/teclado.js';
 import '../componentes/tb-pista.js';
 import '../componentes/tb-camara.js';
 import '../componentes/tb-cursor-mano.js';
-import { aPantalla } from '../entrada/permanencia.js';
+import { aPantalla } from '../componentes/permanencia.js';
+import { EntradaVoz, vozDisponible } from '../entrada/voz.js';
 
 /** Segundos de cuenta atrás antes de que empiece la música. */
 const RETARDO_INICIO = 2.5;
@@ -48,6 +49,11 @@ class VistaPartida extends Vista {
   #puntos = { i: null, d: null };
   /** Última vez (performance.now) que la cámara vio alguna mano. */
   #ultimaManoVista = 0;
+  /** @type {EntradaVoz | null} */
+  #voz = null;
+  /** Modo realidad aumentada: la pista se dibuja sobre la imagen de la cámara. */
+  #modoAR = false;
+  #observadorAR = new ResizeObserver(() => this.#ajustarAR());
 
   /** @param {string} selector */
   #el(selector) {
@@ -68,12 +74,13 @@ class VistaPartida extends Vista {
             <div><dt>Combo</dt><dd><span class="dato-combo">0</span> <span class="dato-multiplicador"></span></dd></div>
             <div><dt>Precisión</dt><dd class="dato-precision">100,0 %</dd></div>
           </dl>
+          <p class="indicador-voz" hidden><span aria-hidden="true">🎤</span> <span class="texto-voz">Di «pausa»</span></p>
           <button class="boton boton-pausa" type="button" aria-label="Pausa (Esc)">❚❚</button>
         </header>
         <div class="area-juego">
           <tb-pista class="pista"></tb-pista>
           <aside class="panel-camara" aria-label="Cámara" hidden>
-            <tb-camara></tb-camara>
+            <tb-camara esqueleto></tb-camara>
             <p class="estado-camara" role="status"></p>
           </aside>
         </div>
@@ -95,6 +102,12 @@ class VistaPartida extends Vista {
     const opciones = { signal: this.senal.signal };
     this.#teclado.addEventListener('cambiomanos', () => this.#combinarManos(), opciones);
     this.app.camara.addEventListener('cambiomanos', () => this.#combinarManos(), opciones);
+    // Gesto de movimiento: las dos manos arriba → empezar (si espera) o pausar (si juega).
+    this.app.camara.addEventListener('gesto', () => {
+      if (this.#estado === 'esperando') this.#empezar();
+      else if (this.#estado === 'jugando') this.#pausar('Has levantado las dos manos.');
+    }, opciones);
+    this.querySelector('tb-camara')?.addEventListener('lista', () => this.#ajustarAR(), opciones);
     this.app.camara.addEventListener('fotograma', (e) => {
       const detalle = /** @type {CustomEvent} */ (e).detail;
       const zona = this.app.camara.zona;
@@ -123,6 +136,8 @@ class VistaPartida extends Vista {
 
   limpiar() {
     cancelAnimationFrame(this.#bucle);
+    this.#voz?.detener();
+    this.#observadorAR.disconnect();
     this.#teclado.desconectar();
     this.app.camara.detener();
     this.app.audio.detener();
@@ -143,16 +158,29 @@ class VistaPartida extends Vista {
       ]);
       this.#buffer = buffer;
       if (!this.isConnected) return;
+      this.#encenderVoz();
+      const formas = [
+        'pulsa Espacio o el botón',
+        ...(this.#conCamara ? ['levanta las dos manos por encima de la zona'] : []),
+        ...(this.#voz ? ['di «empezar»'] : []),
+      ];
+      const comoEmpezar = `Para empezar, ${formas.join(', ').replace(/, ([^,]*)$/, ' o $1')}.`;
       const texto = this.#conCamara
-        ? 'Levanta las manos a la altura del pecho: en la imagen de la cámara verás en qué carril estás. Pulsa Espacio o el botón para empezar.'
-        : `${avisoCamara}Pulsa Espacio o el botón para empezar. Ten las manos preparadas.`;
+        ? `Pon las manos a la altura del pecho: en la imagen verás en qué carril estás. ${comoEmpezar}`
+        : `${avisoCamara}${comoEmpezar}`;
       this.#mostrarCapa('Todo listo', texto, [
         ['empezar', 'Empezar'],
         ['salir', 'Elegir otra canción'],
       ]);
       this.#estado = 'esperando';
     } catch (error) {
-      this.#mostrarCapa('No se pudo cargar la canción', error instanceof Error ? error.message : String(error), [
+      console.error(error);
+      const mensaje = error instanceof Error ? error.message : String(error);
+      // Errores de partitura: se muestran tal cual (dicen qué nota falla). El resto, en lenguaje llano.
+      const texto = mensaje.startsWith('Partitura no válida') || mensaje.startsWith('La canción no tiene')
+        ? mensaje
+        : 'No se ha encontrado esta canción. Si la grabaste en el editor, recuerda que solo dura hasta recargar la página: descárgala y añádela a «canciones».';
+      this.#mostrarCapa('No se pudo cargar la canción', texto, [
         ['salir', 'Volver a las canciones'],
       ]);
     }
@@ -177,10 +205,71 @@ class VistaPartida extends Vista {
       }
       this.#conCamara = true;
       this.#el('.estado-camara').textContent = '';
+      if (ajustes.vistaAR) this.#activarAR();
       return '';
     } catch {
       panel.hidden = true;
       return `No se pudo usar la cámara (${this.app.camara.error}); puedes jugar con el teclado. `;
+    }
+  }
+
+  /**
+   * Realidad aumentada: la imagen de la cámara ocupa el fondo y la pista se
+   * coloca encima, con los carriles exactamente sobre la zona de juego. Así
+   * las notas caen justo donde el jugador tiene que poner las manos.
+   */
+  #activarAR() {
+    this.#modoAR = true;
+    this.#el('.partida').classList.add('modo-ar');
+    const pista = /** @type {import('../componentes/tb-pista.js').TbPista} */ (this.querySelector('tb-pista'));
+    pista.transparente = true;
+    /** @type {any} */ (this.querySelector('tb-camara')).sinRejilla = true;
+    this.#observadorAR.observe(this.#el('.area-juego'));
+    this.#ajustarAR();
+  }
+
+  /** Coloca la imagen (sin deformarla) y alinea la pista con la zona de juego. */
+  #ajustarAR() {
+    if (!this.#modoAR) return;
+    const area = this.#el('.area-juego');
+    const camara = /** @type {HTMLElement & { video: HTMLVideoElement }} */ (this.querySelector('tb-camara'));
+    const proporcion = camara.video.videoWidth / camara.video.videoHeight || 4 / 3;
+    const ancho = Math.min(area.clientWidth, area.clientHeight * proporcion);
+    const alto = ancho / proporcion;
+    const izquierda = (area.clientWidth - ancho) / 2;
+    const arriba = (area.clientHeight - alto) / 2;
+    Object.assign(camara.style, { width: `${ancho}px`, height: `${alto}px`, left: `${izquierda}px`, top: `${arriba}px` });
+    const z = this.app.camara.zona.zona;
+    /** @type {import('../componentes/tb-pista.js').TbPista} */ (this.querySelector('tb-pista')).geometria = {
+      x0: izquierda + z.izquierda * ancho,
+      ancho: (z.derecha - z.izquierda) * ancho,
+      // La línea, a la altura a la que se suelen poner las manos dentro de la zona.
+      yLinea: arriba + (z.arriba + (z.abajo - z.arriba) * 0.55) * alto,
+    };
+  }
+
+  /** Órdenes de voz, si están activadas en Ajustes y el navegador las admite. */
+  #encenderVoz() {
+    if (!this.app.ajustes.datos.usarVoz || !vozDisponible() || this.#voz) return;
+    const voz = new EntradaVoz();
+    voz.permitidas = ['empezar', 'pausa', 'continuar', 'reiniciar', 'salir'];
+    voz.addEventListener('orden', (e) => {
+      const { orden, texto } = /** @type {CustomEvent} */ (e).detail;
+      this.#el('.texto-voz').textContent = `«${texto.trim()}»`;
+      if (orden === 'empezar' && this.#estado === 'esperando') this.#empezar();
+      else if (orden === 'pausa' && this.#estado === 'jugando') this.#pausar('Pausa por voz.');
+      else if (orden === 'continuar' && this.#estado === 'pausa') this.#continuar();
+      else if (orden === 'reiniciar' && this.#estado === 'pausa') this.#empezar();
+      else if (orden === 'salir' && this.#estado !== 'jugando') this.app.ir('/canciones');
+    });
+    voz.addEventListener('estado', (e) => {
+      if (/** @type {CustomEvent} */ (e).detail === 'error') {
+        this.#el('.texto-voz').textContent = 'Sin permiso para el micrófono';
+      }
+    });
+    if (voz.iniciar()) {
+      this.#voz = voz;
+      this.#el('.indicador-voz').hidden = false;
     }
   }
 

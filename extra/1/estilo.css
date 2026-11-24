@@ -327,6 +327,27 @@ kbd {
   .panel-camara { top: auto; bottom: 0.5rem; right: 0.5rem; width: 34vw; opacity: 0.85; }
 }
 
+/* Realidad aumentada: la cámara de fondo y la pista encima, alineadas por JS */
+.modo-ar .panel-camara { inset: 0; width: auto; top: 0; right: 0; }
+.modo-ar .panel-camara tb-camara { position: absolute; border-radius: 0; }
+.modo-ar .estado-camara { display: none; }
+.modo-ar .pista { position: relative; z-index: 1; }
+
+/* Indicador de órdenes de voz */
+.indicador-voz {
+  margin: 0;
+  padding: 0.3rem 0.8rem;
+  border: 1px solid var(--color-borde-control);
+  border-radius: 999px;
+  font-size: 0.9rem;
+  color: var(--color-texto-suave);
+  max-width: 16rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.indicador-voz[hidden] { display: none; }
+
 /* Opción de cámara en la lista de canciones */
 .opcion-camara {
   display: flex;

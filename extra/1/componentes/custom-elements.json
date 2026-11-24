@@ -1,0 +1,387 @@
+{
+  "schemaVersion": "1.0.0",
+  "readme": "README.md",
+  "modules": [
+    {
+      "kind": "javascript-module",
+      "path": "tb-pista.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "name": "TbPista",
+          "tagName": "tb-pista",
+          "customElement": true,
+          "description": "Pista de ritmo de 4 carriles dibujada en Canvas: notas con forma de mano, línea de juicio, manos del jugador y destellos.",
+          "attributes": [
+            {
+              "name": "antelacion",
+              "type": {
+                "text": "number"
+              },
+              "default": "2",
+              "description": "Segundos que tarda una nota en bajar.",
+              "fieldName": "antelacion"
+            },
+            {
+              "name": "transparente",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Carriles solo con bordes, para ir sobre la cámara.",
+              "fieldName": "transparente"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "antelacion",
+              "type": {
+                "text": "number"
+              },
+              "description": "Segundos que tarda una nota en bajar.",
+              "default": "2"
+            },
+            {
+              "kind": "field",
+              "name": "transparente",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Carriles solo con bordes.",
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "notas",
+              "type": {
+                "text": "Nota[]"
+              },
+              "description": "Notas a dibujar.",
+              "default": "[]"
+            },
+            {
+              "kind": "field",
+              "name": "pulso",
+              "type": {
+                "text": "number"
+              },
+              "description": "Segundos de un pulso (0 = sin líneas).",
+              "default": "0"
+            },
+            {
+              "kind": "field",
+              "name": "geometria",
+              "type": {
+                "text": "{ x0: number, ancho: number, yLinea: number } | null"
+              },
+              "description": "Posición en píxeles; null = centrada.",
+              "default": "null"
+            },
+            {
+              "kind": "method",
+              "name": "dibujar",
+              "description": "Pinta el instante t de la canción.",
+              "parameters": [
+                {
+                  "name": "t",
+                  "type": {
+                    "text": "number"
+                  }
+                },
+                {
+                  "name": "manos",
+                  "type": {
+                    "text": "EstadoManos"
+                  }
+                },
+                {
+                  "name": "puntos",
+                  "type": {
+                    "text": "PuntosManos | null"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "marcar",
+              "description": "Muestra la calificación de una nota.",
+              "parameters": [
+                {
+                  "name": "juicio",
+                  "type": {
+                    "text": "Juicio"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "reiniciar",
+              "description": "Olvida notas acertadas y efectos.",
+              "parameters": []
+            }
+          ],
+          "events": [
+            {
+              "name": "marcada",
+              "type": {
+                "text": "CustomEvent<{ juicio: Juicio }>"
+              },
+              "description": "Se ha mostrado una calificación."
+            }
+          ],
+          "cssProperties": [
+            {
+              "name": "--color-izquierda",
+              "description": "Color de la mano izquierda."
+            },
+            {
+              "name": "--color-derecha",
+              "description": "Color de la mano derecha."
+            },
+            {
+              "name": "--color-texto",
+              "description": "Color del texto."
+            },
+            {
+              "name": "--color-fondo",
+              "description": "Color de fondo (letra de las manos)."
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "TbPista",
+          "declaration": {
+            "name": "TbPista",
+            "module": "tb-pista.js"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "tb-pista",
+          "declaration": {
+            "name": "TbPista",
+            "module": "tb-pista.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "tb-camara.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "name": "TbCamara",
+          "tagName": "tb-camara",
+          "customElement": true,
+          "description": "Imagen de la cámara en espejo con la zona de juego, las manos y su esqueleto virtual (realidad aumentada).",
+          "attributes": [
+            {
+              "name": "esqueleto",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Dibuja el esqueleto virtual de cada mano.",
+              "fieldName": "esqueleto"
+            },
+            {
+              "name": "sin-rejilla",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "No dibuja la zona de juego ni los carriles.",
+              "fieldName": "sinRejilla"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "esqueleto",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Dibuja el esqueleto virtual.",
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "sinRejilla",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Oculta la rejilla.",
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "video",
+              "type": {
+                "text": "HTMLVideoElement"
+              },
+              "description": "El <video> interno.",
+              "readonly": true
+            },
+            {
+              "kind": "method",
+              "name": "dibujar",
+              "description": "Pinta un fotograma.",
+              "parameters": [
+                {
+                  "name": "detalle",
+                  "type": {
+                    "text": "DetalleFotograma | null"
+                  }
+                },
+                {
+                  "name": "zona",
+                  "type": {
+                    "text": "Rectangulo"
+                  }
+                }
+              ]
+            }
+          ],
+          "events": [
+            {
+              "name": "lista",
+              "type": {
+                "text": "CustomEvent<{ ancho: number, alto: number }>"
+              },
+              "description": "La cámara ya da imagen."
+            }
+          ],
+          "cssProperties": [
+            {
+              "name": "--color-izquierda",
+              "description": "Color de la mano izquierda."
+            },
+            {
+              "name": "--color-derecha",
+              "description": "Color de la mano derecha."
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "TbCamara",
+          "declaration": {
+            "name": "TbCamara",
+            "module": "tb-camara.js"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "tb-camara",
+          "declaration": {
+            "name": "TbCamara",
+            "module": "tb-camara.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "tb-cursor-mano.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "name": "TbCursorMano",
+          "tagName": "tb-cursor-mano",
+          "customElement": true,
+          "description": "Cursor que sigue a la mano y pulsa el botón sobre el que se queda quieta (permanencia).",
+          "attributes": [
+            {
+              "name": "duracion",
+              "type": {
+                "text": "number"
+              },
+              "default": "1",
+              "description": "Segundos que hay que mantener la mano.",
+              "fieldName": "duracion"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "duracion",
+              "type": {
+                "text": "number"
+              },
+              "description": "Segundos que hay que mantener la mano.",
+              "default": "1"
+            },
+            {
+              "kind": "field",
+              "name": "raiz",
+              "type": {
+                "text": "Element | null"
+              },
+              "description": "Solo se pulsan botones dentro de este elemento.",
+              "default": "null"
+            },
+            {
+              "kind": "method",
+              "name": "mover",
+              "description": "Posición de la mano en píxeles (null = sin mano).",
+              "parameters": [
+                {
+                  "name": "punto",
+                  "type": {
+                    "text": "{ x: number, y: number } | null"
+                  }
+                }
+              ]
+            }
+          ],
+          "events": [
+            {
+              "name": "pulsado",
+              "type": {
+                "text": "CustomEvent<{ elemento: Element }>"
+              },
+              "description": "Justo antes de hacer clic."
+            }
+          ],
+          "cssProperties": [
+            {
+              "name": "--color-derecha",
+              "description": "Color del centro del cursor."
+            },
+            {
+              "name": "--color-acento",
+              "description": "Color del anillo de progreso."
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "TbCursorMano",
+          "declaration": {
+            "name": "TbCursorMano",
+            "module": "tb-cursor-mano.js"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "tb-cursor-mano",
+          "declaration": {
+            "name": "TbCursorMano",
+            "module": "tb-cursor-mano.js"
+          }
+        }
+      ]
+    }
+  ]
+}

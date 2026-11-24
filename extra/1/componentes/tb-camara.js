@@ -4,8 +4,16 @@
  * derecha, la ves ir a la derecha) con la zona de juego, los cuatro carriles
  * y las manos detectadas dibujados encima.
  *
- * - `video`: el <video> interno, para pasárselo a EntradaCamara.
- * - `dibujar(detalle, zona)`: pinta un fotograma (lo llama quien escucha a la cámara).
+ * Atributos (y propiedades equivalentes), con su valor por defecto:
+ * - `esqueleto` (booleano, `false`): dibuja el esqueleto virtual de cada mano
+ *   sobre la imagen (realidad aumentada: los 21 puntos de MediaPipe unidos).
+ * - `sin-rejilla` (booleano, `false`): no dibuja la zona de juego ni los carriles
+ *   (en el modo RA ya los dibuja la pista encima).
+ *
+ * Propiedad `video` (solo lectura): el <video> interno, para EntradaCamara.
+ * Método `dibujar(detalle, zona)`: pinta un fotograma.
+ * Evento `lista` → { ancho, alto }: la cámara ya da imagen (tamaño real).
+ *
  *
  * Las coordenadas que recibe ya son del punto de vista del jugador, igual
  * que la imagen en espejo: se dibujan tal cual, sin invertir.
@@ -16,7 +24,17 @@
 /** @typedef {import('../entrada/camara.js').DetalleFotograma} DetalleFotograma */
 /** @typedef {import('../entrada/zona-juego.js').Rectangulo} Rectangulo */
 
+/** Pares de puntos de MediaPipe que forman los huesos de la mano. */
+const HUESOS = [
+  [0, 1], [1, 2], [2, 3], [3, 4], // pulgar
+  [0, 5], [5, 6], [6, 7], [7, 8], // índice
+  [5, 9], [9, 10], [10, 11], [11, 12], // corazón
+  [9, 13], [13, 14], [14, 15], [15, 16], // anular
+  [13, 17], [0, 17], [17, 18], [18, 19], [19, 20], // meñique y palma
+];
+
 export class TbCamara extends HTMLElement {
+
   #video = document.createElement('video');
   #lienzo = document.createElement('canvas');
   #ctx = /** @type {CanvasRenderingContext2D} */ (this.#lienzo.getContext('2d'));
@@ -39,13 +57,32 @@ export class TbCamara extends HTMLElement {
     this.#lienzo.setAttribute('aria-label', 'Imagen de la cámara con los carriles y tus manos');
     // La caja toma la proporción real de la cámara (4:3, 16:9…).
     this.#video.addEventListener('loadedmetadata', () => {
-      if (this.#video.videoWidth) this.style.aspectRatio = `${this.#video.videoWidth} / ${this.#video.videoHeight}`;
+      const { videoWidth: ancho, videoHeight: alto } = this.#video;
+      if (!ancho) return;
+      this.style.aspectRatio = `${ancho} / ${alto}`;
+      this.dispatchEvent(new CustomEvent('lista', { detail: { ancho, alto } }));
     });
     sombra.append(estilo, this.#video, this.#lienzo);
   }
 
   get video() {
     return this.#video;
+  }
+
+  get esqueleto() {
+    return this.hasAttribute('esqueleto');
+  }
+
+  set esqueleto(valor) {
+    this.toggleAttribute('esqueleto', Boolean(valor));
+  }
+
+  get sinRejilla() {
+    return this.hasAttribute('sin-rejilla');
+  }
+
+  set sinRejilla(valor) {
+    this.toggleAttribute('sin-rejilla', Boolean(valor));
   }
 
   connectedCallback() {
@@ -65,7 +102,7 @@ export class TbCamara extends HTMLElement {
     const ancho = this.clientWidth;
     const alto = this.clientHeight;
     if (!ancho || !alto) return;
-    if (this.#lienzo.width !== Math.round(ancho * escala)) {
+    if (this.#lienzo.width !== Math.round(ancho * escala) || this.#lienzo.height !== Math.round(alto * escala)) {
       this.#lienzo.width = Math.round(ancho * escala);
       this.#lienzo.height = Math.round(alto * escala);
     }
@@ -73,6 +110,16 @@ export class TbCamara extends HTMLElement {
     ctx.setTransform(escala, 0, 0, escala, 0, 0);
     ctx.clearRect(0, 0, ancho, alto);
 
+    if (!this.sinRejilla) this.#dibujarRejilla(ctx, ancho, alto, detalle, zona);
+    if (this.esqueleto) this.#dibujarEsqueletos(ctx, ancho, alto, detalle);
+    this.#dibujarManos(ctx, ancho, alto, detalle);
+  }
+
+  /**
+   * @param {CanvasRenderingContext2D} ctx @param {number} ancho @param {number} alto
+   * @param {DetalleFotograma | null} detalle @param {Rectangulo} zona
+   */
+  #dibujarRejilla(ctx, ancho, alto, detalle, zona) {
     // Fuera de la zona, oscurecido
     const x0 = zona.izquierda * ancho;
     const x1 = zona.derecha * ancho;
@@ -114,6 +161,43 @@ export class TbCamara extends HTMLElement {
     ctx.textBaseline = 'top';
     for (let c = 0; c < 4; c++) ctx.fillText(String(c + 1), x0 + (c + 0.5) * anchoCarril, y0 + 6);
 
+  }
+
+  /**
+   * Realidad aumentada: un "guante" virtual del color de cada mano, pegado a
+   * la mano real de la imagen.
+   * @param {CanvasRenderingContext2D} ctx @param {number} ancho @param {number} alto
+   * @param {DetalleFotograma | null} detalle
+   */
+  #dibujarEsqueletos(ctx, ancho, alto, detalle) {
+    for (const mano of /** @type {const} */ (['i', 'd'])) {
+      const puntos = detalle?.esqueletos?.[mano];
+      if (!puntos) continue;
+      ctx.lineCap = 'round';
+      for (const [grosor, color] of /** @type {const} */ ([[7, '#150f26'], [4, this.#colores[mano]]])) {
+        ctx.lineWidth = grosor;
+        ctx.strokeStyle = color;
+        ctx.beginPath();
+        for (const [a, b] of HUESOS) {
+          ctx.moveTo(puntos[a].x * ancho, puntos[a].y * alto);
+          ctx.lineTo(puntos[b].x * ancho, puntos[b].y * alto);
+        }
+        ctx.stroke();
+      }
+      ctx.fillStyle = '#f7efe3';
+      for (const p of puntos) {
+        ctx.beginPath();
+        ctx.arc(p.x * ancho, p.y * alto, 2.5, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    }
+  }
+
+  /**
+   * @param {CanvasRenderingContext2D} ctx @param {number} ancho @param {number} alto
+   * @param {DetalleFotograma | null} detalle
+   */
+  #dibujarManos(ctx, ancho, alto, detalle) {
     // Manos
     const radio = Math.max(12, alto * 0.055);
     for (const mano of /** @type {const} */ (['i', 'd'])) {

@@ -265,13 +265,14 @@ copia en JSON, como en GlyphCraft.
 | **Import maps** | Importar `mediapipe` por nombre | Sin npm ni empaquetador |
 | **MediaPipe Tasks Vision · HandLandmarker** | Posición de las manos y si son izquierda o derecha | Visto en clase (UD02) y en GlyphCraft; da las dos cosas en un solo modelo y funciona en local, sin enviar la imagen a ningún servidor. Se copia en `lib/` desde GlyphCraft |
 | **`getUserMedia`** | Cámara | API estándar; exige `localhost` o `https` |
+| **Web Speech API** | Órdenes de voz (`SpeechRecognition`) y lectura del resultado (`speechSynthesis`) | Única API de voz del navegador; la síntesis es local. El reconocimiento en Chrome/Edge es en línea: desactivado por defecto |
 | **Web Audio API** | Reloj maestro, música, sonido de acierto | Único reloj preciso del navegador y permite programar sonidos al milisegundo; `<audio>` no da esa precisión |
 | **Filtro One Euro** | Suavizar la posición | Suaviza cuando la mano está quieta y casi no retrasa cuando se mueve rápido |
 | **Canvas 2D** | Pista de notas y superposición sobre la cámara | Suficiente para cientos de notas a 60 fps; Three.js sería excesivo y quitaría CPU/GPU a MediaPipe |
 | **`localStorage`** | Récords, ajustes, calibración | Datos pequeños; sin servidor |
 | **Ejecutor de pruebas propio** (`pruebas.html`) | Pruebas | El de GlyphCraft, API tipo Vitest, sin instalar nada |
 
-**Descartado:** micrófono (ya no hace falta), PoseLandmarker de cuerpo entero
+**Descartado:** el micrófono para detectar golpes (se usa solo para órdenes de voz), PoseLandmarker de cuerpo entero
 (más pesado y con peor precisión en las manos; solo aportaría si se jugara a
 varios metros), frameworks, npm/Vite, TypeScript, Three.js, PHP y servicios en
 la nube.
@@ -306,7 +307,8 @@ extra/1/
 │   ├── zona-juego.js           Posición → carril, histéresis
 │   ├── filtro-un-euro.js       Suavizado sin retraso (de GlyphCraft)
 │   ├── calibracion.js          ¿Intercambiar manos? Retraso con metrónomo
-│   └── permanencia.js          Pulsar dejando la mano quieta encima
+│   ├── gestos.js               Gesto: levantar las dos manos
+│   └── voz.js                  Órdenes de voz y habla (Web Speech API)
 ├── audio/
 │   ├── motor-audio.js          Reloj maestro, reproducción, sonido de acierto
 │   ├── secuenciador.js         Partitura musical → eventos → AudioBuffer
@@ -317,7 +319,10 @@ extra/1/
 ├── componentes/
 │   ├── tb-pista.js             Canvas con carriles, notas y manos
 │   ├── tb-camara.js            Imagen en espejo con carriles y manos
-│   └── tb-cursor-mano.js       Cursor que sigue a la mano y pulsa por permanencia
+│   ├── tb-cursor-mano.js       Cursor que sigue a la mano y pulsa por permanencia
+│   ├── permanencia.js          Pulsar dejando la mano quieta encima
+│   ├── index.js · package.json · custom-elements.json · README.md · LICENSE
+│   └── demo.html               Página para probar los componentes por separado
 ├── vistas/
 │   ├── vista.js                Clase base (montar / limpiar)
 │   ├── vista-menu.js  vista-canciones.js  vista-partida.js  vista-resultados.js

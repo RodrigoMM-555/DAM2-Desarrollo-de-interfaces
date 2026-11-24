@@ -1,0 +1,31 @@
+{
+  "name": "tumbao-componentes",
+  "version": "1.0.0",
+  "description": "Web Components de Tumbao: pista de ritmo de 4 carriles, vista de cámara con realidad aumentada y cursor que pulsa con la mano.",
+  "keywords": ["web-components", "custom-elements", "rhythm-game", "canvas", "hand-tracking", "augmented-reality"],
+  "author": "Rodrigo Menéndez Molina",
+  "license": "MIT",
+  "type": "module",
+  "main": "./index.js",
+  "customElements": "custom-elements.json",
+  "exports": {
+    ".": "./index.js",
+    "./tb-pista.js": "./tb-pista.js",
+    "./tb-camara.js": "./tb-camara.js",
+    "./tb-cursor-mano.js": "./tb-cursor-mano.js",
+    "./permanencia.js": "./permanencia.js",
+    "./custom-elements.json": "./custom-elements.json"
+  },
+  "files": [
+    "index.js",
+    "tb-pista.js",
+    "tb-camara.js",
+    "tb-cursor-mano.js",
+    "permanencia.js",
+    "custom-elements.json",
+    "README.md",
+    "LICENSE",
+    "!*.prueba.js"
+  ],
+  "sideEffects": ["./index.js", "./tb-pista.js", "./tb-camara.js", "./tb-cursor-mano.js"]
+}

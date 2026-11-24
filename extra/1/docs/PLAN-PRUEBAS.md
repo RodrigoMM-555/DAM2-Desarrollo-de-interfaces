@@ -11,19 +11,24 @@ el ejecutor propio (`pruebas/ejecutor.js`, API tipo Vitest).
 
 | Archivo | Qué prueba | Pruebas |
 |---|---|---|
-| `motor/motor.prueba.js` | Partitura (validación, jugabilidad), juez (ventanas, calificaciones, quedarse en el carril, notas de mantener, cruces), puntuación (combo, precisión, nota final), partida (eventos, fin, latencia) | 40 |
+| `motor/motor.prueba.js` | Partitura (validación, jugabilidad), juez (ventanas, calificaciones, quedarse en el carril, notas de mantener, cruces), puntuación, partida | 40 |
 | `motor/grabador.prueba.js` | Editor: cuantización, notas de mantener, roces, notas injugables, salida válida | 6 |
-| `audio/secuenciador.prueba.js` | Patrones, bajo, acordes, frecuencias; las 3 canciones incluidas son válidas | 12 |
+| `audio/secuenciador.prueba.js` | Patrones, bajo, acordes, frecuencias; las 3 canciones son válidas | 12 |
 | `entrada/teclado.prueba.js` | Teclas por mano, varias teclas, repetición, pérdida de foco | 8 |
-| `entrada/manos.prueba.js` | Zona de juego (carriles, reposo, bordes, histéresis), seguidor de manos (etiquetas erróneas, orden cambiado, brazos cruzados, manos perdidas), filtro One Euro | 21 |
-| `entrada/camara.prueba.js` | Centro de la palma, etiqueta → mano, comprobación izquierda/derecha, medición del retraso | 12 |
-| `entrada/permanencia.prueba.js` | Pulsar dejando la mano quieta, mano → pantalla | 6 |
+| `entrada/manos.prueba.js` | Zona de juego, seguidor de manos (etiquetas erróneas, orden cambiado, cruces, pérdidas), filtro One Euro | 21 |
+| `entrada/camara.prueba.js` | Centro de la palma, etiqueta → mano, comprobación izquierda/derecha, retraso | 12 |
+| `entrada/voz-gestos.prueba.js` | Órdenes de voz (sinónimos, tildes, palabras enteras, permitidas) y gesto de levantar las manos | 17 |
+| `componentes/tb-componentes.prueba.js` | **Componentes montados en el DOM**: registro, valores por defecto, atributos ↔ propiedades, dibujo (píxeles), eventos | 15 |
+| `componentes/permanencia.prueba.js` | Pulsar dejando la mano quieta, mano → pantalla | 6 |
 | `servicios/records.prueba.js` | Récords: mejora, persistencia, borrado, datos corruptos | 6 |
-| `servicios/ajustes.prueba.js` | Ajustes: valores por defecto, validación campo a campo | 6 |
+| `servicios/ajustes.prueba.js` | Ajustes: valores por defecto, validación campo a campo | 7 |
+| `servicios/accesibilidad.prueba.js` | **Accesibilidad**: contraste de 13 pares leídos de `estilo.css`; estructura de las 7 pantallas reales | 30 |
 | `nucleo/enrutador.prueba.js` | Rutas y parámetros | 4 |
-| **Total** | | **121** |
+| **Total** | | **184** |
 
-Resultado (24/11/2026): **121/121 correctas**.
+Resultado (24/11/2026): **184/184 correctas** en Firefox (`pruebas.html`).
+Las de componentes y la parte estructural de accesibilidad necesitan navegador;
+el resto también se ejecuta en Node.
 
 Las pruebas no necesitan cámara: la lógica de las manos recibe datos
 inventados que reproducen los problemas reales de MediaPipe.
@@ -43,6 +48,8 @@ momento justo.
 | Cámara activada: MediaPipe carga desde `lib/` | Análisis a ~30 fps | ✅ |
 | Cámara sin manos y sin teclado | Pausa "No veo tus manos" tras el primer fallo, no antes | ✅ |
 | Editor: grabar con teclas y parar | Partitura válida, "Probarla" y "Descargar JSON" disponibles | ✅ |
+| Modo realidad aumentada | Cámara de fondo, carriles alineados con la zona de juego | ✅ |
+| `componentes/demo.html` | Los tres componentes funcionan por separado | ✅ |
 
 ## 3. Pruebas manuales (cámara real)
 
@@ -62,6 +69,11 @@ Pendientes de hacer por el jugador; marcar al probar.
 | M10 | Pausa automática | Salir de la imagen durante la canción → pausa | ☐ |
 | M11 | Luz | Repetir M1 y M3 con poca luz; anotar fps | ☐ |
 | M12 | Otra persona | Repetir M1–M3 con otra persona (manga larga/corta) | ☐ |
+| M13 | Órdenes de voz (Chrome/Edge) | Activar en Ajustes; decir «pausa» y «continuar» jugando | ☐ |
+| M14 | Gesto | Levantar las dos manos: empieza la partida; jugando, la pausa | ☐ |
+| M15 | Realidad aumentada | Las notas caen sobre tus manos; esqueleto virtual sobre cada mano | ☐ |
+| M16 | Leer resultados | Activar en Ajustes; al terminar se oye la nota | ☐ |
+| M17 | Prueba con usuarios | Protocolo de `USABILIDAD.md` §8 (5 personas, SUS) | ☐ |
 
 ## 4. Accesibilidad
 
@@ -75,4 +87,6 @@ Pendientes de hacer por el jugador; marcar al probar.
 | Movimiento (2.3.3) | `prefers-reduced-motion` y opción en Ajustes |
 | Tamaño de objetivos (2.5.8) | Botones de 40–48 px de alto |
 | Pausa (2.2.2) | <kbd>Esc</kbd>, botón y pausa automática al perder el foco |
+| Estructura de las 7 pantallas (h1, títulos, nombres, etiquetas, tabindex) | ✅ automático (`servicios/accesibilidad.prueba.js`) |
+| Mensajes claros | Revisados (`USABILIDAD.md` §6) |
 | Lighthouse / axe | ☐ Pendiente de pasar en Chrome |

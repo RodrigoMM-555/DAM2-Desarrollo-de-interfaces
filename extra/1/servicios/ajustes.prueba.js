@@ -39,6 +39,11 @@ describe('ajustes', () => {
     expect(datos.antelacion).toBe(POR_DEFECTO.antelacion);
   });
 
+  it('voz y realidad aumentada empiezan desactivadas y solo aceptan true/false', () => {
+    const datos = new Ajustes(almacenFalso({ [CLAVE]: JSON.stringify({ usarVoz: 'sí', vistaAR: 1 }) })).datos;
+    expect([datos.usarVoz, datos.leerResultados, datos.vistaAR]).toEqual([false, false, false]);
+  });
+
   it('datos corruptos → valores por defecto', () => {
     expect(new Ajustes(almacenFalso({ [CLAVE]: '{roto' })).datos).toEqual(POR_DEFECTO);
   });

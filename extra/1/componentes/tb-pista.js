@@ -14,7 +14,17 @@
  * izquierda tiene el pulgar a la derecha, como cuando miras el dorso de tu
  * mano izquierda) **y** por la letra I / D.
  *
- * Atributos: `antelacion` (s, por defecto 2).
+ * Atributos (y propiedades equivalentes), con su valor por defecto:
+ * - `antelacion` (número, `2`): segundos que tarda una nota en bajar.
+ * - `transparente` (booleano, `false`): carriles sin relleno, solo con bordes,
+ *   para dibujar la pista encima de la imagen de la cámara (realidad aumentada).
+ *
+ * Propiedades: `notas` (`[]`), `pulso` (`0` = sin líneas de pulso) y
+ * `geometria` (`null` = pista centrada; o { x0, ancho, yLinea } en píxeles para
+ * alinear los carriles con la zona de juego de la cámara).
+ *
+ * Métodos: `dibujar(t, manos, puntos)`, `marcar(juicio)`, `reiniciar()`.
+ * Evento: `marcada` → { juicio } cada vez que se muestra una calificación.
  * Variables CSS: --color-izquierda, --color-derecha, --color-texto, --color-fondo.
  */
 
@@ -44,12 +54,13 @@ const TEXTOS = /** @type {const} */ ({ perfecto: '¡Perfecto!', bien: 'Bien', ju
 const COLORES_CALIFICACION = { perfecto: '#ffd166', bien: '#7fe0a8', justo: '#d9cfea', fallo: '#ff7a8a' };
 
 export class TbPista extends HTMLElement {
-  static get observedAttributes() {
-    return ['antelacion'];
-  }
-
   /** @type {Nota[]} */
   notas = [];
+  /**
+   * Posición de la pista en píxeles; `null` = centrada automáticamente.
+   * @type {{ x0: number, ancho: number, yLinea: number } | null}
+   */
+  geometria = null;
   /** Segundos de un pulso (para las líneas de compás). 0 = sin líneas. */
   pulso = 0;
   /** Ids de notas acertadas (dejan de dibujarse). @type {Set<number>} */
@@ -87,6 +98,18 @@ export class TbPista extends HTMLElement {
   get antelacion() {
     const valor = Number(this.getAttribute('antelacion'));
     return valor > 0 ? valor : 2;
+  }
+
+  set antelacion(valor) {
+    this.setAttribute('antelacion', String(valor));
+  }
+
+  get transparente() {
+    return this.hasAttribute('transparente');
+  }
+
+  set transparente(valor) {
+    this.toggleAttribute('transparente', Boolean(valor));
   }
 
   connectedCallback() {
@@ -133,6 +156,7 @@ export class TbPista extends HTMLElement {
       mano: juicio.nota.mano,
       inicio: performance.now(),
     });
+    this.dispatchEvent(new CustomEvent('marcada', { detail: { juicio } }));
   }
 
   /** Lienzo a la resolución real de la pantalla (nítido en pantallas HiDPI). */
@@ -168,18 +192,30 @@ export class TbPista extends HTMLElement {
     const avanzar = (/** @type {number} */ tau) => (reducido ? 1 : 1 - Math.exp(-dt / tau));
 
     // Pista centrada, como mucho 0,8 veces el alto de ancho.
-    const anchoPista = Math.min(ancho - 16, alto * 0.8);
-    const x0 = (ancho - anchoPista) / 2;
+    const g = this.geometria;
+    const anchoPista = g ? g.ancho : Math.min(ancho - 16, alto * 0.8);
+    const x0 = g ? g.x0 : (ancho - anchoPista) / 2;
     const anchoCarril = anchoPista / CARRILES;
-    const yLinea = alto * LINEA;
+    const yLinea = g ? g.yLinea : alto * LINEA;
     const velocidad = yLinea / this.antelacion; // píxeles por segundo
     const centro = (/** @type {number} */ c) => x0 + anchoCarril * (c + 0.5);
     const tam = Math.min(anchoCarril * 0.62, 64);
 
-    // Carriles
-    for (let c = 0; c < CARRILES; c++) {
-      ctx.fillStyle = c % 2 ? 'rgba(255,255,255,0.035)' : 'rgba(255,255,255,0.06)';
-      ctx.fillRect(x0 + c * anchoCarril, 0, anchoCarril, alto);
+    // Carriles: con relleno, o solo bordes si la pista va sobre la cámara.
+    if (this.transparente) {
+      ctx.strokeStyle = 'rgba(255,255,255,0.55)';
+      ctx.lineWidth = 2;
+      for (let c = 0; c <= CARRILES; c++) {
+        ctx.beginPath();
+        ctx.moveTo(x0 + c * anchoCarril, 0);
+        ctx.lineTo(x0 + c * anchoCarril, alto);
+        ctx.stroke();
+      }
+    } else {
+      for (let c = 0; c < CARRILES; c++) {
+        ctx.fillStyle = c % 2 ? 'rgba(255,255,255,0.035)' : 'rgba(255,255,255,0.06)';
+        ctx.fillRect(x0 + c * anchoCarril, 0, anchoCarril, alto);
+      }
     }
 
     // Líneas de pulso: ayudan a leer el ritmo. Cada 4 pulsos, más marcada.

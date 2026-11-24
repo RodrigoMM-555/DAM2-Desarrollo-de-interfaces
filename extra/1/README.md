@@ -9,7 +9,9 @@ Proyecto extra de *Desarrollo de Interfaces* (2.º DAM).
 | Documento | Contenido |
 |---|---|
 | [docs/DISEÑO.md](docs/DISEÑO.md) | Diseño, funcionamiento y justificación de tecnologías |
-| [docs/EVALUACION.md](docs/EVALUACION.md) | Qué se aplica de cada unidad de la asignatura, contraste WCAG |
+| [docs/EVALUACION.md](docs/EVALUACION.md) | **Cada criterio de evaluación de RA1–RA4** y dónde se cumple |
+| [docs/USABILIDAD.md](docs/USABILIDAD.md) | Estándares, menús, controles, mensajes, colores, wireframes, prueba con usuarios |
+| [componentes/README.md](componentes/README.md) | Paquete `tumbao-componentes`: API de los 3 Web Components ([demo](componentes/demo.html)) |
 | [docs/PLAN-PRUEBAS.md](docs/PLAN-PRUEBAS.md) | Pruebas automáticas, en navegador y manuales |
 
 ## Estado
@@ -74,8 +76,17 @@ bien, ≥ 30 % justo). **Cruces** (en Difícil): la mano izquierda va a un carri
 a la derecha de la mano derecha.
 
 **Con la cámara**, en las pantallas de pausa y de inicio se puede pulsar un
-botón dejando la mano quieta encima 1 segundo. Si se falla una nota y la
+botón dejando la mano quieta encima 1 segundo, y **levantar las dos manos**
+por encima de la zona empieza o pausa la partida. Si se falla una nota y la
 cámara lleva 3 s sin ver manos, la partida se pausa sola.
+
+**Realidad aumentada** (Ajustes → Cámara): la pista se dibuja sobre tu imagen,
+con los carriles encima de la zona de juego, y cada mano lleva un esqueleto
+virtual de su color.
+
+**Voz** (Ajustes → Voz, Chrome o Edge): «empezar», «pausa», «continuar»,
+«reiniciar», «salir»; en resultados, «repetir», «canciones», «menú». También
+se puede pedir que lea el resultado en voz alta.
 
 ## Otras pantallas
 
@@ -87,7 +98,8 @@ cámara lleva 3 s sin ver manos, la partida se pausa sola.
 
 ## Pruebas
 
-Abre `pruebas.html` con Live Server (121 pruebas): ejecuta cada `*.prueba.js` en su propio
+Abre `pruebas.html` con Live Server (184 pruebas, incluidas las de los
+componentes y las de accesibilidad): ejecuta cada `*.prueba.js` en su propio
 `<iframe>` con un ejecutor propio de API tipo Vitest (`pruebas/ejecutor.js`,
 reutilizado de GlyphCraft). Al crear un archivo de pruebas nuevo, añádelo a
 `pruebas/lista.js`.
@@ -115,13 +127,14 @@ index.html · pruebas.html · codigo.js · estilo.css
 nucleo/       Aplicación (mediador) y enrutador
 motor/        Lógica pura: partitura, juez, puntuación, partida, grabador del editor
 entrada/      Teclado, cámara (MediaPipe), seguidor de manos, zona de juego, filtro,
-              calibración, permanencia (pulsar con la mano)
+              calibración, gestos (manos arriba), voz (órdenes y habla)
 audio/        Reloj maestro, secuenciador e instrumentos sintetizados
-componentes/  <tb-pista>, <tb-camara>, <tb-cursor-mano>
+componentes/  Paquete tumbao-componentes: <tb-pista>, <tb-camara>, <tb-cursor-mano>,
+              index.js, package.json, custom-elements.json, demo.html, README
 vistas/       Menú, canciones, partida, resultados, calibración, ajustes, editor
-servicios/    Récords y ajustes (localStorage)
+servicios/    Récords y ajustes (localStorage), contraste WCAG
 canciones/    3 canciones en JSON (fácil, normal, difícil)
 pruebas/      Ejecutor de pruebas
-docs/         Diseño, evaluación y plan de pruebas
+docs/         Diseño, evaluación (criterios), usabilidad y plan de pruebas
 lib/mediapipe MediaPipe Tasks Vision + modelo de manos (copiado de GlyphCraft)
 ```

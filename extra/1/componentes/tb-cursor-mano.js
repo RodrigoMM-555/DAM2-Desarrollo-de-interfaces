@@ -3,19 +3,25 @@
  * <tb-cursor-mano>: un cursor que sigue a la mano y "pulsa" el botón sobre
  * el que se queda quieta un segundo (anillo de progreso alrededor).
  *
- * - `raiz`: elemento dentro del cual se buscan botones y enlaces.
- * - `mover(punto | null)`: posición en píxeles de la ventana (o null = sin mano).
+ * Atributo `duracion` (número, `1`): segundos que hay que mantener la mano.
+ * Propiedad `raiz` (`null` = ninguno): elemento dentro del cual se buscan
+ * botones y enlaces.
+ * Método `mover(punto | null)`: posición en píxeles de la ventana (o null = sin mano).
  *
  * El elemento apuntado recibe la clase `apuntado-mano` para que se vea cuál es.
  * No captura el ratón (`pointer-events: none`): convive con él y con el teclado.
  *
  * Evento: `pulsado` → { elemento } justo antes de hacer clic.
  */
-import { Permanencia } from '../entrada/permanencia.js';
+import { Permanencia } from './permanencia.js';
 
 const SELECTOR = 'button:not([disabled]), a[href]';
 
 export class TbCursorMano extends HTMLElement {
+  static get observedAttributes() {
+    return ['duracion'];
+  }
+
   /** @type {Element | null} */
   raiz = null;
   #permanencia = new Permanencia(1);
@@ -44,6 +50,20 @@ export class TbCursorMano extends HTMLElement {
     this.#cursor.hidden = true;
     this.#cursor.setAttribute('aria-hidden', 'true');
     sombra.append(estilo, this.#cursor);
+  }
+
+  get duracion() {
+    const valor = Number(this.getAttribute('duracion'));
+    return valor > 0 ? valor : 1;
+  }
+
+  set duracion(valor) {
+    this.setAttribute('duracion', String(valor));
+  }
+
+  /** Al cambiar `duracion`, se empieza de cero con el tiempo nuevo. */
+  attributeChangedCallback() {
+    this.#permanencia = new Permanencia(this.duracion);
   }
 
   disconnectedCallback() {

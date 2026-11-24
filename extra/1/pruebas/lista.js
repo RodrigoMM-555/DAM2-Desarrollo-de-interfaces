@@ -12,8 +12,11 @@ export const ARCHIVOS_DE_PRUEBAS = [
   'entrada/teclado.prueba.js',
   'entrada/manos.prueba.js',
   'entrada/camara.prueba.js',
-  'entrada/permanencia.prueba.js',
+  'componentes/permanencia.prueba.js',
+  'componentes/tb-componentes.prueba.js',
+  'entrada/voz-gestos.prueba.js',
   'servicios/records.prueba.js',
   'servicios/ajustes.prueba.js',
+  'servicios/accesibilidad.prueba.js',
   'nucleo/enrutador.prueba.js',
 ];

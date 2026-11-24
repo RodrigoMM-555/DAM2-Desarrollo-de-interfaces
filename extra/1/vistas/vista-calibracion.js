@@ -55,7 +55,7 @@ class VistaCalibracion extends Vista {
         </header>
         <div class="calibracion-rejilla">
           <div class="calibracion-imagen">
-            <tb-camara></tb-camara>
+            <tb-camara esqueleto></tb-camara>
             <div class="camara-apagada">
               <p>Siéntate delante del ordenador, con las manos a la altura del pecho.</p>
               <button class="boton boton-principal" type="button" data-accion="activar">Activar cámara</button>

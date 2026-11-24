@@ -36,9 +36,12 @@ class VistaMenu extends Vista {
           <h3>Con la cámara</h3>
           <p>Siéntate delante del ordenador y pulsa <strong>Cámara</strong> para ajustar la zona de juego.
             Levanta las manos a la altura del pecho para entrar en los carriles; bájalas para descansar.
+            <strong>Levanta las dos manos</strong> por encima de la zona para empezar o pausar.
             El <strong>punto de color</strong> sobre la línea marca dónde ve la cámara cada mano en ese momento;
             si está hueco, la mano está demasiado alta o baja y no cuenta.
             La imagen se analiza en tu ordenador y no se envía a ningún sitio.</p>
+          <h3>Con la voz</h3>
+          <p>Actívala en Ajustes (Chrome o Edge) y di «empezar», «pausa», «continuar», «reiniciar» o «salir».</p>
           <h3>Con el teclado</h3>
           <p>Mantén pulsada la tecla del carril:</p>
           <table class="tabla-teclas">

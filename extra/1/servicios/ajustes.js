@@ -18,6 +18,9 @@ import { ZONA_POR_DEFECTO } from '../entrada/zona-juego.js';
  * @property {number} volumenEfectos 0–1
  * @property {number} antelacion Segundos que tarda una nota en bajar (menos = más rápido).
  * @property {boolean} reducirMovimiento Quitar animaciones aunque el sistema no lo pida.
+ * @property {boolean} usarVoz Órdenes de voz (pausa, continuar…).
+ * @property {boolean} leerResultados Leer el resultado en voz alta al terminar.
+ * @property {boolean} vistaAR Realidad aumentada: la pista se dibuja sobre la imagen de la cámara.
  */
 
 /** Límites de la antelación (velocidad de las notas). */
@@ -36,6 +39,9 @@ export const POR_DEFECTO = Object.freeze({
   volumenEfectos: 0.8,
   antelacion: 2,
   reducirMovimiento: false,
+  usarVoz: false,
+  leerResultados: false,
+  vistaAR: false,
 });
 
 export class Ajustes {
@@ -92,6 +98,9 @@ function validar(d) {
     volumenEfectos: entre(d?.volumenEfectos, 0, 1, POR_DEFECTO.volumenEfectos),
     antelacion: entre(d?.antelacion, ANTELACION.minima, ANTELACION.maxima, POR_DEFECTO.antelacion),
     reducirMovimiento: d?.reducirMovimiento === true,
+    usarVoz: d?.usarVoz === true,
+    leerResultados: d?.leerResultados === true,
+    vistaAR: d?.vistaAR === true,
   };
 }
 

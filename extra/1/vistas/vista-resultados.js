@@ -1,8 +1,17 @@
 // @ts-check
 import { Vista, escapar, numero, porcentaje, NOMBRES_DIFICULTAD } from './vista.js';
+import { EntradaVoz, hablar, vozDisponible } from '../entrada/voz.js';
 
 /** Resumen de la última partida. */
 class VistaResultados extends Vista {
+  /** @type {EntradaVoz | null} */
+  #voz = null;
+
+  limpiar() {
+    this.#voz?.detener();
+    if (typeof speechSynthesis !== 'undefined') speechSynthesis.cancel();
+  }
+
   pintar() {
     const resultado = this.app.ultimoResultado;
     if (!resultado) {
@@ -36,7 +45,29 @@ class VistaResultados extends Vista {
           <a class="boton" href="#/canciones">Otra canción</a>
           <a class="boton" href="#/">Menú</a>
         </nav>
+        <p class="nota indicador-voz-resultados" hidden>🎤 Puedes decir «repetir», «canciones» o «menú».</p>
       </section>`;
+
+    const ajustes = this.app.ajustes.datos;
+    // Habla: el resultado, en voz alta (síntesis local).
+    if (ajustes.leerResultados) {
+      hablar(`Nota ${r.nota}. ${numero(r.puntos)} puntos. Precisión del ${Math.round(r.precision * 100)} por ciento.${nuevoRecord ? ' ¡Nuevo récord!' : ''}`);
+    }
+    // Voz: elegir qué hacer sin tocar nada.
+    if (ajustes.usarVoz && vozDisponible()) {
+      const voz = new EntradaVoz();
+      voz.permitidas = ['repetir', 'reiniciar', 'canciones', 'menu', 'salir'];
+      voz.addEventListener('orden', (e) => {
+        const { orden } = /** @type {CustomEvent} */ (e).detail;
+        if (orden === 'repetir' || orden === 'reiniciar') this.app.ir(`/partida/${cancion.id}/${dificultad}`);
+        else if (orden === 'canciones') this.app.ir('/canciones');
+        else this.app.ir('/');
+      });
+      if (voz.iniciar()) {
+        this.#voz = voz;
+        /** @type {HTMLElement} */ (this.querySelector('.indicador-voz-resultados')).hidden = false;
+      }
+    }
   }
 }
 

@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Componentes · Tumbao</title>
+    <link rel="icon" type="image/svg+xml" href="../favicon.svg" />
+    <link rel="stylesheet" href="../estilo.css" />
+    <style>
+      body { display: block; }
+      main { width: min(100%, 1100px); margin: 0 auto; padding: 2rem 1.25rem 4rem; }
+      .ficha-componente { margin-bottom: 2rem; padding: 1.25rem 1.5rem; border: 1px solid var(--color-borde); border-radius: var(--radio); background: rgb(36 26 63 / 0.85); }
+      .ficha-componente h2 code { color: var(--color-acento); }
+      .rejilla-demo { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(240px, 1fr); gap: 1.25rem; align-items: start; }
+      .controles { display: grid; gap: 0.75rem; }
+      .controles label { display: flex; flex-wrap: wrap; align-items: center; gap: 0.2rem 0.4rem; font-size: 0.92rem; }
+      .controles input[type="range"] { flex-basis: 100%; accent-color: var(--color-acento); }
+      .registro { min-height: 6rem; max-height: 10rem; overflow: auto; margin: 0; padding: 0.6rem; border-radius: 8px; background: #0b0816; font-size: 0.85rem; color: var(--color-texto-suave); }
+      tb-pista { height: 380px; border-radius: 12px; background: #120d22; }
+      .zona-botones { display: flex; gap: 0.75rem; flex-wrap: wrap; padding: 1.5rem; border: 2px dashed var(--color-borde-control); border-radius: 12px; }
+      @media (max-width: 800px) { .rejilla-demo { grid-template-columns: 1fr; } }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>Componentes de Tumbao</h1>
+      <p class="nota">Página para diseñar y probar los componentes por separado: cambia sus atributos y mira sus
+        eventos. API completa en <a href="README.md">README.md</a> y <a href="custom-elements.json">custom-elements.json</a>.</p>
+
+      <section class="ficha-componente" aria-labelledby="t-pista">
+        <h2 id="t-pista"><code>&lt;tb-pista&gt;</code></h2>
+        <div class="rejilla-demo">
+          <tb-pista id="pista"></tb-pista>
+          <div class="controles">
+            <label>antelacion: <output id="s-antelacion">2</output> s
+              <input type="range" id="antelacion" min="1.2" max="3.5" step="0.1" value="2" /></label>
+            <label class="interruptor"><input type="checkbox" id="transparente" /> <span>transparente</span></label>
+            <label>Mano izquierda en el carril
+              <input type="range" id="mano-i" min="-1" max="3" step="1" value="0" /></label>
+            <label>Mano derecha en el carril
+              <input type="range" id="mano-d" min="-1" max="3" step="1" value="3" /></label>
+            <button class="boton boton-pequeno" type="button" id="marcar">marcar(¡Perfecto!)</button>
+            <p class="nota">Evento <code>marcada</code>:</p>
+            <pre class="registro" id="registro-pista" aria-live="polite"></pre>
+          </div>
+        </div>
+      </section>
+
+      <section class="ficha-componente" aria-labelledby="t-camara">
+        <h2 id="t-camara"><code>&lt;tb-camara&gt;</code></h2>
+        <div class="rejilla-demo">
+          <tb-camara id="camara" esqueleto></tb-camara>
+          <div class="controles">
+            <label class="interruptor"><input type="checkbox" id="esqueleto" checked /> <span>esqueleto</span></label>
+            <label class="interruptor"><input type="checkbox" id="sin-rejilla" /> <span>sin-rejilla</span></label>
+            <p class="nota">Sin encender la cámara: se dibuja una mano sintética que se mueve de carril.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="ficha-componente" aria-labelledby="t-cursor">
+        <h2 id="t-cursor"><code>&lt;tb-cursor-mano&gt;</code></h2>
+        <p class="nota">El ratón hace de mano: déjalo quieto sobre un botón de la zona punteada.</p>
+        <div class="rejilla-demo">
+          <div class="zona-botones" id="zona-cursor">
+            <button class="boton" type="button">Uno</button>
+            <button class="boton" type="button">Dos</button>
+            <button class="boton boton-principal" type="button">Tres</button>
+          </div>
+          <div class="controles">
+            <label>duracion: <output id="s-duracion">1</output> s
+              <input type="range" id="duracion" min="0.3" max="2" step="0.1" value="1" /></label>
+            <p class="nota">Evento <code>pulsado</code>:</p>
+            <pre class="registro" id="registro-cursor" aria-live="polite"></pre>
+          </div>
+        </div>
+        <tb-cursor-mano id="cursor"></tb-cursor-mano>
+      </section>
+    </main>
+
+    <script type="module">
+      import { TbPista } from './index.js';
+      const $ = (id) => document.getElementById(id);
+      const anotar = (id, texto) => ($(id).textContent = `${new Date().toLocaleTimeString()}  ${texto}\n` + $(id).textContent);
+
+      // ── tb-pista: notas de ejemplo que se repiten cada 8 s ──
+      const pista = /** @type {TbPista} */ ($('pista'));
+      pista.pulso = 0.5;
+      pista.notas = [
+        { id: 0, tiempo: 1, mano: 'i', carril: 0, duracion: 0, pulso: 2 },
+        { id: 1, tiempo: 2, mano: 'd', carril: 3, duracion: 0, pulso: 4 },
+        { id: 2, tiempo: 3, mano: 'i', carril: 1, duracion: 1.5, pulso: 6 },
+        { id: 3, tiempo: 5, mano: 'i', carril: 0, duracion: 0, pulso: 10 },
+        { id: 4, tiempo: 5, mano: 'd', carril: 2, duracion: 0, pulso: 10 },
+        { id: 5, tiempo: 6.5, mano: 'd', carril: 1, duracion: 0, pulso: 13 },
+      ];
+      const inicio = performance.now();
+      const carril = (id) => (Number($(id).value) < 0 ? null : Number($(id).value));
+      const bucle = () => {
+        const t = ((performance.now() - inicio) / 1000) % 8;
+        if (t < 0.05) pista.reiniciar();
+        pista.dibujar(t, { i: carril('mano-i'), d: carril('mano-d') }, { i: { u: (carril('mano-i') ?? 0) / 4 + 0.1, dentro: true }, d: null });
+        requestAnimationFrame(bucle);
+      };
+      bucle();
+      $('antelacion').addEventListener('input', (e) => { pista.antelacion = e.target.value; $('s-antelacion').textContent = e.target.value; });
+      $('transparente').addEventListener('change', (e) => (pista.transparente = e.target.checked));
+      $('marcar').addEventListener('click', () =>
+        pista.marcar({ nota: { id: 99, tiempo: 0, mano: 'i', carril: carril('mano-i') ?? 0, duracion: 0, pulso: 0 }, tipo: 'cabeza', calificacion: 'perfecto', tiempo: 0, entrada: 0 }));
+      pista.addEventListener('marcada', (e) => anotar('registro-pista', `marcada → ${e.detail.juicio.calificacion}`));
+
+      // ── tb-camara: mano sintética (21 puntos) que va y viene ──
+      const camara = $('camara');
+      const zona = { izquierda: 0.08, derecha: 0.92, arriba: 0.12, abajo: 0.78 };
+      const manoSintetica = (cx, cy, s) => {
+        const p = [[0, 0.5]];
+        for (const [dx, largo] of [[-0.35, 0.45], [-0.15, 0.75], [0, 0.8], [0.15, 0.72], [0.3, 0.55]]) {
+          for (let k = 1; k <= 4; k++) p.push([dx * (1 + k * 0.15), 0.3 - (k / 4) * largo]);
+        }
+        return p.map(([x, y]) => ({ x: cx + x * s, y: cy + y * s }));
+      };
+      const bucleCamara = () => {
+        const t = performance.now() / 1000;
+        const x = 0.5 + Math.sin(t * 0.8) * 0.33;
+        const d = { x, y: 0.42 };
+        const c = Math.min(3, Math.max(0, Math.floor(((x - zona.izquierda) / (zona.derecha - zona.izquierda)) * 4)));
+        camara.dibujar({ posiciones: { i: null, d }, carriles: { i: null, d: c }, esqueletos: { i: null, d: manoSintetica(x, 0.38, 0.22) } }, zona);
+        requestAnimationFrame(bucleCamara);
+      };
+      bucleCamara();
+      $('esqueleto').addEventListener('change', (e) => (camara.esqueleto = e.target.checked));
+      $('sin-rejilla').addEventListener('change', (e) => (camara.sinRejilla = e.target.checked));
+
+      // ── tb-cursor-mano: el ratón hace de mano ──
+      const cursor = $('cursor');
+      cursor.raiz = $('zona-cursor');
+      addEventListener('pointermove', (e) => cursor.mover({ x: e.clientX, y: e.clientY }));
+      setInterval(() => cursor.mover(cursor.ultimo ?? null), 50);
+      addEventListener('pointermove', (e) => (cursor.ultimo = { x: e.clientX, y: e.clientY }));
+      $('duracion').addEventListener('input', (e) => { cursor.duracion = e.target.value; $('s-duracion').textContent = e.target.value; });
+      cursor.addEventListener('pulsado', (e) => anotar('registro-cursor', `pulsado → «${e.detail.elemento.textContent}»`));
+    </script>
+  </body>
+</html>

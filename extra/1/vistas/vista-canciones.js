@@ -42,7 +42,11 @@ class VistaCanciones extends Vista {
       lista.innerHTML = canciones.map((c) => this.#tarjeta(c)).join('');
       estado.remove();
     } catch (error) {
-      estado.textContent = `No se pudieron cargar las canciones: ${error instanceof Error ? error.message : error}`;
+      // Mensaje para el jugador (qué pasa y qué hacer); el detalle técnico, a la consola.
+      console.error(error);
+      estado.textContent = location.protocol === 'file:'
+        ? 'No se pueden cargar las canciones abriendo el archivo con doble clic. Ábrelo con Live Server o con un servidor local.'
+        : 'No se pudieron cargar las canciones. Comprueba que la carpeta «canciones» está junto al juego y recarga la página.';
       estado.classList.add('error');
     }
     // Cualquier clic en una dificultad desbloquea el audio (es un gesto del usuario).

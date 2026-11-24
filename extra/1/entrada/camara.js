@@ -10,7 +10,8 @@
  *          → evento "cambiomanos" { i, d }   ← el mismo que el teclado
  *
  * Además emite `fotograma` con todo el detalle (para dibujar la imagen de la
- * cámara y para la calibración).
+ * cámara, la realidad aumentada y la calibración) y `gesto` cuando se
+ * levantan las dos manos por encima de la zona de juego.
  *
  * MediaPipe se ejecuta en el navegador: la imagen no sale del ordenador.
  * Se carga bajo demanda (`import()` dinámico) y una sola vez para toda la
@@ -19,6 +20,7 @@
 import { SeguidorManos } from './seguidor-manos.js';
 import { FiltroPunto } from './filtro-un-euro.js';
 import { ZonaJuego } from './zona-juego.js';
+import { DetectorManosArriba } from './gestos.js';
 
 /** @typedef {import('./seguidor-manos.js').Deteccion} Deteccion */
 /** @typedef {import('./seguidor-manos.js').PosicionesManos} PosicionesManos */
@@ -29,6 +31,8 @@ import { ZonaJuego } from './zona-juego.js';
  * @property {Deteccion[]} detecciones Manos detectadas (coordenadas del jugador, etiqueta corregida).
  * @property {PosicionesManos} posiciones Posición filtrada de cada mano.
  * @property {EstadoManos} carriles
+ * @property {{ i: { x: number, y: number }[] | null, d: { x: number, y: number }[] | null }} esqueletos
+ *   Los 21 puntos de cada mano identificada (coordenadas del jugador), para la realidad aumentada.
  * @property {number} fps
  */
 
@@ -96,6 +100,8 @@ export function manoDeEtiqueta(categoria, intercambiarManos) {
 
 export class EntradaCamara extends EventTarget {
   seguidor = new SeguidorManos();
+  /** Detector del gesto «levantar las dos manos» (evento `gesto`). */
+  manosArriba = new DetectorManosArriba();
   zona = new ZonaJuego();
   intercambiarManos = false;
   /** @type {EstadoManos} */
@@ -207,6 +213,9 @@ export class EntradaCamara extends EventTarget {
   #procesar(resultado, t) {
     const etiquetas = resultado.handedness ?? resultado.handednesses ?? [];
     /** @type {Deteccion[]} */
+    const todos = (resultado.landmarks ?? []).map((/** @type {any[]} */ puntos) =>
+      puntos.map(({ x, y }) => ({ x: 1 - x, y })),
+    );
     const detecciones = (resultado.landmarks ?? []).map((/** @type {any[]} */ puntos, /** @type {number} */ k) => {
       const palma = centroPalma(puntos);
       const categoria = etiquetas[k]?.[0];
@@ -228,8 +237,28 @@ export class EntradaCamara extends EventTarget {
     }
     this.#ponerEstado({ i: this.zona.carril('i', posiciones.i), d: this.zona.carril('d', posiciones.d) });
 
+    // Esqueleto de cada mano identificada: el de la detección más cercana a su palma.
+    const esqueleto = (/** @type {{ x: number, y: number } | null} */ p) => {
+      if (!p || !detecciones.length) return null;
+      let mejor = 0;
+      detecciones.forEach((d, k) => {
+        if (Math.hypot(d.x - p.x, d.y - p.y) < Math.hypot(detecciones[mejor].x - p.x, detecciones[mejor].y - p.y)) mejor = k;
+      });
+      return todos[mejor];
+    };
+
+    // Gesto de movimiento: las dos manos por encima de la zona de juego.
+    const gesto = this.manosArriba.actualizar(t, posiciones, this.zona.zona.arriba);
+    if (gesto.activado) this.dispatchEvent(new CustomEvent('gesto', { detail: { gesto: 'manos-arriba' } }));
+
     /** @type {DetalleFotograma} */
-    const detalle = { detecciones, posiciones, carriles: this.estado, fps: this.#fps };
+    const detalle = {
+      detecciones,
+      posiciones,
+      carriles: this.estado,
+      esqueletos: { i: esqueleto(crudas.i), d: esqueleto(crudas.d) },
+      fps: this.#fps,
+    };
     this.dispatchEvent(new CustomEvent('fotograma', { detail: detalle }));
   }
 
