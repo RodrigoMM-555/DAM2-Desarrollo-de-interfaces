@@ -1,0 +1,448 @@
+/* =========================================================
+   Tumbao · estilos
+   1. Variables   2. Base   3. Botones   4. Pantallas (menú, canciones, resultados)
+   5. Partida     6. Accesibilidad
+   ========================================================= */
+
+/* 1. Variables ------------------------------------------- */
+:root {
+  --color-fondo: #150f26;
+  --color-fondo-2: #2a1440;
+  --color-superficie: #241a3f;
+  --color-superficie-2: #30245a;
+  --color-borde: #4a3c78; /* decorativo: tarjetas y paneles */
+  /* Borde de controles (botones, selects…): ≥ 3:1 con todos los fondos (WCAG 1.4.11). */
+  --color-borde-control: #8576c0;
+  --color-texto: #f7efe3;
+  --color-texto-suave: #c9bedb;
+  /* Las dos manos: azul y naranja se distinguen también con daltonismo. */
+  --color-izquierda: #4da3ff;
+  --color-derecha: #ff9442;
+  --color-acento: #ffd166;
+  --color-error: #ff7a8a;
+
+  --fuente: system-ui, "Segoe UI", Ubuntu, Roboto, Arial, sans-serif;
+  --fuente-titulo: "Arial Black", "Segoe UI Black", system-ui, sans-serif;
+  --radio: 14px;
+  --sombra: 0 12px 32px rgb(0 0 0 / 0.35);
+  color-scheme: dark;
+}
+
+/* 2. Base ------------------------------------------------- */
+*, *::before, *::after { box-sizing: border-box; }
+
+html, body { height: 100%; }
+
+body {
+  margin: 0;
+  font: 16px/1.5 var(--fuente);
+  color: var(--color-texto);
+  background:
+    radial-gradient(ellipse 80% 60% at 20% 0%, rgb(77 163 255 / 0.14), transparent 70%),
+    radial-gradient(ellipse 80% 60% at 85% 100%, rgb(255 148 66 / 0.14), transparent 70%),
+    linear-gradient(160deg, var(--color-fondo), var(--color-fondo-2));
+  background-attachment: fixed;
+}
+
+#app { min-height: 100%; display: flex; }
+#app > * { flex: 1; display: flex; min-width: 0; }
+
+h1, h2, h3 { line-height: 1.15; margin: 0 0 0.5em; }
+h1:focus { outline: none; }
+
+a { color: var(--color-acento); }
+
+kbd {
+  display: inline-block;
+  min-width: 1.8em;
+  padding: 0.05em 0.4em;
+  border: 1px solid var(--color-borde);
+  border-bottom-width: 3px;
+  border-radius: 6px;
+  background: var(--color-superficie-2);
+  font: 700 0.9em var(--fuente);
+  text-align: center;
+  color: var(--color-texto);
+}
+
+.texto-i { color: var(--color-izquierda); }
+.texto-d { color: var(--color-derecha); }
+
+/* 3. Botones ---------------------------------------------- */
+.boton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 48px;
+  padding: 0.6em 1.4em;
+  border: 2px solid var(--color-borde-control);
+  border-radius: 999px;
+  background: var(--color-superficie);
+  color: var(--color-texto);
+  font: 700 1rem var(--fuente);
+  text-decoration: none;
+  cursor: pointer;
+  transition: transform 0.12s, background-color 0.12s, border-color 0.12s;
+}
+.boton:hover { background: var(--color-superficie-2); border-color: var(--color-texto-suave); }
+.boton:active { transform: scale(0.97); }
+
+.boton-principal {
+  border-color: transparent;
+  background: linear-gradient(90deg, var(--color-izquierda), var(--color-derecha)) border-box;
+  color: #150f26;
+}
+.boton-principal:hover { border-color: var(--color-texto); background: linear-gradient(90deg, var(--color-izquierda), var(--color-derecha)) padding-box, var(--color-texto) border-box; }
+
+.boton-volver { min-height: 40px; padding: 0.3em 1em; font-size: 0.9rem; }
+
+/* 4. Pantallas -------------------------------------------- */
+.pantalla {
+  width: min(100%, 860px);
+  margin: 0 auto;
+  padding: clamp(1rem, 4vw, 3rem) 1.25rem;
+}
+
+.cabecera-pantalla {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+.cabecera-pantalla h1 { margin: 0; font-size: clamp(1.6rem, 4vw, 2.2rem); }
+
+/* Menú */
+.menu {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: 1.25rem;
+}
+
+.titulo-juego {
+  margin: 0;
+  font: 900 clamp(4rem, 16vw, 9rem)/0.9 var(--fuente-titulo);
+  letter-spacing: 0.04em;
+  transform: skewX(-8deg);
+}
+.titulo-juego span:first-child { color: var(--color-izquierda); }
+.titulo-juego span:last-child { color: var(--color-derecha); }
+
+.lema { margin: 0; font-size: 1.2rem; color: var(--color-texto-suave); }
+
+.leyenda-manos {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  justify-content: center;
+  color: var(--color-texto-suave);
+}
+.ficha {
+  display: inline-grid;
+  place-items: center;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  font-weight: 900;
+  color: var(--color-fondo);
+}
+.ficha-i { background: var(--color-izquierda); }
+.ficha-d { background: var(--color-derecha); margin-left: 1rem; }
+
+.acciones { display: flex; gap: 0.75rem; flex-wrap: wrap; justify-content: center; margin-top: 0.5rem; }
+
+.ayuda {
+  max-width: 560px;
+  padding: 1.75rem;
+  border: 1px solid var(--color-borde);
+  border-radius: var(--radio);
+  background: var(--color-superficie);
+  color: var(--color-texto);
+  text-align: left;
+  box-shadow: var(--sombra);
+}
+.ayuda::backdrop { background: rgb(10 6 20 / 0.7); }
+.ayuda ol { padding-left: 1.2rem; }
+.ayuda li { margin-bottom: 0.5rem; }
+.ayuda form { margin-top: 1rem; text-align: right; }
+
+.tabla-teclas { border-collapse: collapse; }
+.tabla-teclas th, .tabla-teclas td { padding: 0.3rem 0.6rem; text-align: center; }
+.tabla-teclas thead th { font-size: 0.85rem; color: var(--color-texto-suave); font-weight: 600; }
+.tabla-teclas tbody th { text-align: left; }
+
+/* Canciones */
+.estado-carga { color: var(--color-texto-suave); }
+.estado-carga.error { color: var(--color-error); }
+
+.lista-canciones { list-style: none; margin: 0; padding: 0; display: grid; gap: 1.25rem; }
+
+.tarjeta-cancion {
+  padding: 1.25rem 1.5rem;
+  border: 1px solid var(--color-borde);
+  border-radius: var(--radio);
+  background: rgb(36 26 63 / 0.85);
+  box-shadow: var(--sombra);
+}
+.tarjeta-cancion h2 { margin: 0; font-size: 1.5rem; }
+.datos-cancion { margin: 0.2rem 0 1rem; color: var(--color-texto-suave); }
+
+.dificultades {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 0.75rem;
+}
+.dificultad {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 0.1rem 0.75rem;
+  padding: 0.8rem 1rem;
+  border: 2px solid var(--color-borde-control);
+  border-radius: 12px;
+  background: var(--color-superficie-2);
+  color: var(--color-texto);
+  text-decoration: none;
+  transition: border-color 0.12s, transform 0.12s;
+}
+.dificultad:hover { border-color: var(--color-acento); transform: translateY(-2px); }
+.nombre-dificultad { font-weight: 800; font-size: 1.1rem; }
+.notas { color: var(--color-texto-suave); font-size: 0.9rem; align-self: center; }
+.record { grid-column: 1 / -1; font-size: 0.9rem; color: var(--color-texto-suave); }
+.record strong { color: var(--color-acento); }
+
+/* Resultados */
+.resultados { text-align: center; }
+.resultados h1 { font-size: clamp(1.6rem, 4vw, 2.2rem); }
+.subtitulo { display: block; margin-top: 0.3rem; font-size: 1rem; color: var(--color-texto-suave); font-weight: 600; }
+
+.nota-final {
+  font: 900 clamp(6rem, 22vw, 10rem)/1 var(--fuente-titulo);
+  transform: skewX(-8deg);
+  background: linear-gradient(90deg, var(--color-izquierda), var(--color-derecha));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.nota-S { background: linear-gradient(90deg, var(--color-acento), #fff2c4); -webkit-background-clip: text; background-clip: text; }
+
+.nuevo-record { margin: 0; font-weight: 800; color: var(--color-acento); font-size: 1.2rem; }
+
+.datos-resultado { display: flex; justify-content: center; flex-wrap: wrap; gap: 0.75rem 2.5rem; margin: 1.5rem 0; }
+.datos-resultado dt { color: var(--color-texto-suave); font-size: 0.9rem; }
+.datos-resultado dd { margin: 0; font-size: 1.8rem; font-weight: 800; }
+
+.tabla-calificaciones { margin: 0 auto 2rem; border-collapse: collapse; min-width: 240px; }
+.tabla-calificaciones caption { color: var(--color-texto-suave); font-size: 0.9rem; margin-bottom: 0.4rem; }
+.tabla-calificaciones th, .tabla-calificaciones td { padding: 0.3rem 1rem; border-bottom: 1px solid var(--color-borde); }
+.tabla-calificaciones th { text-align: left; }
+.tabla-calificaciones td { text-align: right; font-weight: 700; }
+.c-perfecto th { color: var(--color-acento); }
+.c-bien th { color: #7fe0a8; }
+.c-justo th { color: var(--color-texto-suave); }
+.c-fallo th { color: var(--color-error); }
+
+/* 5. Partida ---------------------------------------------- */
+.partida {
+  position: relative;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  width: 100%;
+  height: 100dvh;
+  overflow: hidden;
+}
+
+.marcador {
+  display: flex;
+  align-items: center;
+  gap: 1rem 2rem;
+  flex-wrap: wrap;
+  padding: 0.75rem 1.25rem;
+  background: rgb(21 15 38 / 0.6);
+  border-bottom: 1px solid var(--color-borde);
+}
+.marcador-cancion { flex: 1; min-width: 160px; }
+.titulo-partida { margin: 0; font-size: 1.2rem; }
+.marcador-dificultad { color: var(--color-texto-suave); font-size: 0.9rem; }
+.marcador-datos { display: flex; gap: 1.5rem; margin: 0; }
+.marcador-datos dt { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--color-texto-suave); }
+.marcador-datos dd { margin: 0; font-size: 1.4rem; font-weight: 800; font-variant-numeric: tabular-nums; }
+.dato-multiplicador { color: var(--color-acento); }
+.boton-pausa { min-height: 44px; min-width: 44px; padding: 0; }
+
+.pista { min-height: 0; }
+
+.teclas-partida {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  flex-wrap: wrap;
+  padding: 0.5rem;
+  font-weight: 700;
+  font-size: 0.9rem;
+}
+.teclas-partida kbd { margin-left: 0.25rem; }
+
+.capa {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 1rem;
+  background: rgb(10 6 20 / 0.72);
+}
+.capa[hidden] { display: none; }
+.capa-caja {
+  width: min(100%, 440px);
+  padding: 1.75rem;
+  border: 1px solid var(--color-borde);
+  border-radius: var(--radio);
+  background: var(--color-superficie);
+  text-align: center;
+  box-shadow: var(--sombra);
+}
+.capa-texto { color: var(--color-texto-suave); }
+.capa-texto:empty { display: none; }
+.capa-botones { display: flex; gap: 0.75rem; justify-content: center; flex-wrap: wrap; }
+
+/* Cámara en la partida */
+.area-juego { position: relative; min-height: 0; display: grid; }
+.area-juego > .pista { grid-area: 1 / 1; }
+.panel-camara {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  width: min(26vw, 360px);
+}
+.panel-camara[hidden] { display: none; }
+.estado-camara { margin: 0.4rem 0 0; font-size: 0.85rem; color: var(--color-texto-suave); }
+.estado-camara:empty { display: none; }
+
+@media (max-width: 900px) {
+  .panel-camara { top: auto; bottom: 0.5rem; right: 0.5rem; width: 34vw; opacity: 0.85; }
+}
+
+/* Opción de cámara en la lista de canciones */
+.opcion-camara {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.25rem;
+  margin-bottom: 1.25rem;
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--color-borde);
+  border-radius: 12px;
+  background: rgb(36 26 63 / 0.6);
+}
+.interruptor { display: inline-flex; align-items: center; gap: 0.6rem; font-weight: 700; cursor: pointer; }
+.interruptor input { width: 1.3rem; height: 1.3rem; accent-color: var(--color-acento); }
+.nota { color: var(--color-texto-suave); font-size: 0.92rem; }
+.error { color: var(--color-error); }
+
+/* Pulsar con la mano */
+.apuntado-mano { outline: 3px solid var(--color-acento); outline-offset: 4px; }
+.capa-ayuda-mano { margin: 1rem 0 0; font-size: 0.9rem; color: var(--color-texto-suave); }
+.capa-ayuda-mano[hidden] { display: none; }
+
+/* Ajustes */
+.ajustes { display: grid; gap: 1rem; }
+.ajustes fieldset {
+  margin: 0;
+  padding: 1rem 1.25rem 1.25rem;
+  border: 1px solid var(--color-borde);
+  border-radius: var(--radio);
+  background: rgb(36 26 63 / 0.85);
+}
+.ajustes legend { padding: 0 0.4rem; font-weight: 800; font-size: 1.1rem; }
+.ajustes .nota { margin: 0.5rem 0 0; }
+.campo-deslizador { display: grid; gap: 0.25rem; margin-bottom: 0.75rem; }
+.campo-deslizador span { display: flex; justify-content: space-between; gap: 1rem; }
+.campo-deslizador input { width: 100%; accent-color: var(--color-acento); }
+.aviso-guardado { min-height: 1.5em; color: var(--color-texto-suave); }
+
+/* Editor de partituras */
+.editor-opciones { display: flex; flex-wrap: wrap; align-items: end; gap: 0.75rem 1.25rem; margin-bottom: 0.5rem; }
+.editor-opciones label { display: grid; gap: 0.25rem; font-weight: 700; font-size: 0.92rem; }
+.editor-opciones select {
+  min-height: 44px; padding: 0 0.75rem; border: 2px solid var(--color-borde-control); border-radius: 10px;
+  background: var(--color-superficie-2); color: var(--color-texto); font: inherit;
+}
+.editor-opciones [hidden] { display: none; }
+.editor-escenario { display: grid; grid-template-columns: minmax(0, 1fr) minmax(200px, 320px); gap: 1rem; margin-top: 1rem; }
+.pista-editor { height: min(60vh, 520px); border-radius: var(--radio); background: rgb(21 15 38 / 0.6); }
+.editor-lateral tb-camara[hidden] { display: none; }
+.editor-contador { font-size: 1.5rem; font-weight: 800; }
+.editor-resultado { margin-top: 1.5rem; padding: 1.25rem 1.5rem; border: 1px solid var(--color-borde); border-radius: var(--radio); background: rgb(36 26 63 / 0.85); }
+.editor-resultado[hidden], .editor-resultado [hidden] { display: none; }
+@media (max-width: 800px) { .editor-escenario { grid-template-columns: 1fr; } }
+
+/* Calibración */
+.pantalla-ancha { width: min(100%, 1200px); }
+.calibracion-rejilla {
+  display: grid;
+  grid-template-columns: minmax(0, 1.6fr) minmax(280px, 1fr);
+  gap: 1.5rem;
+  align-items: start;
+}
+.calibracion-imagen { position: relative; }
+.camara-apagada {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 1.5rem;
+  text-align: center;
+  border-radius: 12px;
+  background: rgb(11 8 22 / 0.85);
+}
+.camara-apagada[hidden] { display: none; }
+.lectura { margin: 0.5rem 0 0; font-weight: 700; font-variant-numeric: tabular-nums; }
+.calibracion-panel {
+  padding: 1.25rem 1.5rem;
+  border: 1px solid var(--color-borde);
+  border-radius: var(--radio);
+  background: rgb(36 26 63 / 0.85);
+}
+.calibracion-panel h2 { font-size: 1.15rem; margin: 1.25rem 0 0.25rem; }
+.calibracion-panel h2:first-child { margin-top: 0; }
+.calibracion-panel .nota { margin: 0 0 0.75rem; }
+.deslizadores { display: grid; gap: 0.6rem; margin-bottom: 0.75rem; }
+.deslizadores label { display: grid; gap: 0.2rem; font-size: 0.92rem; }
+.deslizadores label span { display: flex; justify-content: space-between; gap: 1rem; }
+.deslizadores input { width: 100%; accent-color: var(--color-acento); }
+.instruccion { min-height: 1.5em; margin: 0.6rem 0 0; }
+.boton-pequeno { min-height: 40px; padding: 0.3em 1em; font-size: 0.9rem; }
+.acciones-izquierda { justify-content: flex-start; margin-top: 0.5rem; }
+
+@media (max-width: 800px) {
+  .calibracion-rejilla { grid-template-columns: 1fr; }
+}
+
+/* 6. Accesibilidad ---------------------------------------- */
+:focus-visible {
+  outline: 3px solid var(--color-acento);
+  outline-offset: 3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { transition: none !important; animation: none !important; }
+}
+/* Lo mismo, activado desde Ajustes. */
+.reducir-movimiento *, .reducir-movimiento *::before, .reducir-movimiento *::after {
+  transition: none !important;
+  animation: none !important;
+}
+
+@media (max-width: 560px) {
+  .marcador-datos { gap: 1rem; }
+  .marcador-datos dd { font-size: 1.1rem; }
+  .teclas-partida { gap: 1rem; }
+}

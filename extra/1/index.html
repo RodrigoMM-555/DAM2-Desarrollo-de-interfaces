@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Tumbao</title>
+    <meta name="description" content="Juego de ritmo: coloca cada mano en su carril a tiempo con la música." />
+    <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+    <link rel="stylesheet" href="estilo.css" />
+    <!-- El import map traduce el nombre del paquete a su archivo: sin npm ni compilación. -->
+    <script type="importmap">
+      { "imports": { "@mediapipe/tasks-vision": "./lib/mediapipe/vision_bundle.mjs" } }
+    </script>
+  </head>
+  <body>
+    <main id="app">
+      <noscript>Tumbao necesita JavaScript.</noscript>
+    </main>
+    <script type="module" src="codigo.js"></script>
+  </body>
+</html>

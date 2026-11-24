@@ -1,0 +1,20 @@
+[
+  {
+    "id": "primer-tumbao",
+    "titulo": "Primer tumbao",
+    "bpm": 92,
+    "archivo": "primer-tumbao.json"
+  },
+  {
+    "id": "noche-de-clave",
+    "titulo": "Noche de clave",
+    "bpm": 108,
+    "archivo": "noche-de-clave.json"
+  },
+  {
+    "id": "brisa-de-malecon",
+    "titulo": "Brisa de malecón",
+    "bpm": 100,
+    "archivo": "brisa-de-malecon.json"
+  }
+]
